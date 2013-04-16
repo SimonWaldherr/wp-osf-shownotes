@@ -1,8 +1,10 @@
 <?php
 
-function osf_shownotes_shortcode($atts, $content = null) {
+function osf_shownotes_shortcode($atts, $content = "") {
   $export = 'test-lorem-ipsum';
-  if ($content !== null) {
+  $post_id = get_the_ID();
+  $shownotes = get_post_meta($post_id, 'shownotes', true);
+  if (($content !== "")||($shownotes)) {
     $data = array(
       'amazon' => 'shownot.es-21',
       'thomann' => '93439',
@@ -12,7 +14,11 @@ function osf_shownotes_shortcode($atts, $content = null) {
     );
 
     //undo fucking wordpress shortcode cripple shit
-    $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
+    if($content !== "") {
+      $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
+    } else {
+      $shownotesString = "\n".$shownotes."\n";
+    }
 
     //parse shortcode as osf string to html
     $shownotesArray = osf_parser($shownotesString, $data);
@@ -389,11 +395,11 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
             } else {
               $time = $array[$arraykeys[$i]]['time'];
             }
-          
+
             if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
               $returnstring .= ''; //add code, which should inserted between chapters
             }
-          
+
             $returnstring .= '<dt data-time="' . osf_convert_time($time) . '">' . $time . '</dt>' . "\n" . '<dd>';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
               $returnstring .= '<strong';
