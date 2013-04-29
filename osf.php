@@ -1,5 +1,7 @@
 <?php
 
+include_once( 'settings.php' );
+
 function osf_shownotes_shortcode($atts, $content = "") {
   $export = 'test-lorem-ipsum';
   $post_id = get_the_ID();
