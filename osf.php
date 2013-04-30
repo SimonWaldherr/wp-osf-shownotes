@@ -3,15 +3,21 @@
 include_once( 'settings.php' );
 
 function osf_shownotes_shortcode($atts, $content = "") {
-  $export = 'test-lorem-ipsum';
-  $post_id = get_the_ID();
+  $export    = 'test-lorem-ipsum';
+  $post_id   = get_the_ID();
   $shownotes = get_post_meta($post_id, 'shownotes', true);
+  $options   = get_option('podloveshownotes_options');
   if (($content !== "")||($shownotes)) {
+    if(isset($options['affiliate_amazon'])){$amazon=$options['affiliate_amazon'];}else{$amazon='shownot.es-21';}
+    if(isset($options['affiliate_thomann'])){$thomann=$options['affiliate_thomann'];}else{$thomann='93439';}
+    if(isset($options['affiliate_tradedoubler'])){$tradedoubler=$options['affiliate_tradedoubler'];}else{$tradedoubler='16248286';}
+    if(isset($options['completeness_fullmode'])){$fullmode=$options['completeness_fullmode'];}else{$fullmode='true';}
+    
     $data = array(
-      'amazon' => 'shownot.es-21',
-      'thomann' => '93439',
-      'tradedoubler' => '16248286',
-      'fullmode' => 'true',
+      'amazon'       => $amazon,
+      'thomann'      => $thomann,
+      'tradedoubler' => $tradedoubler,
+      'fullmode'     => $fullmode,
       'tags' => explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote')
     );
 
