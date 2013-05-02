@@ -70,7 +70,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $export    = 'test-lorem-ipsum';
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
-    $options   = get_option('podloveshownotes_options');
+    $options   = get_option('shownotes_options');
     if (($content !== "") || ($shownotes)) {
         if (isset($options['affiliate_amazon'])) {
             $amazon = $options['affiliate_amazon'];
@@ -444,7 +444,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</a>' . " ";
+        $subtext .= '>' . trim($text) . '</a> &nbsp;';
     } else {
         $subtext .= '<span';
         if ($tagtext != '') {
@@ -453,7 +453,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</span> ';
+        $subtext .= '>' . trim($text) . '</span> &nbsp;';
     }
     return $subtext;
 }

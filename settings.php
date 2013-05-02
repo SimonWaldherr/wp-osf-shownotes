@@ -1,20 +1,20 @@
 <?php
 
 if (is_admin()) {
-    add_action('admin_menu', 'podloveshownotes_create_menu');
-    add_action('admin_init', 'podloveshownotes_register_settings');
+    add_action('admin_menu', 'shownotes_create_menu');
+    add_action('admin_init', 'shownotes_register_settings');
 }
 
-function podloveshownotes_settings_page() {
+function shownotes_settings_page() {
 ?>
  <div class="wrap">
-    <h2>Podlove Shownotes Options</h2>
+    <h2> Shownotes Options</h2>
     <form method="post" action="options.php">
       <?php
-    settings_fields('podloveshownotes_options');
+    settings_fields('shownotes_options');
 ?>
      <?php
-    do_settings_sections('podloveshownotes');
+    do_settings_sections('shownotes');
 ?>
      <p class="submit">
        <input name="Submit" type="submit" class="button button-primary" value="<?php
@@ -27,12 +27,12 @@ function podloveshownotes_settings_page() {
 }
 
 
-function podloveshownotes_create_menu() {
-    add_options_page('Podlove Shownotes Options', 'Podlove Shownotes', 'manage_options', 'podloveshownotes', 'podloveshownotes_settings_page');
+function shownotes_create_menu() {
+    add_options_page(' Shownotes Options', ' Shownotes', 'manage_options', 'shownotes', 'shownotes_settings_page');
 }
 
-function podloveshownotes_register_settings() {
-    $ps = 'podloveshownotes';
+function shownotes_register_settings() {
+    $ps = 'shownotes';
 
     $settings = array(
         'affiliate' => array(
@@ -43,19 +43,13 @@ function podloveshownotes_register_settings() {
                 'tradedoubler' => 'Tradedoubler'
             )
         ),
-        'completeness' => array(
-            'title' => 'Completeness',
-            'fields' => array(
-                'fullmode' => 'Export All'
-            )
-        ),
         'info' => array(
             'title' => 'Information',
             'function' => true
         )
     );
 
-    register_setting('podloveshownotes_options', 'podloveshownotes_options');
+    register_setting('shownotes_options', 'shownotes_options');
 
     foreach ($settings as $sectionname => $section) {
         $function = false;
@@ -76,50 +70,50 @@ function podloveshownotes_register_settings() {
 }
 
 
-function podloveshownotes_affiliate_amazon() {
-    $options = get_option('podloveshownotes_options');
+function shownotes_affiliate_amazon() {
+    $options = get_option('shownotes_options');
     if (!isset($options['affiliate_amazon'])) {
         $options['affiliate_amazon'] = "";
     }
-    print "<input id='affiliate_amazon' name='podloveshownotes_options[affiliate_amazon]' 
+    print "<input id='affiliate_amazon' name='shownotes_options[affiliate_amazon]' 
     value='" . $options['affiliate_amazon'] . "' style='width:8em;' />";
 }
 
-function podloveshownotes_affiliate_thomann() {
-    $options = get_option('podloveshownotes_options');
+function shownotes_affiliate_thomann() {
+    $options = get_option('shownotes_options');
     if (!isset($options['affiliate_thomann'])) {
         $options['affiliate_thomann'] = "";
     }
-    print "<input id='affiliate_thomann' name='podloveshownotes_options[affiliate_thomann]' 
+    print "<input id='affiliate_thomann' name='shownotes_options[affiliate_thomann]' 
     value='" . $options['affiliate_thomann'] . "' style='width:8em;' />";
 }
 
-function podloveshownotes_affiliate_tradedoubler() {
-    $options = get_option('podloveshownotes_options');
+function shownotes_affiliate_tradedoubler() {
+    $options = get_option('shownotes_options');
     if (!isset($options['affiliate_tradedoubler'])) {
         $options['affiliate_tradedoubler'] = "";
     }
-    print "<input id='affiliate_tradedoubler' name='podloveshownotes_options[affiliate_tradedoubler]' 
+    print "<input id='affiliate_tradedoubler' name='shownotes_options[affiliate_tradedoubler]' 
     value='" . $options['affiliate_tradedoubler'] . "' style='width:8em;' />";
 }
 
-function podloveshownotes_completeness_fullmode() {
-    $options = get_option('podloveshownotes_options');
+function shownotes_completeness_fullmode() {
+    $options = get_option('shownotes_options');
     $checked = "";
     if (isset($options['completeness_fullmode']))
         $checked = "checked ";
-    print "<input id='completeness_fullmode' name='podloveshownotes_options[completeness_fullmode]' 
+    print "<input id='completeness_fullmode' name='shownotes_options[completeness_fullmode]' 
     $checked type='checkbox' value='1' />";
 }
 
-function podloveshownotes_info() {
+function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.0.2</strong> of the <strong>Podlove Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.0.3</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
-  The <strong>ps-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
+  The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
-  <a href="https://github.com/SimonWaldherr/podlove-shownotes">github.com/SimonWaldherr/podlove-shownotes</a></p>
+  <a href="https://github.com/SimonWaldherr/wp-osf-shownotes">github.com/SimonWaldherr/wp-osf-shownotes</a></p>
   <p>If you found a bug, please tell us your WP- and ps- (and PPP- if you use PPP) Version. <br/>Also your 
   Browser version, your PHP version and the URL of your Podcast can help us, find the bug.</p>';
 }
