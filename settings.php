@@ -43,6 +43,12 @@ function shownotes_register_settings() {
                 'tradedoubler' => 'Tradedoubler'
             )
         ),
+        'export' => array(
+            'title' => 'Export mode',
+            'fields' => array(
+                'mode' => 'select style'
+            )
+        ),
         'info' => array(
             'title' => 'Information',
             'function' => true
@@ -106,10 +112,24 @@ function shownotes_completeness_fullmode() {
     $checked type='checkbox' value='1' />";
 }
 
+function shownotes_export_mode() {
+    $options = get_option('shownotes_options');
+    $modes = array('anycast', 'wikigeeks');
+    print '<select id="export_mode" name="shownotes_options[export_mode]">';
+    foreach($modes as $mode) {
+        if($mode == $options['export_mode']) {
+            print '<option selected>'.$mode.'</option>';
+        } else {
+            print '<option>'.$mode.'</option>';
+        }
+    }
+    print "<select/>";
+}
+
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.0.3</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.0.4</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

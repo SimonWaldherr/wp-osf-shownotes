@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 0.0.3
+Stable tag: 0.0.4
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -12,7 +12,7 @@ Here should be a short description of the plugin, but currently there is nothing
 
 == Description ==
 
-This Plugin converts <a href="https://github.com/shownotes/OpenShownotesFormat">Shownotes in OSF</a> to HTML
+This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">Shownotes in OSF</a> to HTML
 
 == Installation ==
 
@@ -29,7 +29,7 @@ convert OSF to HTML
 
 = What is OSF? =
 
-a simple format for (Podcast-) Shownotes
+a simple format for (Podcast-) Shownotes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
 
 = Why should i use it? =
 
@@ -44,15 +44,22 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 == Screenshots ==
 
 1. Options
-2. Result
+2. Result (Anycast style)
+3. Result (Wikigeeks style)
 
 == Changelog ==
+
+= 0.0.4 =
+* wikigeeks style added
 
 = 0.0.3 =
 * first Version on Wordpress.org.
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.0.4 =
+new style added (wikigeeks)
 
 = 0.0.3 =
 first Version on Wordpress.org.
