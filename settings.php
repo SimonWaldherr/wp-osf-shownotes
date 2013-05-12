@@ -49,6 +49,12 @@ function shownotes_register_settings() {
                 'mode' => 'select style'
             )
         ),
+        'css' => array(
+            'title' => 'Include Standard CSS',
+            'fields' => array(
+                'css' => 'include CSS'
+            )
+        ),
         'info' => array(
             'title' => 'Information',
             'function' => true
@@ -124,6 +130,15 @@ function shownotes_export_mode() {
         }
     }
     print "<select/>";
+}
+
+function shownotes_css_css() {
+    $options = get_option('shownotes_options');
+    $checked = "";
+    if (isset($options['css_css']))
+        $checked = "checked ";
+    print "<input id='css_css' name='shownotes_options[css_css]' 
+    $checked type='checkbox' value='1' />";
 }
 
 function shownotes_info() {

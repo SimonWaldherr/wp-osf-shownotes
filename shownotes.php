@@ -67,22 +67,27 @@ add_action('save_post', 'save_shownotes');
 
 
 function osf_shownotes_shortcode($atts, $content = "") {
-    $export    = 'test-lorem-ipsum';
+    $export    = '';
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
     $options   = get_option('shownotes_options');
+    
+    extract(shortcode_atts(array(
+       'export_mode' => $options['export_mode']
+    ), $atts));
+    
     if (($content !== "") || ($shownotes)) {
-        if (isset($options['affiliate_amazon'])) {
+        if (isset($options['affiliate_amazon']) && $options['affiliate_amazon'] != '') {
             $amazon = $options['affiliate_amazon'];
         } else {
             $amazon = 'shownot.es-21';
         }
-        if (isset($options['affiliate_thomann'])) {
+        if (isset($options['affiliate_thomann']) && $options['affiliate_thomann'] != '') {
             $thomann = $options['affiliate_thomann'];
         } else {
             $thomann = '93439';
         }
-        if (isset($options['affiliate_tradedoubler'])) {
+        if (isset($options['affiliate_tradedoubler']) && $options['affiliate_tradedoubler'] != '') {
             $tradedoubler = $options['affiliate_tradedoubler'];
         } else {
             $tradedoubler = '16248286';
@@ -110,9 +115,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($options['export_mode'] == 'anycast') {
+        if($export_mode == 'anycast') {
             $export     = osf_export_anycast($shownotesArray['export'], 1);
-        } elseif($options['export_mode'] == 'wikigeeks') {
+        } elseif($export_mode == 'wikigeeks') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], 1);
         }
     }
@@ -122,7 +127,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
 add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
-    wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
+    $options = get_option('shownotes_options');
+    if(isset($options['css_css'])) {
+        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
+    }
 }
 add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
