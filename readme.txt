@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 0.0.4
+Stable tag: 0.0.5
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -49,6 +49,11 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.0.5 =
+* shownot.es CSS can be turned off
+* import from ShowPad
+* export tags changeable
+
 = 0.0.4 =
 * wikigeeks style added
 
@@ -57,6 +62,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.0.5 =
+export tags now changeable and osf shownotes can be imported via ajax
 
 = 0.0.4 =
 new style added (wikigeeks)
