@@ -133,10 +133,12 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($export_mode == 'anycast') {
+        if($export_mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
-        } elseif($export_mode == 'wikigeeks') {
+        } elseif($export_mode == 'list style') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
+        } elseif($export_mode == 'glossary') {
+            $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         }
     }
     return $export;
@@ -671,6 +673,69 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
 
     $returnstring .= '</div>' . "\n";
     return $returnstring;
+}
+
+function osf_glossarysort($a, $b) {
+    $ax = str_split(strtolower(trim($a['text'])));
+    $bx = str_split(strtolower(trim($b['text'])));
+
+    if (count($ax) < count($bx)) {
+        for ($i = 0; $i <= count($bx); $i++) {
+            if (ord($ax[$i]) != ord($bx[$i])) {
+                return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+            }
+        }
+    } else {
+        for ($i = 0; $i <= count($ax); $i++) {
+            if (ord($ax[$i]) != ord($bx[$i])) {
+                return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+            }
+        }
+    }
+    return 0;
+}
+
+//HTML export as glossary
+function osf_export_glossary($array, $showtags = array(0 => '')) {
+    $linksbytag = array();
+
+    $filterpattern = array(
+        '(\s(#)(\S*))',
+        '(\<((http(|s)://[\S#?-]{0,128})>))',
+        '(\s+((http(|s)://[\S#?-]{0,128})\s))',
+        '(^ *-*)'
+    );
+    $arraykeys     = array_keys($array);
+    for ($i = 0; $i <= count($array); $i++) {
+        if (($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) {
+            if (isset($array[$arraykeys[$i]]['subitems'])) {
+                for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
+                    if (($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && ($array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
+                        foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
+                            if (($showtags[0] == '') || (array_search($tag, $showtags) !== false)) {
+                                $linksbytag[$tag][$ii]['url']  = $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0];
+                                $linksbytag[$tag][$ii]['text'] = $array[$arraykeys[$i]]['subitems'][$ii]['text'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $return = '';
+
+    foreach ($linksbytag as $tagname => $content) {
+        $return .= '<h1>' . $tagname . '</h1>' . "\n";
+        $return .= '<ol>' . "\n";
+        usort($content, "osf_glossarysort");
+        foreach ($content as $item) {
+            $return .= '<li><a href="' . $item['url'] . '">' . $item['text'] . '</a></li>' . "\n";
+        }
+        $return .= '</ol>' . "\n";
+    }
+
+    return $return;
 }
 
 ?>

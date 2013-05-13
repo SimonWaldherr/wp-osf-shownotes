@@ -127,7 +127,7 @@ function shownotes_completeness_fullmode() {
 
 function shownotes_export_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('anycast', 'wikigeeks');
+    $modes = array('block style', 'list style', 'glossary');
     print '<select id="export_mode" name="shownotes_options[export_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['export_mode']) {
