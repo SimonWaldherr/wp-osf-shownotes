@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.0.1  
 Tested up to: 3.4  
-Stable tag: 0.0.5  
+Stable tag: 0.0.6  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -42,6 +42,9 @@ it's easy to write
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
 ##Changelog
+
+###0.0.6
+* small fullmode fix
 
 ###0.0.5
 * shownot.es CSS can be turned off
