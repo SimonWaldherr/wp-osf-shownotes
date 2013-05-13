@@ -34,7 +34,7 @@ function add_shownotes_textarea($post) {
         $baseurl = $options['import_baseurl'];
         $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
     }
-    
+
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
 
@@ -49,7 +49,7 @@ function save_shownotes() {
     } else {
         $new = '';
     }
-    
+
     $shownotes = $old;
     if ($new && $new != $old) {
         update_post_meta($post_id, 'shownotes', $new);
@@ -78,11 +78,11 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
     $options   = get_option('shownotes_options');
-    
+
     extract(shortcode_atts(array(
        'export_mode' => $options['export_mode']
     ), $atts));
-    
+
     if (($content !== "") || ($shownotes)) {
         if (isset($options['affiliate_amazon']) && $options['affiliate_amazon'] != '') {
             $amazon = $options['affiliate_amazon'];
@@ -99,9 +99,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } else {
             $tradedoubler = '16248286';
         }
-        
+
         $fullmode = 'false';
-        
+
         if(isset($options['export_tags'])) {
             $tags = trim($options['export_tags']);
         } else {
@@ -115,7 +115,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $fullint  = 1;
             $tags = explode(' ', $tags);
         }
-        
+
         $data = array(
             'amazon' => $amazon,
             'thomann' => $thomann,
@@ -123,14 +123,14 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'fullmode' => $fullmode,
             'tags' => $tags
         );
-        
+
         //undo fucking wordpress shortcode cripple shit
         if ($content !== "") {
             $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
         } else {
             $shownotesString = "\n" . $shownotes . "\n";
         }
-        
+
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
         if($export_mode == 'anycast') {
@@ -181,7 +181,7 @@ function osf_affiliate_generator($url, $data) {
     $amazon       = $data['amazon'];
     $thomann      = $data['thomann'];
     $tradedoubler = $data['tradedoubler'];
-    
+
     if ((strstr($url, 'www.amazon.de/') && strstr($url, 'p/')) && ($amazon != '')) {
         if (strstr($url, "dp/")) {
             $pid = substr(strstr($url, "dp/"), 3, 10);
@@ -214,7 +214,7 @@ function osf_affiliate_generator($url, $data) {
     } else {
         $purl = $url;
     }
-    
+
     return $purl;
 }
 
@@ -267,7 +267,7 @@ function osf_parser($shownotes, $data) {
     // Diese Funktion ist das Herzstück des OSF-Parsers
     $specialtags = $data['tags'];
     $exportall   = $data['fullmode'];
-    
+
     // entferne alle Angaben vorm und im Header
     $shownotes = explode('/HEADER', $shownotes);
     if (count($shownotes) != 1) {
@@ -279,7 +279,7 @@ function osf_parser($shownotes, $data) {
     } else {
         $shownotes = $shownotes[0];
     }
-    
+
     $shownotes = explode('/HEAD', $shownotes);
     if (count($shownotes) != 1) {
         if (strlen($shownotes[1]) > 42) {
@@ -290,46 +290,46 @@ function osf_parser($shownotes, $data) {
     } else {
         $shownotes = $shownotes[0];
     }
-    
+
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
     $shownotes = "\n" . osf_replace_timestamps("\n" . $shownotes);
-    
+
     // zuerst werden die regex-Definitionen zum erkennen von Zeilen, Tags, URLs und subitems definiert
     $pattern['zeilen']  = '/(((\d\d:)?\d\d:\d\d)(\\.\d\d\d)?)*(.+)/';
     $pattern['tags']    = '((\s#)(\S*))';
     $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
     $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
     $pattern['kaskade'] = '/^([\t ]*-+ )/';
-    
+
     // danach werden mittels des zeilen-Patterns die Shownotes in Zeilen/items geteilt
     preg_match_all($pattern['zeilen'], $shownotes, $zeilen, PREG_SET_ORDER);
-    
+
     // Zählvariablen definieren
     // i = item, lastroot = Nummer des letzten Hauptitems, kaskadei = Verschachtelungstiefe
     $i                             = 0;
     $lastroot                      = 0;
     $kaskadei                      = 0;
     $returnarray['info']['zeilen'] = 0;
-    
+
     // Zeile für Zeile durch die Shownotes gehen
     foreach ($zeilen as $zeile) {
         // Alle Daten der letzten Zeile verwerfen
         unset($newarray);
-        
+
         // Text der Zeile in Variable abspeichern und abschließendes Leerzeichen anhängen
         $text = $zeile[5] . ' ';
-        
+
         // Mittels regex tags und urls extrahieren
         preg_match_all($pattern['tags'], $text, $tags, PREG_PATTERN_ORDER);
         preg_match_all($pattern['urls'], $text, $urls, PREG_PATTERN_ORDER);
         preg_match_all($pattern['urls2'], $text, $urls2, PREG_PATTERN_ORDER);
-        
+
         // array mit URLs im format <url> mit array mit URLs im format  url  zusammenführen
         $urls = array_merge($urls[2], $urls2[2]);
-        
+
         // Zeit und Text in Array zur weitergabe speichern
         $newarray['time'] = $zeile[1];
-        $newarray['text'] = trim(htmlentities(preg_replace(array(
+        $newarray['text'] = trim(preg_replace('/\s&quot;/', ' &#8222;', preg_replace('/&quot;\s/', '&#8221; ', ' '.htmlentities(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
             $pattern['urls2']
@@ -337,7 +337,7 @@ function osf_parser($shownotes, $data) {
             '',
             '',
             ''
-        ), $zeile[5]), ENT_QUOTES, 'UTF-8'));
+        ), $zeile[5]), ENT_QUOTES, 'UTF-8').' ')));
         $newarray['orig'] = trim(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
@@ -347,7 +347,7 @@ function osf_parser($shownotes, $data) {
             '',
             ''
         ), $zeile[5]));
-        
+
         // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
         $newarray['chapter'] = false;
         if (count($tags[2]) > 0) {
@@ -387,7 +387,7 @@ function osf_parser($shownotes, $data) {
                 $newarray['chapter'] = true;
             }
         }
-        
+
         // Wenn URLs vorhanden sind, auch diese im Array speichern
         if (count($urls) > 0) {
             $purls = array();
@@ -397,7 +397,7 @@ function osf_parser($shownotes, $data) {
             $newarray['urls']   = $purls;
             $newarray['tags'][] = 'link';
         }
-        
+
         // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
         if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
             if (isset($newarray['tags'])) {
@@ -413,37 +413,37 @@ function osf_parser($shownotes, $data) {
                     unset($newarray);
                 }
             }
-            
-            
+
+
             // Verschachtelungstiefe hochzählen
             ++$kaskadei;
         }
-        
+
         // Wenn die Zeile keine Verschachtelung darstellt
         else {
             if ((osf_specialtags($newarray['tags'], $specialtags)) || ($exportall == 'true')) {
                 // Daten auf oberster ebene einfügen
                 $returnarray['export'][$i] = $newarray;
-                
+
                 // Nummer des letzten Objekts auf oberster ebene auf akutelle Item Nummer setzen
                 $lastroot = $i;
-                
+
                 // Verschachtelungstiefe auf 0 setzen
                 $kaskadei = 0;
             } else {
                 unset($newarray);
             }
         }
-        
+
         // Item Nummer hochzählen
         ++$i;
     }
-    
+
     // Zusatzinformationen im Array abspeichern (Zeilenzahl, Zeichenlänge und Hash der Shownotes)
     $returnarray['info']['zeilen']  = $i;
     $returnarray['info']['zeichen'] = strlen($shownotes);
     $returnarray['info']['hash']    = md5($shownotes);
-    
+
     // Rückgabe der geparsten Daten
     return $returnarray;
 }
@@ -481,7 +481,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         } else {
             $subtext .= ' class="' . $tagtext . '"';
         }
-        
+
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
@@ -522,11 +522,11 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                         } else {
                             $time = $array[$arraykeys[$i]]['time'];
                         }
-                        
+
                         if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
                             $returnstring .= ''; //add code, which should inserted between chapters
                         }
-                        
+
                         $returnstring .= '<dt data-time="' . osf_convert_time($time) . '">' . $time . '</dt>' . "\n" . '<dd>';
                         if (isset($array[$arraykeys[$i]]['urls'][0])) {
                             $returnstring .= '<strong';
@@ -579,7 +579,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
             }
         }
     }
-    
+
     $returnstring .= '</dl>' . "\n";
     return str_replace(',</dd>', '</dd>', $returnstring);
 }
