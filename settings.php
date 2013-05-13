@@ -169,7 +169,7 @@ function shownotes_css_css() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.0.5</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.0.6</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.0.5
+ * @version 0.0.6
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.0.5
+Version: 0.0.6
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -109,8 +109,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
         }
         if($tags == "") {
             $fullmode = 'true';
+            $fullint  = 2;
             $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote podcast news');
         } else {
+            $fullint  = 1;
             $tags = explode(' ', $tags);
         }
         
@@ -132,9 +134,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
         if($export_mode == 'anycast') {
-            $export     = osf_export_anycast($shownotesArray['export'], 1);
+            $export     = osf_export_anycast($shownotesArray['export'], $fullint);
         } elseif($export_mode == 'wikigeeks') {
-            $export     = osf_export_wikigeeks($shownotesArray['export'], 1);
+            $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
         }
     }
     return $export;
@@ -540,7 +542,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                             $returnstring .= '>' . $text . '</strong><div class="osf_items"> ' . "\n";
                         }
                         if (isset($array[$arraykeys[$i]]['subitems'])) {
-                            for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
+                            for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
                                     if (((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) {
                                         if (($full == 2) && (osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
