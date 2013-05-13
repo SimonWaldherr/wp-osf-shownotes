@@ -50,6 +50,12 @@ function shownotes_register_settings() {
                 'tags' => 'choose export tags'
             )
         ),
+        'import' => array(
+            'title' => 'Import Shownotes',
+            'fields' => array(
+                'baseurl' => 'ShowPad Base URL'
+            )
+        ),
         'css' => array(
             'title' => 'Include Standard CSS',
             'fields' => array(
@@ -89,7 +95,7 @@ function shownotes_affiliate_amazon() {
         $options['affiliate_amazon'] = "";
     }
     print "<input id='affiliate_amazon' name='shownotes_options[affiliate_amazon]' 
-    value='" . $options['affiliate_amazon'] . "' style='width:8em;' />";
+    value='" . $options['affiliate_amazon'] . "' style='width:8em;' /> <i> e.g.: shownot.es-21</i>";
 }
 
 function shownotes_affiliate_thomann() {
@@ -98,7 +104,7 @@ function shownotes_affiliate_thomann() {
         $options['affiliate_thomann'] = "";
     }
     print "<input id='affiliate_thomann' name='shownotes_options[affiliate_thomann]' 
-    value='" . $options['affiliate_thomann'] . "' style='width:8em;' />";
+    value='" . $options['affiliate_thomann'] . "' style='width:8em;' /> <i> e.g.: 93439</i>";
 }
 
 function shownotes_affiliate_tradedoubler() {
@@ -107,7 +113,7 @@ function shownotes_affiliate_tradedoubler() {
         $options['affiliate_tradedoubler'] = "";
     }
     print "<input id='affiliate_tradedoubler' name='shownotes_options[affiliate_tradedoubler]' 
-    value='" . $options['affiliate_tradedoubler'] . "' style='width:8em;' />";
+    value='" . $options['affiliate_tradedoubler'] . "' style='width:8em;' /> <i> e.g.: 16248286</i>";
 }
 
 function shownotes_completeness_fullmode() {
@@ -133,13 +139,22 @@ function shownotes_export_mode() {
     print "<select/>";
 }
 
+function shownotes_import_baseurl() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['import_baseurl'])) {
+        $options['import_baseurl'] = "";
+    }
+    print "<input id='import_baseurl' name='shownotes_options[import_baseurl]' 
+    value='" . $options['import_baseurl'] . "' style='width:18em;' /> <i>&nbsp; enter \$\$\$ at Episode ID Position &nbsp;(e.g.: http://tools.shownot.es/showpadapi/?podcast=nsfw-&episode=\$\$\$)</i>";
+}
+
 function shownotes_export_tags() {
     $options = get_option('shownotes_options');
     if (!isset($options['export_tags'])) {
         $options['export_tags'] = "";
     }
     print "<input id='export_tags' name='shownotes_options[export_tags]' 
-    value='" . $options['export_tags'] . "' style='width:8em;' /> &nbsp; split by space &nbsp;(leave empty to export all tags)";
+    value='" . $options['export_tags'] . "' style='width:18em;' /> <i>&nbsp; split by space &nbsp;(leave empty to export all tags)</i>";
 }
 
 function shownotes_css_css() {
@@ -154,7 +169,7 @@ function shownotes_css_css() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.0.3</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.0.5</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.0.3
+ * @version 0.0.5
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.0.3
+Version: 0.0.5
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -28,8 +28,14 @@ function add_shownotes_textarea($post) {
     } else {
         $shownotes = '';
     }
+    $baseurl = '';
+    $baseurlstring = '';
+    if (isset($options['import_baseurl'])) {
+        $baseurl = $options['import_baseurl'];
+        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    }
     
-    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p><p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes()" value="Import"><script>function importShownotes () {alert(document.getElementById("importId").value+"' . $options['import_baseurl'] . '");}</script></div>';
+    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
 
 function save_shownotes() {
@@ -94,21 +100,16 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $tradedoubler = '16248286';
         }
         
-        /*
-        if (isset($options['completeness_fullmode'])) {
-            $fullmode = $options['completeness_fullmode'];
-        } else {
-            $fullmode = 'true';
-        }*/
-        
         $fullmode = 'false';
-        $tags = '';
+        
         if(isset($options['export_tags'])) {
             $tags = trim($options['export_tags']);
+        } else {
+            $tags = '';
         }
         if($tags == "") {
             $fullmode = 'true';
-            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote');
+            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote podcast news');
         } else {
             $tags = explode(' ', $tags);
         }
@@ -147,6 +148,17 @@ function shownotesshortcode_add_styles() {
         wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
     }
 }
+function shownotesshortcode_add_scripts() {
+    wp_enqueue_script( 
+        'importPad', 
+        plugins_url('static/importPad.js', __FILE__), 
+        array(), '0.0.1', false
+    );
+}
+if (is_admin()) {
+    add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
+}
+
 add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
 function osf_specialtags($needles, $haystack) {
@@ -241,7 +253,7 @@ function osf_replace_timestamps($shownotes) {
     // Durchsucht die Shownotes nach Zeitangaben (UNIX-Timestamp) und übergibt sie an die Funktion osf_time_from_timestamp()
     global $osf_starttime;
     preg_match_all('/\n[0-9]{9,15}/', $shownotes, $unixtimestamps);
-    $osf_starttime = $unixtimestamps[0][0];
+    $osf_starttime = @$unixtimestamps[0][0];
     $regexTS       = array(
         '/\n[0-9:]{9,23}/e',
         'osf_time_from_timestamp(\'\\0\')'
@@ -369,7 +381,7 @@ function osf_parser($shownotes, $data) {
                     $newarray['tags'] = $tags[2];
                 }
             }
-            if (((in_array("Chapter", $newarray['tags'])) || (in_array("chapter", $newarray['tags']))) && ($newarray['time'] != '')) {
+            if (((@in_array("Chapter", $newarray['tags'])) || (@in_array("chapter", $newarray['tags']))) && ($newarray['time'] != '')) {
                 $newarray['chapter'] = true;
             }
         }
@@ -538,10 +550,10 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         }
                                         if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                                             if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
-                                                if (!$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
+                                                if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
                                                     $tagtext .= ' osf_substart';
                                                 }
-                                                if (!$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
+                                                if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
                                                     $tagtext .= ' osf_subend';
                                                 }
                                             }
