@@ -80,7 +80,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $options   = get_option('shownotes_options');
 
     extract(shortcode_atts(array(
-       'export_mode' => $options['export_mode']
+       'main_mode' => $options['main_mode']
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
@@ -102,8 +102,8 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         $fullmode = 'false';
 
-        if(isset($options['export_tags'])) {
-            $tags = trim($options['export_tags']);
+        if(isset($options['main_tags'])) {
+            $tags = trim($options['main_tags']);
         } else {
             $tags = '';
         }
@@ -133,11 +133,11 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($export_mode == 'block style') {
+        if($main_mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
-        } elseif($export_mode == 'list style') {
+        } elseif($main_mode == 'list style') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
-        } elseif($export_mode == 'glossary') {
+        } elseif($main_mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         }
     }
@@ -148,7 +148,7 @@ add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
     $options = get_option('shownotes_options');
-    if(isset($options['css_css'])) {
+    if(isset($options['main_css'])) {
         wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
     }
 }

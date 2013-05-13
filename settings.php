@@ -35,31 +35,20 @@ function shownotes_register_settings() {
     $ps = 'shownotes';
 
     $settings = array(
+        'main' => array(
+            'title' => 'General Settings',
+            'fields' => array(
+                'mode' => 'select style',
+                'tags' => 'choose main tags',
+                'css'  => 'include CSS'
+            )
+        ),
         'affiliate' => array(
             'title' => 'Affiliate',
             'fields' => array(
                 'amazon' => 'Amazon',
                 'thomann' => 'Thomann',
                 'tradedoubler' => 'Tradedoubler'
-            )
-        ),
-        'export' => array(
-            'title' => 'Export mode',
-            'fields' => array(
-                'mode' => 'select style',
-                'tags' => 'choose export tags'
-            )
-        ),
-        'import' => array(
-            'title' => 'Import Shownotes',
-            'fields' => array(
-                'baseurl' => 'ShowPad Base URL'
-            )
-        ),
-        'css' => array(
-            'title' => 'Include Standard CSS',
-            'fields' => array(
-                'css' => 'include CSS'
             )
         ),
         'info' => array(
@@ -94,8 +83,7 @@ function shownotes_affiliate_amazon() {
     if (!isset($options['affiliate_amazon'])) {
         $options['affiliate_amazon'] = "";
     }
-    print "<input id='affiliate_amazon' name='shownotes_options[affiliate_amazon]' 
-    value='" . $options['affiliate_amazon'] . "' style='width:8em;' /> <i> e.g.: shownot.es-21</i>";
+    print '<input id="affiliate_amazon" name="shownotes_options[affiliate_amazon]" value="' . $options['affiliate_amazon'] . '" style="width:8em;" /> <i> e.g.: shownot.es-21</i>';
 }
 
 function shownotes_affiliate_thomann() {
@@ -103,8 +91,7 @@ function shownotes_affiliate_thomann() {
     if (!isset($options['affiliate_thomann'])) {
         $options['affiliate_thomann'] = "";
     }
-    print "<input id='affiliate_thomann' name='shownotes_options[affiliate_thomann]' 
-    value='" . $options['affiliate_thomann'] . "' style='width:8em;' /> <i> e.g.: 93439</i>";
+    print '<input id="affiliate_thomann" name="shownotes_options[affiliate_thomann]" value="' . $options['affiliate_thomann'] . '" style="width:8em;" /> <i> e.g.: 93439</i>';
 }
 
 function shownotes_affiliate_tradedoubler() {
@@ -112,8 +99,7 @@ function shownotes_affiliate_tradedoubler() {
     if (!isset($options['affiliate_tradedoubler'])) {
         $options['affiliate_tradedoubler'] = "";
     }
-    print "<input id='affiliate_tradedoubler' name='shownotes_options[affiliate_tradedoubler]' 
-    value='" . $options['affiliate_tradedoubler'] . "' style='width:8em;' /> <i> e.g.: 16248286</i>";
+    print '<input id="affiliate_tradedoubler" name="shownotes_options[affiliate_tradedoubler]" value="' . $options['affiliate_tradedoubler'] . '" style="width:8em;" /> <i> e.g.: 16248286</i>';
 }
 
 function shownotes_completeness_fullmode() {
@@ -121,16 +107,15 @@ function shownotes_completeness_fullmode() {
     $checked = "";
     if (isset($options['completeness_fullmode']))
         $checked = "checked ";
-    print "<input id='completeness_fullmode' name='shownotes_options[completeness_fullmode]' 
-    $checked type='checkbox' value='1' />";
+    print '<input id="completeness_fullmode" name="shownotes_options[completeness_fullmode]" ' . $checked . ' type="checkbox" value="1" />';
 }
 
-function shownotes_export_mode() {
+function shownotes_main_mode() {
     $options = get_option('shownotes_options');
     $modes = array('block style', 'list style', 'glossary');
-    print '<select id="export_mode" name="shownotes_options[export_mode]">';
+    print '<select id="main_mode" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
-        if($mode == $options['export_mode']) {
+        if($mode == $options['main_mode']) {
             print '<option selected>'.$mode.'</option>';
         } else {
             print '<option>'.$mode.'</option>';
@@ -144,26 +129,23 @@ function shownotes_import_baseurl() {
     if (!isset($options['import_baseurl'])) {
         $options['import_baseurl'] = "";
     }
-    print "<input id='import_baseurl' name='shownotes_options[import_baseurl]' 
-    value='" . $options['import_baseurl'] . "' style='width:18em;' /> <i>&nbsp; enter \$\$\$ at Episode ID Position &nbsp;(e.g.: http://tools.shownot.es/showpadapi/?podcast=nsfw-&episode=\$\$\$)</i>";
+    print '<input id="import_baseurl" name="shownotes_options[import_baseurl]" value="' . $options['import_baseurl'] . '" style="width:18em;" /> <i>&nbsp; enter \$\$\$ at Episode ID Position &nbsp;(e.g.: http://tools.shownot.es/showpadapi/?podcast=nsfw-&episode=\$\$\$)</i>';
 }
 
-function shownotes_export_tags() {
+function shownotes_main_tags() {
     $options = get_option('shownotes_options');
-    if (!isset($options['export_tags'])) {
-        $options['export_tags'] = "";
+    if (!isset($options['main_tags'])) {
+        $options['main_tags'] = "";
     }
-    print "<input id='export_tags' name='shownotes_options[export_tags]' 
-    value='" . $options['export_tags'] . "' style='width:18em;' /> <i>&nbsp; split by space &nbsp;(leave empty to export all tags)</i>";
+    print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
 }
 
-function shownotes_css_css() {
+function shownotes_main_css() {
     $options = get_option('shownotes_options');
-    $checked = "";
-    if (isset($options['css_css']))
+    $checked = '';
+    if (isset($options['main_css']))
         $checked = "checked ";
-    print "<input id='css_css' name='shownotes_options[css_css]' 
-    $checked type='checkbox' value='1' />";
+    print '<input id="main_css" name="shownotes_options[main_css]" ' . $checked . ' type="checkbox" value="1" /> <i>&nbsp; adds icons for tags</i>';
 }
 
 function shownotes_info() {
