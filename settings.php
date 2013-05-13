@@ -46,7 +46,8 @@ function shownotes_register_settings() {
         'export' => array(
             'title' => 'Export mode',
             'fields' => array(
-                'mode' => 'select style'
+                'mode' => 'select style',
+                'tags' => 'choose export tags'
             )
         ),
         'css' => array(
@@ -130,6 +131,15 @@ function shownotes_export_mode() {
         }
     }
     print "<select/>";
+}
+
+function shownotes_export_tags() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['export_tags'])) {
+        $options['export_tags'] = "";
+    }
+    print "<input id='export_tags' name='shownotes_options[export_tags]' 
+    value='" . $options['export_tags'] . "' style='width:8em;' /> &nbsp; split by space &nbsp;(leave empty to export all tags)";
 }
 
 function shownotes_css_css() {

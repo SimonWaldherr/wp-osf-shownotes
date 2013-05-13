@@ -18,6 +18,7 @@ License: MIT License
 include_once('settings.php');
 
 function add_shownotes_textarea($post) {
+    $options   = get_option('shownotes_options');
     $post_id = @get_the_ID();
     if ($post_id == '') {
         return;
@@ -28,7 +29,7 @@ function add_shownotes_textarea($post) {
         $shownotes = '';
     }
     
-    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p></div>';
+    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p><p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes()" value="Import"><script>function importShownotes () {alert(document.getElementById("importId").value+"' . $options['import_baseurl'] . '");}</script></div>';
 }
 
 function save_shownotes() {
@@ -92,10 +93,24 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } else {
             $tradedoubler = '16248286';
         }
+        
+        /*
         if (isset($options['completeness_fullmode'])) {
             $fullmode = $options['completeness_fullmode'];
         } else {
             $fullmode = 'true';
+        }*/
+        
+        $fullmode = 'false';
+        $tags = '';
+        if(isset($options['export_tags'])) {
+            $tags = trim($options['export_tags']);
+        }
+        if($tags == "") {
+            $fullmode = 'true';
+            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote');
+        } else {
+            $tags = explode(' ', $tags);
         }
         
         $data = array(
@@ -103,7 +118,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'thomann' => $thomann,
             'tradedoubler' => $tradedoubler,
             'fullmode' => $fullmode,
-            'tags' => explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote')
+            'tags' => $tags
         );
         
         //undo fucking wordpress shortcode cripple shit
