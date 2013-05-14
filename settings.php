@@ -46,8 +46,8 @@ function shownotes_register_settings() {
         'affiliate' => array(
             'title' => 'Affiliate',
             'fields' => array(
-                'amazon' => 'Amazon',
-                'thomann' => 'Thomann',
+                'amazon' => 'Amazon.de',
+                'thomann' => 'Thomann.de',
                 'tradedoubler' => 'Tradedoubler'
             )
         ),

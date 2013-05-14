@@ -79,8 +79,15 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $shownotes = get_post_meta($post_id, 'shownotes', true);
     $options   = get_option('shownotes_options');
 
+    if(isset($options['main_tags'])) {
+        $default_tags = trim($options['main_tags']);
+    } else {
+        $default_tags = '';
+    }
+
     extract(shortcode_atts(array(
-       'main_mode' => $options['main_mode']
+       'mode' => $options['main_mode'],
+       'tags' => $default_tags
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
@@ -102,15 +109,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         $fullmode = 'false';
 
-        if(isset($options['main_tags'])) {
-            $tags = trim($options['main_tags']);
-        } else {
-            $tags = '';
-        }
         if($tags == "") {
             $fullmode = 'true';
             $fullint  = 2;
-            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote podcast news');
+            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
         } else {
             $fullint  = 1;
             $tags = explode(' ', $tags);
@@ -133,11 +135,11 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($main_mode == 'block style') {
+        if($mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
-        } elseif($main_mode == 'list style') {
+        } elseif($mode == 'list style') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
-        } elseif($main_mode == 'glossary') {
+        } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         }
     }
@@ -397,7 +399,6 @@ function osf_parser($shownotes, $data) {
                 $purls[] = osf_affiliate_generator($url, $data);
             }
             $newarray['urls']   = $purls;
-            $newarray['tags'][] = 'link';
         }
 
         // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
@@ -707,10 +708,10 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
     );
     $arraykeys     = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
-        if (($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) {
+        if ((@$array[$arraykeys[$i]]['chapter']) || ((@$full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
             if (isset($array[$arraykeys[$i]]['subitems'])) {
                 for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
-                    if (($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && ($array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
+                    if ((@$array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && (@$array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
                         foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
                             if (($showtags[0] == '') || (array_search($tag, $showtags) !== false)) {
                                 $linksbytag[$tag][$ii]['url']  = $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0];
