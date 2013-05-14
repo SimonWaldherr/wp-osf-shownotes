@@ -150,7 +150,19 @@ function osf_shownotes_shortcode($atts, $content = "") {
     return $export;
 }
 
+function md_shownotes_shortcode($atts, $content = "") {
+    $post_id   = get_the_ID();
+    $shownotes = get_post_meta($post_id, 'shownotes', true);
+    if ($content !== "") {
+        $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
+    } else {
+        $shownotesString = "\n" . $shownotes . "\n";
+    }
+    return markdown($shownotesString);
+}
+
 add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
+add_shortcode('md-shownotes', 'md_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
     $options = get_option('shownotes_options');
@@ -773,6 +785,82 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
     }
 
     return $return;
+}
+
+function markdown($string) {
+    $rules['sm'] = array(
+        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')', // headers
+        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>', // links
+        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>', // bold emphasis
+        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>', // bold
+        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>', // emphasis
+        '/\~\~(.*?)\~\~/' => '<del>\1</del>', // del
+        '/\:\"(.*?)\"\:/' => '<q>\1</q>', // quote
+        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')', // unorderd lists
+        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')', // orderd lists
+        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')', // blockquotes
+        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')', // add paragraphs
+        '/<\/ul>(\s*)<ul>/' => '', // fix extra ul
+        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>', // fix extra ul li
+        '/(<\/ul><\/li><li><ul>)/' => '', // fix extra ul li
+        '/<\/ol><ol>/' => '', // fix extra ol
+        '/<\/blockquote><blockquote>/' => "\n" // fix extra blockquote
+    );
+
+    $rules['html'] = array(
+        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ', // url
+        '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a href="mailto:\2">\2</a> ', // mail
+        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>' // phone
+    );
+
+    $rules['tweet'] = array(
+        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ', // user
+        '((#)(\S*))' => ' <a href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
+    );
+
+
+    $string = "\n" . $string . "\n";
+
+    foreach ($rules as $rule) {
+        foreach ($rule as $regex => $replace) {
+            //echo "$regex<br>";
+            $string = preg_replace($regex, $replace, $string);
+        }
+    }
+
+    return trim($string);
+}
+
+function md_header($chars, $header) {
+    $level = strlen($chars);
+    return sprintf('<h%d>%s</h%d>', $level, trim($header), $level);
+}
+
+function md_ulist($count, $string) {
+    $return = trim($string);
+    $count  = strlen($count);
+    $i      = 0;
+    while ($i != $count) {
+        $return = '<ul><li>' . $return . '</li></ul>';
+        ++$i;
+    }
+    return $return;
+}
+
+function md_olist($item) {
+    return sprintf("\n<ol>\n\t<li>%s</li>\n</ol>", trim($item));
+}
+
+function md_blockquote($item) {
+    return sprintf("\n<blockquote>%s</blockquote>", trim($item));
+}
+
+function md_paragraph($line) {
+    $trimmed = trim($line);
+    if (strpos($trimmed, '<') === 0) {
+        return $line;
+    }
+    return sprintf("\n<p>%s</p>\n", $trimmed);
 }
 
 ?>
