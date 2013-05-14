@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.0.1  
 Tested up to: 3.4  
-Stable tag: 0.0.6  
+Stable tag: 0.1.0  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -42,6 +42,14 @@ it's easy to write
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
 ##Changelog
+
+###0.1.0
+* typographically correct quotation marks
+* export modes renamed and glossary added
+* show shownoter (as new output mode)
+* tags selectable via attributes
+* markdown support added
+* settings rearranged
 
 ###0.0.6
 * small fullmode fix

@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.0.6
+ * @version 0.1.0
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.0.6
+Version: 0.1.0
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -31,10 +31,7 @@ function add_shownotes_textarea($post) {
     $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
     
-    //if (isset($options['import_baseurl'])) {
-    //$baseurl = $options['import_baseurl'];
     $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
-    //}
 
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
@@ -305,13 +302,8 @@ function osf_get_shownoter($header) {
             }
         }
         if($profileurl == false) {
-            //$shownoterArray[$i]['name'] = $name;
-            //$shownoterArray[$i]['str']  = '<span>'.$name.'</span>';
             $shownoterArray[$i]  = '<span>'.$name.'</span>';
         } else {
-            //$shownoterArray[$i]['name'] = $name;
-            //$shownoterArray[$i]['url']  = $profileurl;
-            //$shownoterArray[$i]['str']  = '<a href="'.$profileurl.'">'.$name.'</a>';
             $shownoterArray[$i]  = '<a href="'.$profileurl.'">'.$name.'</a>';
         }
         $i++;
@@ -325,7 +317,6 @@ function osf_parser($shownotes, $data) {
     $exportall   = $data['fullmode'];
 
     // entferne alle Angaben vorm und im Header
-    
     $splitAt = false;
     if(strpos($shownotes, '/HEADER')) {
         $splitAt = '/HEADER';
