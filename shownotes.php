@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 /*
@@ -10,15 +10,17 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.0
+Version: 0.1.1
 Author URI: http://waldherr.eu
 License: MIT License
 */
 
 include_once('settings.php');
 
+$shownotes_options = get_option('shownotes_options');
+
 function add_shownotes_textarea($post) {
-    $options   = get_option('shownotes_options');
+    global $shownotes_options;
     $post_id = @get_the_ID();
     if ($post_id == '') {
         return;
@@ -72,35 +74,35 @@ add_action('save_post', 'save_shownotes');
 
 
 function osf_shownotes_shortcode($atts, $content = "") {
+    global $shownotes_options;
     $export    = '';
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
-    $options   = get_option('shownotes_options');
 
-    if(isset($options['main_tags'])) {
-        $default_tags = trim($options['main_tags']);
+    if(isset($shownotes_options['main_tags'])) {
+        $default_tags = trim($shownotes_options['main_tags']);
     } else {
         $default_tags = '';
     }
 
     extract(shortcode_atts(array(
-       'mode' => $options['main_mode'],
+       'mode' => $shownotes_options['main_mode'],
        'tags' => $default_tags
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
-        if (isset($options['affiliate_amazon']) && $options['affiliate_amazon'] != '') {
-            $amazon = $options['affiliate_amazon'];
+        if (isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') {
+            $amazon = $shownotes_options['affiliate_amazon'];
         } else {
             $amazon = 'shownot.es-21';
         }
-        if (isset($options['affiliate_thomann']) && $options['affiliate_thomann'] != '') {
-            $thomann = $options['affiliate_thomann'];
+        if (isset($shownotes_options['affiliate_thomann']) && $shownotes_options['affiliate_thomann'] != '') {
+            $thomann = $shownotes_options['affiliate_thomann'];
         } else {
             $thomann = '93439';
         }
-        if (isset($options['affiliate_tradedoubler']) && $options['affiliate_tradedoubler'] != '') {
-            $tradedoubler = $options['affiliate_tradedoubler'];
+        if (isset($shownotes_options['affiliate_tradedoubler']) && $shownotes_options['affiliate_tradedoubler'] != '') {
+            $tradedoubler = $shownotes_options['affiliate_tradedoubler'];
         } else {
             $tradedoubler = '16248286';
         }
@@ -159,13 +161,25 @@ function md_shownotes_shortcode($atts, $content = "") {
     return markdown($shownotesString);
 }
 
-add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
-add_shortcode('md-shownotes', 'md_shownotes_shortcode');
+if(!isset($shownotes_options['main_osf_shortcode'])) {
+    $osf_shortcode = 'osf-shownotes';
+} else {
+    $osf_shortcode = $shownotes_options['main_osf_shortcode'];
+}
+
+if(!isset($shownotes_options['main_md_shortcode'])) {
+    $md_shortcode = 'md-shownotes';
+} else {
+    $md_shortcode = $shownotes_options['main_md_shortcode'];
+}
+
+add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
+add_shortcode($md_shortcode, 'md_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
-    $options = get_option('shownotes_options');
-    if(isset($options['main_css'])) {
-        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
+    global $shownotes_options;
+    if(isset($shownotes_options['main_css'])) {
+        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.1.1');
     }
 }
 function shownotesshortcode_add_scripts() {
@@ -282,7 +296,7 @@ function osf_replace_timestamps($shownotes) {
 }
 
 function osf_get_shownoter($header) {
-    preg_match_all('/Shownoter:([ \S]*)/', $header, $shownoter);
+    preg_match_all('/Shownoter|Zusammengetragen[^:]*:([ \S]*)/', $header, $shownoter);
     $shownoter = explode(',', $shownoter[1][0]);
     $shownoterArray = array();
     $i = 0;
@@ -567,7 +581,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
         if (isset($array[$arraykeys[0]])) {
             if (isset($arraykeys[$i])) {
                 if (isset($array[$arraykeys[$i]])) {
-                    if (($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) {
+                    if ((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
                         $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
                         if (strpos($array[$arraykeys[$i]]['time'], '.')) {
                             $time = explode('.', $array[$arraykeys[$i]]['time']);
@@ -597,7 +611,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                         if (isset($array[$arraykeys[$i]]['subitems'])) {
                             for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                                    if (((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) {
+                                    if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2))||($full == 2)) {
                                         if (($full == 2) && (osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                                             $tagtext = ' osf_spoiler';
                                         } else {
