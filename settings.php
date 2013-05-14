@@ -38,9 +38,12 @@ function shownotes_register_settings() {
         'main' => array(
             'title' => 'General Settings',
             'fields' => array(
-                'mode' => 'select output mode',
+                'mode' => 'select template',
                 'tags' => 'only include items with certain tags',
-                'css'  => 'include tag-icons CSS'
+                'delimiter' => 'choose string between items in block',
+                'css'  => 'include tag-icons CSS',
+                'osf_shortcode' => 'choose your osf shortcode',
+                'md_shortcode'  => 'choose your md shortcode'
             )
         ),
         'affiliate' => array(
@@ -140,6 +143,14 @@ function shownotes_main_tags() {
     print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
 }
 
+function shownotes_main_delimiter() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_delimiter'])) {
+        $options['main_delimiter'] = ' &nbsp;';
+    }
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . $options['main_delimiter'] . '" style="width:8em;" />';
+}
+
 function shownotes_main_css() {
     $options = get_option('shownotes_options');
     $checked = '';
@@ -148,10 +159,26 @@ function shownotes_main_css() {
     print '<input id="main_css" name="shownotes_options[main_css]" ' . $checked . ' type="checkbox" value="1" /> <i>&nbsp; adds icons for tags</i>';
 }
 
+function shownotes_main_osf_shortcode() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_osf_shortcode'])) {
+        $options['main_osf_shortcode'] = 'osf-shownotes';
+    }
+    print '<input id="main_osf_shortcode" name="shownotes_options[main_osf_shortcode]" value="' . $options['main_osf_shortcode'] . '" style="width:8em;" />';
+}
+
+function shownotes_main_md_shortcode() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_md_shortcode'])) {
+        $options['main_md_shortcode'] = 'md-shownotes';
+    }
+    print '<input id="main_md_shortcode" name="shownotes_options[main_md_shortcode]" value="' . $options['main_md_shortcode'] . '" style="width:8em;" />';
+}
+
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.1.0</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.1.1</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

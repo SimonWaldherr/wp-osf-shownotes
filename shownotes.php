@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 /*
@@ -10,15 +10,17 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.0
+Version: 0.1.1
 Author URI: http://waldherr.eu
 License: MIT License
 */
 
 include_once('settings.php');
 
+$shownotes_options = get_option('shownotes_options');
+
 function add_shownotes_textarea($post) {
-    $options   = get_option('shownotes_options');
+    global $shownotes_options;
     $post_id = @get_the_ID();
     if ($post_id == '') {
         return;
@@ -72,42 +74,42 @@ add_action('save_post', 'save_shownotes');
 
 
 function osf_shownotes_shortcode($atts, $content = "") {
+    global $shownotes_options;
     $export    = '';
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
-    $options   = get_option('shownotes_options');
 
-    if(isset($options['main_tags'])) {
-        $default_tags = trim($options['main_tags']);
+    if(isset($shownotes_options['main_tags'])) {
+        $default_tags = trim($shownotes_options['main_tags']);
     } else {
         $default_tags = '';
     }
 
     extract(shortcode_atts(array(
-       'mode' => $options['main_mode'],
+       'mode' => $shownotes_options['main_mode'],
        'tags' => $default_tags
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
-        if (isset($options['affiliate_amazon']) && $options['affiliate_amazon'] != '') {
-            $amazon = $options['affiliate_amazon'];
+        if (isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') {
+            $amazon = $shownotes_options['affiliate_amazon'];
         } else {
             $amazon = 'shownot.es-21';
         }
-        if (isset($options['affiliate_thomann']) && $options['affiliate_thomann'] != '') {
-            $thomann = $options['affiliate_thomann'];
+        if (isset($shownotes_options['affiliate_thomann']) && $shownotes_options['affiliate_thomann'] != '') {
+            $thomann = $shownotes_options['affiliate_thomann'];
         } else {
             $thomann = '93439';
         }
-        if (isset($options['affiliate_tradedoubler']) && $options['affiliate_tradedoubler'] != '') {
-            $tradedoubler = $options['affiliate_tradedoubler'];
+        if (isset($shownotes_options['affiliate_tradedoubler']) && $shownotes_options['affiliate_tradedoubler'] != '') {
+            $tradedoubler = $shownotes_options['affiliate_tradedoubler'];
         } else {
             $tradedoubler = '16248286';
         }
 
         $fullmode = 'false';
 
-        if($tags == "") {
+        if($tags == '') {
             $fullmode = 'true';
             $fullint  = 2;
             $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
@@ -140,7 +142,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         } elseif($mode == 'shownoter') {
-            $export     = osf_get_shownoter($shownotesArray['header']);
+            if(isset($shownotesArray['header'])) {
+                $export = osf_get_shownoter($shownotesArray['header']);
+            }
         }
     }
     return $export;
@@ -157,13 +161,25 @@ function md_shownotes_shortcode($atts, $content = "") {
     return markdown($shownotesString);
 }
 
-add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
-add_shortcode('md-shownotes', 'md_shownotes_shortcode');
+if(!isset($shownotes_options['main_osf_shortcode'])) {
+    $osf_shortcode = 'osf-shownotes';
+} else {
+    $osf_shortcode = $shownotes_options['main_osf_shortcode'];
+}
+
+if(!isset($shownotes_options['main_md_shortcode'])) {
+    $md_shortcode = 'md-shownotes';
+} else {
+    $md_shortcode = $shownotes_options['main_md_shortcode'];
+}
+
+add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
+add_shortcode($md_shortcode, 'md_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
-    $options = get_option('shownotes_options');
-    if(isset($options['main_css'])) {
-        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
+    global $shownotes_options;
+    if(isset($shownotes_options['main_css'])) {
+        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.1.1');
     }
 }
 function shownotesshortcode_add_scripts() {
@@ -280,8 +296,8 @@ function osf_replace_timestamps($shownotes) {
 }
 
 function osf_get_shownoter($header) {
-    preg_match_all('/Shownoter:([ \S]*)/', $header, $shownoter);
-    $shownoter = explode(',', $shownoter[1][0]);
+    preg_match_all('/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/', $header, $shownoter);
+    $shownoter = explode(',', $shownoter[2][0]);
     $shownoterArray = array();
     $i = 0;
     foreach($shownoter as $person) {
@@ -324,13 +340,15 @@ function osf_parser($shownotes, $data) {
     }
     
     if($splitAt != false) {
-        $shownotes = explode($splitAt, $shownotes);
+        $shownotes = explode($splitAt, $shownotes, 2);
+    } else {
+        $shownotes = preg_split("/(\n\s*\n)/", $shownotes,2);
+    }
+    if(count($shownotes)!=1) {
         $header    = $shownotes[0];
         $shownotes = $shownotes[1];
     } else {
-        $shownotes = split('/([(\d{9,})(\d+\u003A\d+\u003A\d+(\u002E\d*)?)]+\s\S)/i', $shownotes);
-        $header    = $shownotes[0];
-        $shownotes = $shownotes[1];
+        $shownotes = $shownotes[0];
     }
 
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
@@ -447,15 +465,19 @@ function osf_parser($shownotes, $data) {
                         $newarray['subtext']                                     = true;
                         $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
                     } else {
-                        //$newarray['subtext'] = true;
                         $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
                     }
                 } else {
                     unset($newarray);
                 }
+            } elseif ($exportall == 'true') {
+                if (preg_match($pattern['kaskade'], $zeile[0])) {
+                    $newarray['subtext']                                     = true;
+                    $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
+                } else {
+                    $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
+                }
             }
-
-
             // Verschachtelungstiefe hochzählen
             ++$kaskadei;
         }
@@ -475,7 +497,6 @@ function osf_parser($shownotes, $data) {
                 unset($newarray);
             }
         }
-
         // Item Nummer hochzählen
         ++$i;
     }
@@ -484,8 +505,9 @@ function osf_parser($shownotes, $data) {
     $returnarray['info']['zeilen']  = $i;
     $returnarray['info']['zeichen'] = strlen($shownotes);
     $returnarray['info']['hash']    = md5($shownotes);
-    $returnarray['header']          = $header;
-
+    if(isset($header)) {
+        $returnarray['header']      = $header;
+    }
     // Rückgabe der geparsten Daten
     return $returnarray;
 }
@@ -503,6 +525,15 @@ function osf_checktags($needles, $haystack) {
 }
 
 function osf_metacast_textgen($subitem, $tagtext, $text) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
+    if(trim($text) == "") {
+        return '';
+    }
     $subtext = '';
     if (isset($subitem['urls'][0])) {
         $tagtext .= ' osf_link';
@@ -527,7 +558,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</a> &nbsp;';
+        $subtext .= '>' . trim($text) . '</a>';
     } else {
         $subtext .= '<span';
         if ($tagtext != '') {
@@ -536,13 +567,20 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</span> &nbsp;';
+        $subtext .= '>' . trim($text) . '</span>';
     }
+    $subtext .= $delimiter;
     return $subtext;
 }
 
 //HTML export im anyca.st style
 function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spoiler')) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
     $returnstring  = '<dl>';
     $filterpattern = array(
         '(\s(#)(\S*))',
@@ -555,7 +593,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
         if (isset($array[$arraykeys[0]])) {
             if (isset($arraykeys[$i])) {
                 if (isset($array[$arraykeys[$i]])) {
-                    if (($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) {
+                    if ((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
                         $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
                         if (strpos($array[$arraykeys[$i]]['time'], '.')) {
                             $time = explode('.', $array[$arraykeys[$i]]['time']);
@@ -585,8 +623,8 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                         if (isset($array[$arraykeys[$i]]['subitems'])) {
                             for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                                    if (((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) {
-                                        if (($full == 2) && (osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
+                                    if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2))||($full == 2)) {
+                                        if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                                             $tagtext = ' osf_spoiler';
                                         } else {
                                             $tagtext = '';
@@ -600,7 +638,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                                     $tagtext .= ' osf_subend';
                                                 }
                                             }
-                                            if (is_array($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
+                                            if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
                                                 foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
                                                     $tagtext .= ' osf_' . $tag;
                                                 }
@@ -622,6 +660,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
     }
 
     $returnstring .= '</dl>' . "\n";
+    $returnstring = str_replace($delimiter.'</div>', '</div>', $returnstring);
     return str_replace(',</dd>', '</dd>', $returnstring);
 }
 
