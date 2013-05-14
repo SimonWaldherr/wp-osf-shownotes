@@ -525,6 +525,15 @@ function osf_checktags($needles, $haystack) {
 }
 
 function osf_metacast_textgen($subitem, $tagtext, $text) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
+    if(trim($text) == "") {
+        return '';
+    }
     $subtext = '';
     if (isset($subitem['urls'][0])) {
         $tagtext .= ' osf_link';
@@ -549,7 +558,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</a> &nbsp;';
+        $subtext .= '>' . trim($text) . '</a>';
     } else {
         $subtext .= '<span';
         if ($tagtext != '') {
@@ -558,13 +567,20 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
-        $subtext .= '>' . trim($text) . '</span> &nbsp;';
+        $subtext .= '>' . trim($text) . '</span>';
     }
+    $subtext .= $delimiter;
     return $subtext;
 }
 
 //HTML export im anyca.st style
 function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spoiler')) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
     $returnstring  = '<dl>';
     $filterpattern = array(
         '(\s(#)(\S*))',
@@ -644,6 +660,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
     }
 
     $returnstring .= '</dl>' . "\n";
+    $returnstring = str_replace($delimiter.'</div>', '</div>', $returnstring);
     return str_replace(',</dd>', '</dd>', $returnstring);
 }
 

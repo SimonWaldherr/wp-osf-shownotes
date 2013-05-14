@@ -38,8 +38,9 @@ function shownotes_register_settings() {
         'main' => array(
             'title' => 'General Settings',
             'fields' => array(
-                'mode' => 'select output mode',
+                'mode' => 'select template',
                 'tags' => 'only include items with certain tags',
+                'delimiter' => 'choose string between items in block',
                 'css'  => 'include tag-icons CSS',
                 'osf_shortcode' => 'choose your osf shortcode',
                 'md_shortcode'  => 'choose your md shortcode'
@@ -140,6 +141,14 @@ function shownotes_main_tags() {
         $options['main_tags'] = "";
     }
     print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+}
+
+function shownotes_main_delimiter() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_delimiter'])) {
+        $options['main_delimiter'] = ' &nbsp;';
+    }
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . $options['main_delimiter'] . '" style="width:8em;" />';
 }
 
 function shownotes_main_css() {
