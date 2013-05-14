@@ -32,7 +32,7 @@ function add_shownotes_textarea($post) {
     }
     $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
-    
+
     $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
 
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
@@ -338,7 +338,7 @@ function osf_parser($shownotes, $data) {
     } elseif(strpos($shownotes, '/HEAD')) {
         $splitAt = '/HEAD';
     }
-    
+
     if($splitAt != false) {
         $shownotes = explode($splitAt, $shownotes, 2);
     } else {
