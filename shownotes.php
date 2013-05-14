@@ -465,11 +465,17 @@ function osf_parser($shownotes, $data) {
                         $newarray['subtext']                                     = true;
                         $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
                     } else {
-                        //$newarray['subtext'] = true;
                         $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
                     }
                 } else {
                     unset($newarray);
+                }
+            } elseif ($exportall == 'true') {
+                if (preg_match($pattern['kaskade'], $zeile[0])) {
+                    $newarray['subtext']                                     = true;
+                    $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
+                } else {
+                    $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
                 }
             }
             // Verschachtelungstiefe hochzählen
@@ -602,7 +608,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                             for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
                                     if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2))||($full == 2)) {
-                                        if (($full == 2) && (osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
+                                        if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                                             $tagtext = ' osf_spoiler';
                                         } else {
                                             $tagtext = '';
@@ -616,7 +622,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                                     $tagtext .= ' osf_subend';
                                                 }
                                             }
-                                            if (is_array($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
+                                            if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
                                                 foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
                                                     $tagtext .= ' osf_' . $tag;
                                                 }
