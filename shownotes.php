@@ -629,13 +629,17 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         } else {
                                             $tagtext = '';
                                         }
+                                        $substart = '';
+                                        $subend   = '';
                                         if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                                             if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
-                                                    $tagtext .= ' osf_substart';
+                                                    //$tagtext .= ' osf_substart';
+                                                    $substart = '(';
                                                 }
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
-                                                    $tagtext .= ' osf_subend';
+                                                    //$tagtext .= ' osf_subend';
+                                                    $subend = ')';
                                                 }
                                             }
                                             if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
@@ -647,7 +651,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         $text    = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']);
                                         $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                         $subtext = trim($subtext);
-                                        $returnstring .= $subtext;
+                                        $returnstring .= $substart.$subtext.$subend;
                                     }
                                 }
                             }
@@ -660,8 +664,18 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
     }
 
     $returnstring .= '</div>' . "\n";
-    $returnstring = str_replace($delimiter.'</div>', '</div>', $returnstring);
-    return str_replace(',</div>', '</div>', $returnstring);
+    $cleanupsearch = array($delimiter.'</div>'
+                          ,',</div>'
+                          ,$delimiter.')'
+                          ,$delimiter.'(');
+
+    $cleanupreplace = array('</div>'
+                           ,'</div>'
+                           ,') '
+                           ,' (');
+
+    $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
+    return $returnstring;
 }
 
 function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 'spoiler')) {
