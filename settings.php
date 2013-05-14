@@ -38,12 +38,12 @@ function shownotes_register_settings() {
         'main' => array(
             'title' => 'General Settings',
             'fields' => array(
-                'mode' => 'select template',
-                'tags' => 'only include items with certain tags',
-                'delimiter' => 'choose string between items in block',
-                'css'  => 'include tag-icons CSS',
-                'osf_shortcode' => 'choose your osf shortcode',
-                'md_shortcode'  => 'choose your md shortcode'
+                'mode' => 'Select template',
+                'tags' => 'Only include items with certain tags',
+                'delimiter' => 'Choose string between items in block',
+                'css'  => 'Include tag-icons CSS',
+                'osf_shortcode' => 'Choose your osf shortcode',
+                'md_shortcode'  => 'Choose your md shortcode'
             )
         ),
         'affiliate' => array(

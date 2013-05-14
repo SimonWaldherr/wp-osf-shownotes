@@ -581,7 +581,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
     } else {
         $delimiter = ' &nbsp;';
     }
-    $returnstring  = '<dl>';
+    $returnstring  = '<div>';
     $filterpattern = array(
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
@@ -606,15 +606,15 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                             $returnstring .= ''; //add code, which should inserted between chapters
                         }
 
-                        $returnstring .= '<dt data-time="' . osf_convert_time($time) . '">' . $time . '</dt>' . "\n" . '<dd>';
+                        $returnstring .= "\n" . '<div class="osf_chapterbox"><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span> ';
                         if (isset($array[$arraykeys[$i]]['urls'][0])) {
-                            $returnstring .= '<strong';
+                            $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
                             $returnstring .= '><a href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><div class="osf_items"> ' . "\n";
                         } else {
-                            $returnstring .= '<strong';
+                            $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
@@ -652,16 +652,16 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                 }
                             }
                         }
-                        $returnstring .= '</div></dd>';
+                        $returnstring .= '</div></div>';
                     }
                 }
             }
         }
     }
 
-    $returnstring .= '</dl>' . "\n";
+    $returnstring .= '</div>' . "\n";
     $returnstring = str_replace($delimiter.'</div>', '</div>', $returnstring);
-    return str_replace(',</dd>', '</dd>', $returnstring);
+    return str_replace(',</div>', '</div>', $returnstring);
 }
 
 function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 'spoiler')) {
