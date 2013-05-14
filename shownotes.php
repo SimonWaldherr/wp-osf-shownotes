@@ -109,7 +109,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         $fullmode = 'false';
 
-        if($tags == "") {
+        if($tags == '') {
             $fullmode = 'true';
             $fullint  = 2;
             $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
@@ -296,8 +296,8 @@ function osf_replace_timestamps($shownotes) {
 }
 
 function osf_get_shownoter($header) {
-    preg_match_all('/Shownoter|Zusammengetragen[^:]*:([ \S]*)/', $header, $shownoter);
-    $shownoter = explode(',', $shownoter[1][0]);
+    preg_match_all('/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/', $header, $shownoter);
+    $shownoter = explode(',', $shownoter[2][0]);
     $shownoterArray = array();
     $i = 0;
     foreach($shownoter as $person) {
@@ -340,21 +340,15 @@ function osf_parser($shownotes, $data) {
     }
     
     if($splitAt != false) {
-        $shownotes = explode($splitAt, $shownotes);
-        if(count($shownotes)!=1) {
-            $header    = $shownotes[0];
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
+        $shownotes = explode($splitAt, $shownotes, 2);
     } else {
-        $shownotes = split('/([(\d{9,})(\d+\u003A\d+\u003A\d+(\u002E\d*)?)]+\s\S)/i', $shownotes);
-        if(count($shownotes)!=1) {
-            $header    = $shownotes[0];
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
+        $shownotes = preg_split("/(\n\s*\n)/", $shownotes,2);
+    }
+    if(count($shownotes)!=1) {
+        $header    = $shownotes[0];
+        $shownotes = $shownotes[1];
+    } else {
+        $shownotes = $shownotes[0];
     }
 
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
@@ -478,8 +472,6 @@ function osf_parser($shownotes, $data) {
                     unset($newarray);
                 }
             }
-
-
             // Verschachtelungstiefe hochzählen
             ++$kaskadei;
         }
@@ -499,7 +491,6 @@ function osf_parser($shownotes, $data) {
                 unset($newarray);
             }
         }
-
         // Item Nummer hochzählen
         ++$i;
     }
@@ -511,7 +502,6 @@ function osf_parser($shownotes, $data) {
     if(isset($header)) {
         $returnarray['header']      = $header;
     }
-
     // Rückgabe der geparsten Daten
     return $returnarray;
 }
