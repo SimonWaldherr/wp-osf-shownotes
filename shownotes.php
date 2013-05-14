@@ -140,8 +140,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         } elseif($mode == 'shownoter') {
-            //var_dump($shownotesArray['header']);
-            $export     = osf_get_shownoter($shownotesArray['header']);
+            if(isset($shownotesArray['header'])) {
+                $export = osf_get_shownoter($shownotesArray['header']);
+            }
         }
     }
     return $export;
@@ -326,12 +327,20 @@ function osf_parser($shownotes, $data) {
     
     if($splitAt != false) {
         $shownotes = explode($splitAt, $shownotes);
-        $header    = $shownotes[0];
-        $shownotes = $shownotes[1];
+        if(count($shownotes)!=1) {
+            $header    = $shownotes[0];
+            $shownotes = $shownotes[1];
+        } else {
+            $shownotes = $shownotes[0];
+        }
     } else {
         $shownotes = split('/([(\d{9,})(\d+\u003A\d+\u003A\d+(\u002E\d*)?)]+\s\S)/i', $shownotes);
-        $header    = $shownotes[0];
-        $shownotes = $shownotes[1];
+        if(count($shownotes)!=1) {
+            $header    = $shownotes[0];
+            $shownotes = $shownotes[1];
+        } else {
+            $shownotes = $shownotes[0];
+        }
     }
 
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
@@ -485,7 +494,9 @@ function osf_parser($shownotes, $data) {
     $returnarray['info']['zeilen']  = $i;
     $returnarray['info']['zeichen'] = strlen($shownotes);
     $returnarray['info']['hash']    = md5($shownotes);
-    $returnarray['header']          = $header;
+    if(isset($header)) {
+        $returnarray['header']      = $header;
+    }
 
     // Rückgabe der geparsten Daten
     return $returnarray;
