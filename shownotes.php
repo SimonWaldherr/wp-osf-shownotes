@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.0.6
+ * @version 0.1.0
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.0.6
+Version: 0.1.0
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -28,13 +28,11 @@ function add_shownotes_textarea($post) {
     } else {
         $shownotes = '';
     }
-    $baseurl = '';
+    $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
-    if (isset($options['import_baseurl'])) {
-        $baseurl = $options['import_baseurl'];
-        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
-    }
     
+    $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
 
@@ -49,7 +47,7 @@ function save_shownotes() {
     } else {
         $new = '';
     }
-    
+
     $shownotes = $old;
     if ($new && $new != $old) {
         update_post_meta($post_id, 'shownotes', $new);
@@ -78,11 +76,18 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, 'shownotes', true);
     $options   = get_option('shownotes_options');
-    
+
+    if(isset($options['main_tags'])) {
+        $default_tags = trim($options['main_tags']);
+    } else {
+        $default_tags = '';
+    }
+
     extract(shortcode_atts(array(
-       'export_mode' => $options['export_mode']
+       'mode' => $options['main_mode'],
+       'tags' => $default_tags
     ), $atts));
-    
+
     if (($content !== "") || ($shownotes)) {
         if (isset($options['affiliate_amazon']) && $options['affiliate_amazon'] != '') {
             $amazon = $options['affiliate_amazon'];
@@ -99,23 +104,18 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } else {
             $tradedoubler = '16248286';
         }
-        
+
         $fullmode = 'false';
-        
-        if(isset($options['export_tags'])) {
-            $tags = trim($options['export_tags']);
-        } else {
-            $tags = '';
-        }
+
         if($tags == "") {
             $fullmode = 'true';
             $fullint  = 2;
-            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote podcast news');
+            $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
         } else {
             $fullint  = 1;
             $tags = explode(' ', $tags);
         }
-        
+
         $data = array(
             'amazon' => $amazon,
             'thomann' => $thomann,
@@ -123,30 +123,46 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'fullmode' => $fullmode,
             'tags' => $tags
         );
-        
+
         //undo fucking wordpress shortcode cripple shit
         if ($content !== "") {
             $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
         } else {
             $shownotesString = "\n" . $shownotes . "\n";
         }
-        
+
         //parse shortcode as osf string to html
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($export_mode == 'anycast') {
+        if($mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
-        } elseif($export_mode == 'wikigeeks') {
+        } elseif($mode == 'list style') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
+        } elseif($mode == 'glossary') {
+            $export     = osf_export_glossary($shownotesArray['export'], $fullint);
+        } elseif($mode == 'shownoter') {
+            $export     = osf_get_shownoter($shownotesArray['header']);
         }
     }
     return $export;
 }
 
+function md_shownotes_shortcode($atts, $content = "") {
+    $post_id   = get_the_ID();
+    $shownotes = get_post_meta($post_id, 'shownotes', true);
+    if ($content !== "") {
+        $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
+    } else {
+        $shownotesString = "\n" . $shownotes . "\n";
+    }
+    return markdown($shownotesString);
+}
+
 add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
+add_shortcode('md-shownotes', 'md_shownotes_shortcode');
 
 function shownotesshortcode_add_styles() {
     $options = get_option('shownotes_options');
-    if(isset($options['css_css'])) {
+    if(isset($options['main_css'])) {
         wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.0.1');
     }
 }
@@ -181,7 +197,7 @@ function osf_affiliate_generator($url, $data) {
     $amazon       = $data['amazon'];
     $thomann      = $data['thomann'];
     $tradedoubler = $data['tradedoubler'];
-    
+
     if ((strstr($url, 'www.amazon.de/') && strstr($url, 'p/')) && ($amazon != '')) {
         if (strstr($url, "dp/")) {
             $pid = substr(strstr($url, "dp/"), 3, 10);
@@ -214,7 +230,7 @@ function osf_affiliate_generator($url, $data) {
     } else {
         $purl = $url;
     }
-    
+
     return $purl;
 }
 
@@ -263,73 +279,99 @@ function osf_replace_timestamps($shownotes) {
     return preg_replace($regexTS[0], $regexTS[1], $shownotes);
 }
 
+function osf_get_shownoter($header) {
+    preg_match_all('/Shownoter:([ \S]*)/', $header, $shownoter);
+    $shownoter = explode(',', $shownoter[1][0]);
+    $shownoterArray = array();
+    $i = 0;
+    foreach($shownoter as $person) {
+        $profileurl = false;
+        $name       = '';
+        $urlmatch   = preg_match_all('/\<(http[\S]+)\>/', $person, $url);
+        if($urlmatch != 0 && $urlmatch != false) {
+            $profileurl = $url[1][0];
+            $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $person));
+        } else {
+            if(strpos($person, '@') != false) {
+                preg_match_all('/@([\S]+)/', $person, $url);
+                $profileurl = 'https://twitter.com/'.$url[1][0];
+                $name = trim($url[1][0]);
+            } else {
+                $name = trim($person);
+            }
+        }
+        if($profileurl == false) {
+            $shownoterArray[$i]  = '<span>'.$name.'</span>';
+        } else {
+            $shownoterArray[$i]  = '<a href="'.$profileurl.'">'.$name.'</a>';
+        }
+        $i++;
+    }
+    return implode(', ', $shownoterArray);
+}
+
 function osf_parser($shownotes, $data) {
     // Diese Funktion ist das Herzstück des OSF-Parsers
     $specialtags = $data['tags'];
     $exportall   = $data['fullmode'];
-    
+
     // entferne alle Angaben vorm und im Header
-    $shownotes = explode('/HEADER', $shownotes);
-    if (count($shownotes) != 1) {
-        if (strlen($shownotes[1]) > 42) {
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
-    } else {
-        $shownotes = $shownotes[0];
+    $splitAt = false;
+    if(strpos($shownotes, '/HEADER')) {
+        $splitAt = '/HEADER';
+    } elseif(strpos($shownotes, '/HEAD')) {
+        $splitAt = '/HEAD';
     }
     
-    $shownotes = explode('/HEAD', $shownotes);
-    if (count($shownotes) != 1) {
-        if (strlen($shownotes[1]) > 42) {
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
+    if($splitAt != false) {
+        $shownotes = explode($splitAt, $shownotes);
+        $header    = $shownotes[0];
+        $shownotes = $shownotes[1];
     } else {
-        $shownotes = $shownotes[0];
+        $shownotes = split('/([(\d{9,})(\d+\u003A\d+\u003A\d+(\u002E\d*)?)]+\s\S)/i', $shownotes);
+        $header    = $shownotes[0];
+        $shownotes = $shownotes[1];
     }
-    
+
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
     $shownotes = "\n" . osf_replace_timestamps("\n" . $shownotes);
-    
+
     // zuerst werden die regex-Definitionen zum erkennen von Zeilen, Tags, URLs und subitems definiert
     $pattern['zeilen']  = '/(((\d\d:)?\d\d:\d\d)(\\.\d\d\d)?)*(.+)/';
     $pattern['tags']    = '((\s#)(\S*))';
     $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
     $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
     $pattern['kaskade'] = '/^([\t ]*-+ )/';
-    
+
     // danach werden mittels des zeilen-Patterns die Shownotes in Zeilen/items geteilt
     preg_match_all($pattern['zeilen'], $shownotes, $zeilen, PREG_SET_ORDER);
-    
+
     // Zählvariablen definieren
     // i = item, lastroot = Nummer des letzten Hauptitems, kaskadei = Verschachtelungstiefe
     $i                             = 0;
     $lastroot                      = 0;
     $kaskadei                      = 0;
     $returnarray['info']['zeilen'] = 0;
-    
+
     // Zeile für Zeile durch die Shownotes gehen
     foreach ($zeilen as $zeile) {
         // Alle Daten der letzten Zeile verwerfen
         unset($newarray);
-        
+
         // Text der Zeile in Variable abspeichern und abschließendes Leerzeichen anhängen
         $text = $zeile[5] . ' ';
-        
+
         // Mittels regex tags und urls extrahieren
         preg_match_all($pattern['tags'], $text, $tags, PREG_PATTERN_ORDER);
         preg_match_all($pattern['urls'], $text, $urls, PREG_PATTERN_ORDER);
         preg_match_all($pattern['urls2'], $text, $urls2, PREG_PATTERN_ORDER);
-        
+
         // array mit URLs im format <url> mit array mit URLs im format  url  zusammenführen
         $urls = array_merge($urls[2], $urls2[2]);
-        
+
         // Zeit und Text in Array zur weitergabe speichern
         $newarray['time'] = $zeile[1];
-        $newarray['text'] = trim(htmlentities(preg_replace(array(
+        $newarray['text'] = trim(preg_replace('/\s&quot;/', ' &#8222;', preg_replace('/&quot;\s/', '&#8221; ', ' '.htmlentities(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
             $pattern['urls2']
@@ -337,7 +379,7 @@ function osf_parser($shownotes, $data) {
             '',
             '',
             ''
-        ), $zeile[5]), ENT_QUOTES, 'UTF-8'));
+        ), $zeile[5]), ENT_QUOTES, 'UTF-8').' ')));
         $newarray['orig'] = trim(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
@@ -347,7 +389,7 @@ function osf_parser($shownotes, $data) {
             '',
             ''
         ), $zeile[5]));
-        
+
         // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
         $newarray['chapter'] = false;
         if (count($tags[2]) > 0) {
@@ -387,7 +429,7 @@ function osf_parser($shownotes, $data) {
                 $newarray['chapter'] = true;
             }
         }
-        
+
         // Wenn URLs vorhanden sind, auch diese im Array speichern
         if (count($urls) > 0) {
             $purls = array();
@@ -395,9 +437,8 @@ function osf_parser($shownotes, $data) {
                 $purls[] = osf_affiliate_generator($url, $data);
             }
             $newarray['urls']   = $purls;
-            $newarray['tags'][] = 'link';
         }
-        
+
         // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
         if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
             if (isset($newarray['tags'])) {
@@ -413,37 +454,38 @@ function osf_parser($shownotes, $data) {
                     unset($newarray);
                 }
             }
-            
-            
+
+
             // Verschachtelungstiefe hochzählen
             ++$kaskadei;
         }
-        
+
         // Wenn die Zeile keine Verschachtelung darstellt
         else {
             if ((osf_specialtags($newarray['tags'], $specialtags)) || ($exportall == 'true')) {
                 // Daten auf oberster ebene einfügen
                 $returnarray['export'][$i] = $newarray;
-                
+
                 // Nummer des letzten Objekts auf oberster ebene auf akutelle Item Nummer setzen
                 $lastroot = $i;
-                
+
                 // Verschachtelungstiefe auf 0 setzen
                 $kaskadei = 0;
             } else {
                 unset($newarray);
             }
         }
-        
+
         // Item Nummer hochzählen
         ++$i;
     }
-    
+
     // Zusatzinformationen im Array abspeichern (Zeilenzahl, Zeichenlänge und Hash der Shownotes)
     $returnarray['info']['zeilen']  = $i;
     $returnarray['info']['zeichen'] = strlen($shownotes);
     $returnarray['info']['hash']    = md5($shownotes);
-    
+    $returnarray['header']          = $header;
+
     // Rückgabe der geparsten Daten
     return $returnarray;
 }
@@ -481,7 +523,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         } else {
             $subtext .= ' class="' . $tagtext . '"';
         }
-        
+
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
@@ -500,7 +542,6 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
 }
 
 //HTML export im anyca.st style
-
 function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spoiler')) {
     $returnstring  = '<dl>';
     $filterpattern = array(
@@ -522,11 +563,11 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                         } else {
                             $time = $array[$arraykeys[$i]]['time'];
                         }
-                        
+
                         if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
                             $returnstring .= ''; //add code, which should inserted between chapters
                         }
-                        
+
                         $returnstring .= '<dt data-time="' . osf_convert_time($time) . '">' . $time . '</dt>' . "\n" . '<dd>';
                         if (isset($array[$arraykeys[$i]]['urls'][0])) {
                             $returnstring .= '<strong';
@@ -579,7 +620,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
             }
         }
     }
-    
+
     $returnstring .= '</dl>' . "\n";
     return str_replace(',</dd>', '</dd>', $returnstring);
 }
@@ -671,6 +712,145 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
 
     $returnstring .= '</div>' . "\n";
     return $returnstring;
+}
+
+function osf_glossarysort($a, $b) {
+    $ax = str_split(strtolower(trim($a['text'])));
+    $bx = str_split(strtolower(trim($b['text'])));
+
+    if (count($ax) < count($bx)) {
+        for ($i = 0; $i <= count($bx); $i++) {
+            if (ord($ax[$i]) != ord($bx[$i])) {
+                return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+            }
+        }
+    } else {
+        for ($i = 0; $i <= count($ax); $i++) {
+            if (ord($ax[$i]) != ord($bx[$i])) {
+                return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+            }
+        }
+    }
+    return 0;
+}
+
+//HTML export as glossary
+function osf_export_glossary($array, $showtags = array(0 => '')) {
+    $linksbytag = array();
+
+    $filterpattern = array(
+        '(\s(#)(\S*))',
+        '(\<((http(|s)://[\S#?-]{0,128})>))',
+        '(\s+((http(|s)://[\S#?-]{0,128})\s))',
+        '(^ *-*)'
+    );
+    $arraykeys     = array_keys($array);
+    for ($i = 0; $i <= count($array); $i++) {
+        if ((@$array[$arraykeys[$i]]['chapter']) || ((@$full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
+            if (isset($array[$arraykeys[$i]]['subitems'])) {
+                for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
+                    if ((@$array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && (@$array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
+                        foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
+                            if (($showtags[0] == '') || (array_search($tag, $showtags) !== false)) {
+                                $linksbytag[$tag][$ii]['url']  = $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0];
+                                $linksbytag[$tag][$ii]['text'] = $array[$arraykeys[$i]]['subitems'][$ii]['text'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $return = '';
+
+    foreach ($linksbytag as $tagname => $content) {
+        $return .= '<h1>' . $tagname . '</h1>' . "\n";
+        $return .= '<ol>' . "\n";
+        usort($content, "osf_glossarysort");
+        foreach ($content as $item) {
+            $return .= '<li><a href="' . $item['url'] . '">' . $item['text'] . '</a></li>' . "\n";
+        }
+        $return .= '</ol>' . "\n";
+    }
+
+    return $return;
+}
+
+function markdown($string) {
+    $rules['sm'] = array(
+        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')', // headers
+        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>', // links
+        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>', // bold emphasis
+        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>', // bold
+        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>', // emphasis
+        '/\~\~(.*?)\~\~/' => '<del>\1</del>', // del
+        '/\:\"(.*?)\"\:/' => '<q>\1</q>', // quote
+        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')', // unorderd lists
+        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')', // orderd lists
+        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')', // blockquotes
+        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')', // add paragraphs
+        '/<\/ul>(\s*)<ul>/' => '', // fix extra ul
+        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>', // fix extra ul li
+        '/(<\/ul><\/li><li><ul>)/' => '', // fix extra ul li
+        '/<\/ol><ol>/' => '', // fix extra ol
+        '/<\/blockquote><blockquote>/' => "\n" // fix extra blockquote
+    );
+
+    $rules['html'] = array(
+        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ', // url
+        '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a href="mailto:\2">\2</a> ', // mail
+        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>' // phone
+    );
+
+    $rules['tweet'] = array(
+        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ', // user
+        '((#)(\S*))' => ' <a href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
+    );
+
+
+    $string = "\n" . $string . "\n";
+
+    foreach ($rules as $rule) {
+        foreach ($rule as $regex => $replace) {
+            //echo "$regex<br>";
+            $string = preg_replace($regex, $replace, $string);
+        }
+    }
+
+    return trim($string);
+}
+
+function md_header($chars, $header) {
+    $level = strlen($chars);
+    return sprintf('<h%d>%s</h%d>', $level, trim($header), $level);
+}
+
+function md_ulist($count, $string) {
+    $return = trim($string);
+    $count  = strlen($count);
+    $i      = 0;
+    while ($i != $count) {
+        $return = '<ul><li>' . $return . '</li></ul>';
+        ++$i;
+    }
+    return $return;
+}
+
+function md_olist($item) {
+    return sprintf("\n<ol>\n\t<li>%s</li>\n</ol>", trim($item));
+}
+
+function md_blockquote($item) {
+    return sprintf("\n<blockquote>%s</blockquote>", trim($item));
+}
+
+function md_paragraph($line) {
+    $trimmed = trim($line);
+    if (strpos($trimmed, '<') === 0) {
+        return $line;
+    }
+    return sprintf("\n<p>%s</p>\n", $trimmed);
 }
 
 ?>

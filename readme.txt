@@ -1,10 +1,10 @@
 === Shownotes ===
 Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
-Tags: shownotes, osf, markup
+Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 0.0.6
+Stable tag: 0.1.0
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -46,8 +46,17 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 1. Options
 2. Result (Anycast style)
 3. Result (Wikigeeks style)
+4. Meta box for OSF/MD input
 
 == Changelog ==
+
+= 0.1.0 =
+* typographically correct quotation marks
+* export modes renamed and glossary added
+* show shownoter (as new output mode)
+* tags selectable via attributes
+* markdown support added
+* settings rearranged
 
 = 0.0.6 =
 * small fullmode fix
@@ -65,6 +74,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.1.0 =
+many important improvements
 
 = 0.0.6 =
 fullmode fixed
