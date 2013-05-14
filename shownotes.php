@@ -738,7 +738,6 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                             }
                             $subtext .= '>' . trim($text) . '</span></li> ';
                         }
-                        //$subtext = str_replace("\n, ", ", ", $subtext);
                         $subtext = trim($subtext);
                         $returnstring .= $subtext;
                         ++$subitemi;
@@ -818,32 +817,32 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
 
 function markdown($string) {
     $rules['sm'] = array(
-        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')', // headers
-        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>', // links
-        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>', // bold emphasis
-        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>', // bold
-        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>', // emphasis
-        '/\~\~(.*?)\~\~/' => '<del>\1</del>', // del
-        '/\:\"(.*?)\"\:/' => '<q>\1</q>', // quote
-        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')', // unorderd lists
-        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')', // orderd lists
-        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')', // blockquotes
-        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')', // add paragraphs
-        '/<\/ul>(\s*)<ul>/' => '', // fix extra ul
-        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>', // fix extra ul li
-        '/(<\/ul><\/li><li><ul>)/' => '', // fix extra ul li
-        '/<\/ol><ol>/' => '', // fix extra ol
-        '/<\/blockquote><blockquote>/' => "\n" // fix extra blockquote
+        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')',               // headers
+        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>',        // links
+        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>',      // bold emphasis
+        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>',                  // bold
+        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>',                         // emphasis
+        '/\~\~(.*?)\~\~/' => '<del>\1</del>',                           // del
+        '/\:\"(.*?)\"\:/' => '<q>\1</q>',                               // quote
+        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')',  // unorderd lists
+        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')',                     // orderd lists
+        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')',                    // blockquotes
+        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')',                   // add paragraphs
+        '/<\/ul>(\s*)<ul>/' => '',                                      // fix extra ul
+        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>',            // fix extra ul li
+        '/(<\/ul><\/li><li><ul>)/' => '',                               // fix extra ul li
+        '/<\/ol><ol>/' => '',                                           // fix extra ol
+        '/<\/blockquote><blockquote>/' => "\n"                          // fix extra blockquote
     );
 
     $rules['html'] = array(
-        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ', // url
+        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ',                                 // url
         '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a href="mailto:\2">\2</a> ', // mail
-        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>' // phone
+        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>'                                  // phone
     );
 
     $rules['tweet'] = array(
-        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ', // user
+        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ',                         // user
         '((#)(\S*))' => ' <a href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
     );
 
@@ -852,7 +851,6 @@ function markdown($string) {
 
     foreach ($rules as $rule) {
         foreach ($rule as $regex => $replace) {
-            //echo "$regex<br>";
             $string = preg_replace($regex, $replace, $string);
         }
     }
