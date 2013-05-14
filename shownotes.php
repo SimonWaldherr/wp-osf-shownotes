@@ -28,12 +28,13 @@ function add_shownotes_textarea($post) {
     } else {
         $shownotes = '';
     }
-    $baseurl = '';
+    $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
-    if (isset($options['import_baseurl'])) {
-        $baseurl = $options['import_baseurl'];
-        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
-    }
+    
+    //if (isset($options['import_baseurl'])) {
+    //$baseurl = $options['import_baseurl'];
+    $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    //}
 
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
@@ -141,6 +142,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
         } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
+        } elseif($mode == 'shownoter') {
+            //var_dump($shownotesArray['header']);
+            $export     = osf_get_shownoter($shownotesArray['header']);
         }
     }
     return $export;
@@ -267,32 +271,64 @@ function osf_replace_timestamps($shownotes) {
     return preg_replace($regexTS[0], $regexTS[1], $shownotes);
 }
 
+function osf_get_shownoter($header) {
+    preg_match_all('/Shownoter:([ \S]*)/', $header, $shownoter);
+    $shownoter = explode(',', $shownoter[1][0]);
+    $shownoterArray = array();
+    $i = 0;
+    foreach($shownoter as $person) {
+        $profileurl = false;
+        $name       = '';
+        $urlmatch   = preg_match_all('/\<(http[\S]+)\>/', $person, $url);
+        if($urlmatch != 0 && $urlmatch != false) {
+            $profileurl = $url[1][0];
+            $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $person));
+        } else {
+            if(strpos($person, '@') != false) {
+                preg_match_all('/@([\S]+)/', $person, $url);
+                $profileurl = 'https://twitter.com/'.$url[1][0];
+                $name = trim($url[1][0]);
+            } else {
+                $name = trim($person);
+            }
+        }
+        if($profileurl == false) {
+            //$shownoterArray[$i]['name'] = $name;
+            //$shownoterArray[$i]['str']  = '<span>'.$name.'</span>';
+            $shownoterArray[$i]  = '<span>'.$name.'</span>';
+        } else {
+            //$shownoterArray[$i]['name'] = $name;
+            //$shownoterArray[$i]['url']  = $profileurl;
+            //$shownoterArray[$i]['str']  = '<a href="'.$profileurl.'">'.$name.'</a>';
+            $shownoterArray[$i]  = '<a href="'.$profileurl.'">'.$name.'</a>';
+        }
+        $i++;
+    }
+    return implode(', ', $shownoterArray);
+}
+
 function osf_parser($shownotes, $data) {
     // Diese Funktion ist das Herzstück des OSF-Parsers
     $specialtags = $data['tags'];
     $exportall   = $data['fullmode'];
 
     // entferne alle Angaben vorm und im Header
-    $shownotes = explode('/HEADER', $shownotes);
-    if (count($shownotes) != 1) {
-        if (strlen($shownotes[1]) > 42) {
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
-    } else {
-        $shownotes = $shownotes[0];
+    
+    $splitAt = false;
+    if(strpos($shownotes, '/HEADER')) {
+        $splitAt = '/HEADER';
+    } elseif(strpos($shownotes, '/HEAD')) {
+        $splitAt = '/HEAD';
     }
-
-    $shownotes = explode('/HEAD', $shownotes);
-    if (count($shownotes) != 1) {
-        if (strlen($shownotes[1]) > 42) {
-            $shownotes = $shownotes[1];
-        } else {
-            $shownotes = $shownotes[0];
-        }
+    
+    if($splitAt != false) {
+        $shownotes = explode($splitAt, $shownotes);
+        $header    = $shownotes[0];
+        $shownotes = $shownotes[1];
     } else {
-        $shownotes = $shownotes[0];
+        $shownotes = split('/([(\d{9,})(\d+\u003A\d+\u003A\d+(\u002E\d*)?)]+\s\S)/i', $shownotes);
+        $header    = $shownotes[0];
+        $shownotes = $shownotes[1];
     }
 
     // wandle Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
@@ -446,6 +482,7 @@ function osf_parser($shownotes, $data) {
     $returnarray['info']['zeilen']  = $i;
     $returnarray['info']['zeichen'] = strlen($shownotes);
     $returnarray['info']['hash']    = md5($shownotes);
+    $returnarray['header']          = $header;
 
     // Rückgabe der geparsten Daten
     return $returnarray;
@@ -503,7 +540,6 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
 }
 
 //HTML export im anyca.st style
-
 function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spoiler')) {
     $returnstring  = '<dl>';
     $filterpattern = array(

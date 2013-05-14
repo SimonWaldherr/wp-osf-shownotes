@@ -38,9 +38,9 @@ function shownotes_register_settings() {
         'main' => array(
             'title' => 'General Settings',
             'fields' => array(
-                'mode' => 'select style',
-                'tags' => 'choose main tags',
-                'css'  => 'include CSS'
+                'mode' => 'select output mode',
+                'tags' => 'only include items with certain tags',
+                'css'  => 'include tag-icons CSS'
             )
         ),
         'affiliate' => array(
@@ -112,7 +112,7 @@ function shownotes_completeness_fullmode() {
 
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('block style', 'list style', 'glossary');
+    $modes = array('block style', 'list style', 'glossary', 'shownoter');
     print '<select id="main_mode" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
