@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.1
+ * @version 0.1.2
  */
 
 /*
@@ -10,14 +10,26 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.1
+Version: 0.1.2
 Author URI: http://waldherr.eu
 License: MIT License
 */
 
 include_once('settings.php');
-
 $shownotes_options = get_option('shownotes_options');
+
+function shownotesshortcode_add_styles() {
+    global $shownotes_options;
+    if(!isset($shownotes_options['css_id'])) {return false;}
+    if($shownotes_options['css_id'] == '0') {return false;}
+    
+    $css_styles = array(''
+                       ,'style_one'
+                       ,'style_two');
+    
+    wp_enqueue_style( 'pwpfont', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.2' );
+}
+add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
 function add_shownotes_textarea($post) {
     global $shownotes_options;
@@ -176,12 +188,6 @@ if(!isset($shownotes_options['main_md_shortcode'])) {
 add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
 add_shortcode($md_shortcode, 'md_shownotes_shortcode');
 
-function shownotesshortcode_add_styles() {
-    global $shownotes_options;
-    if(isset($shownotes_options['main_css'])) {
-        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.1.1');
-    }
-}
 function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
@@ -192,8 +198,6 @@ function shownotesshortcode_add_scripts() {
 if (is_admin()) {
     add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
 }
-
-add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
 function osf_specialtags($needles, $haystack) {
     // Eine Funktion um Tags zu filtern

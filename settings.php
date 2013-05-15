@@ -36,26 +36,26 @@ function shownotes_register_settings() {
 
     $settings = array(
         'main' => array(
-            'title' => 'General Settings',
+            'title'  => 'General Settings',
             'fields' => array(
-                'mode' => 'Select template',
-                'tags' => 'Only include items with certain tags',
-                'delimiter' => 'Choose string between items in block',
-                'css'  => 'Include tag-icons CSS',
+                'mode'          => 'Select template',
+                'tags'          => 'Only include items with certain tags',
+                'delimiter'     => 'Choose string between items in block',
+                'css_id'        => 'Select a CSS-File',
                 'osf_shortcode' => 'Choose your osf shortcode',
                 'md_shortcode'  => 'Choose your md shortcode'
             )
         ),
         'affiliate' => array(
-            'title' => 'Affiliate',
+            'title'  => 'Affiliate',
             'fields' => array(
-                'amazon' => 'Amazon.de',
-                'thomann' => 'Thomann.de',
+                'amazon'       => 'Amazon.de',
+                'thomann'      => 'Thomann.de',
                 'tradedoubler' => 'Tradedoubler'
             )
         ),
         'info' => array(
-            'title' => 'Information',
+            'title'    => 'Information',
             'function' => true
         )
     );
@@ -123,6 +123,22 @@ function shownotes_main_mode() {
         } else {
             print '<option>'.$mode.'</option>';
         }
+    }
+    print "<select/>";
+}
+
+function shownotes_main_css_id() {
+    $options  = get_option('shownotes_options');
+    $cssnames = array('none', 'icons after items', 'icons before items');
+    $i = 0;
+    print '<select id="css_id" name="shownotes_options[css_id]">';
+    foreach($cssnames as $cssname) {
+        if($i == $options['css_id']) {
+            print '<option value="'.$i.'" selected>'.$cssname.'</option>';
+        } else {
+            print '<option value="'.$i.'">'.$cssname.'</option>';
+        }
+        ++$i;
     }
     print "<select/>";
 }
