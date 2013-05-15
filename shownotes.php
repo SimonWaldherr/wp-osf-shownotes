@@ -27,7 +27,7 @@ function shownotesshortcode_add_styles() {
                        ,'style_one'
                        ,'style_two');
     
-    wp_enqueue_style( 'pwpfont', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.2' );
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.2' );
 }
 add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
