@@ -50,8 +50,12 @@ function getPadList(select, podcastname) {
       }
     }
   };
+  if(podcastname.trim() == "*") {
+    requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/';
+  } else {
+    requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search='+podcastname.trim();
+  }
   
-  requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search='+podcastname.trim();
   ajax.open("GET", requrl, true);
   ajax.send();
 }
