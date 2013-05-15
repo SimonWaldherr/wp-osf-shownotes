@@ -178,7 +178,7 @@ function shownotes_main_css() {
 function shownotes_main_osf_shortcode() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_osf_shortcode'])) {
-        $options['main_osf_shortcode'] = 'osf-shownotes';
+        $options['main_osf_shortcode'] = 'shownotes';
     }
     print '<input id="main_osf_shortcode" name="shownotes_options[main_osf_shortcode]" value="' . $options['main_osf_shortcode'] . '" style="width:8em;" />';
 }

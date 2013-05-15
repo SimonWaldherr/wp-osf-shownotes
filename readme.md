@@ -18,7 +18,7 @@ This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blo
 
 1. Upload the `shownotes-shortcode` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress
-3. Use the `[osf-shownotes]` shortcode in your post or page with the options on the front page.
+3. Use the `[shownotes]` shortcode in your post or page with the options on the front page.
 4. Visit the options page
 
 ##Frequently Asked Questions

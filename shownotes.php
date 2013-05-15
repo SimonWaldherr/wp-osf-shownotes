@@ -174,7 +174,7 @@ function md_shownotes_shortcode($atts, $content = "") {
 }
 
 if(!isset($shownotes_options['main_osf_shortcode'])) {
-    $osf_shortcode = 'osf-shownotes';
+    $osf_shortcode = 'shownotes';
 } else {
     $osf_shortcode = $shownotes_options['main_osf_shortcode'];
 }
@@ -186,6 +186,7 @@ if(!isset($shownotes_options['main_md_shortcode'])) {
 }
 
 add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
+add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 add_shortcode($md_shortcode, 'md_shownotes_shortcode');
 
 function shownotesshortcode_add_scripts() {
