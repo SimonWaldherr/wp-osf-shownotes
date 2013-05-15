@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -18,7 +18,7 @@ This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blo
 
 1. Upload the `shownotes-shortcode` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress
-3. Use the `[osf-shownotes]` shortcode in your post or page with the options on the front page.
+3. Use the `[shownotes]` shortcode in your post or page with the options on the front page.
 4. Visit the options page
 
 == Frequently Asked Questions ==
@@ -49,6 +49,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 4. Meta box for OSF/MD input
 
 == Changelog ==
+
+= 0.1.2 =
+* better templates
+* various improvements
+* load Pads and Padcontent via AJAX
+* better shortcode handling
 
 = 0.1.1 =
 * delimiter changeable
@@ -81,6 +87,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.1.2 =
+pad import and output templates improved
 
 = 0.1.1 =
 more adjustment options and tiny improvements

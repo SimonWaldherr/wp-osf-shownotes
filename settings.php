@@ -36,26 +36,32 @@ function shownotes_register_settings() {
 
     $settings = array(
         'main' => array(
-            'title' => 'General Settings',
+            'title'  => 'General Settings',
             'fields' => array(
-                'mode' => 'select template',
-                'tags' => 'only include items with certain tags',
-                'delimiter' => 'choose string between items in block',
-                'css'  => 'include tag-icons CSS',
-                'osf_shortcode' => 'choose your osf shortcode',
-                'md_shortcode'  => 'choose your md shortcode'
+                'mode'          => 'Select template',
+                'tags'          => 'Only include items with certain tags',
+                'delimiter'     => 'Choose string between items in block',
+                'css_id'        => 'Select a CSS-File',
+                'osf_shortcode' => 'Choose your osf shortcode',
+                'md_shortcode'  => 'Choose your md shortcode'
+            )
+        ),
+        'import' => array(
+            'title' => 'Import from ShowPad',
+            'fields' => array(
+                'podcastname' => 'Podcast Name'
             )
         ),
         'affiliate' => array(
-            'title' => 'Affiliate',
+            'title'  => 'Affiliate',
             'fields' => array(
-                'amazon' => 'Amazon.de',
-                'thomann' => 'Thomann.de',
+                'amazon'       => 'Amazon.de',
+                'thomann'      => 'Thomann.de',
                 'tradedoubler' => 'Tradedoubler'
             )
         ),
         'info' => array(
-            'title' => 'Information',
+            'title'    => 'Information',
             'function' => true
         )
     );
@@ -127,12 +133,28 @@ function shownotes_main_mode() {
     print "<select/>";
 }
 
-function shownotes_import_baseurl() {
-    $options = get_option('shownotes_options');
-    if (!isset($options['import_baseurl'])) {
-        $options['import_baseurl'] = "";
+function shownotes_main_css_id() {
+    $options  = get_option('shownotes_options');
+    $cssnames = array('none', 'icons after items', 'icons before items');
+    $i = 0;
+    print '<select id="css_id" name="shownotes_options[css_id]">';
+    foreach($cssnames as $cssname) {
+        if($i == $options['css_id']) {
+            print '<option value="'.$i.'" selected>'.$cssname.'</option>';
+        } else {
+            print '<option value="'.$i.'">'.$cssname.'</option>';
+        }
+        ++$i;
     }
-    print '<input id="import_baseurl" name="shownotes_options[import_baseurl]" value="' . $options['import_baseurl'] . '" style="width:18em;" /> <i>&nbsp; enter \$\$\$ at Episode ID Position &nbsp;(e.g.: http://tools.shownot.es/showpadapi/?podcast=nsfw-&episode=\$\$\$)</i>';
+    print "<select/>";
+}
+
+function shownotes_import_podcastname() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['import_podcastname'])) {
+        $options['import_podcastname'] = "";
+    }
+    print '<input id="import_podcastname" name="shownotes_options[import_podcastname]" value="' . $options['import_podcastname'] . '" style="width:18em;" /> <i>&nbsp; enter Podcastname in ShowPad &nbsp;(e.g.: mobilemacs)</i>';
 }
 
 function shownotes_main_tags() {
@@ -148,7 +170,7 @@ function shownotes_main_delimiter() {
     if (!isset($options['main_delimiter'])) {
         $options['main_delimiter'] = ' &nbsp;';
     }
-    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . $options['main_delimiter'] . '" style="width:8em;" />';
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . $options['main_delimiter'] . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> </i>';
 }
 
 function shownotes_main_css() {
@@ -162,7 +184,7 @@ function shownotes_main_css() {
 function shownotes_main_osf_shortcode() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_osf_shortcode'])) {
-        $options['main_osf_shortcode'] = 'osf-shownotes';
+        $options['main_osf_shortcode'] = 'shownotes';
     }
     print '<input id="main_osf_shortcode" name="shownotes_options[main_osf_shortcode]" value="' . $options['main_osf_shortcode'] . '" style="width:8em;" />';
 }
@@ -178,7 +200,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.1.1</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.1.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

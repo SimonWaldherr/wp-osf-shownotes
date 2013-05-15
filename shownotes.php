@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.1
+ * @version 0.1.2
  */
 
 /*
@@ -10,14 +10,26 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.1
+Version: 0.1.2
 Author URI: http://waldherr.eu
 License: MIT License
 */
 
 include_once('settings.php');
-
 $shownotes_options = get_option('shownotes_options');
+
+function shownotesshortcode_add_styles() {
+    global $shownotes_options;
+    if(!isset($shownotes_options['css_id'])) {return false;}
+    if($shownotes_options['css_id'] == '0') {return false;}
+    
+    $css_styles = array(''
+                       ,'style_one'
+                       ,'style_two');
+    
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.2' );
+}
+add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
 function add_shownotes_textarea($post) {
     global $shownotes_options;
@@ -32,8 +44,19 @@ function add_shownotes_textarea($post) {
     }
     $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
+
+    $import_podcastname = false;
+    if(isset($shownotes_options['import_podcastname'])) {
+        if(trim($shownotes_options['import_podcastname']) != "") {
+            $import_podcastname = trim($shownotes_options['import_podcastname']);
+        }
+    }
     
-    $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    if($import_podcastname == false) {
+        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    } else {
+        $baseurlstring = '<p> <select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\''.$import_podcastname.'\')</script></p>';
+    }
 
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
@@ -162,7 +185,7 @@ function md_shownotes_shortcode($atts, $content = "") {
 }
 
 if(!isset($shownotes_options['main_osf_shortcode'])) {
-    $osf_shortcode = 'osf-shownotes';
+    $osf_shortcode = 'shownotes';
 } else {
     $osf_shortcode = $shownotes_options['main_osf_shortcode'];
 }
@@ -173,15 +196,12 @@ if(!isset($shownotes_options['main_md_shortcode'])) {
     $md_shortcode = $shownotes_options['main_md_shortcode'];
 }
 
-add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
 add_shortcode($md_shortcode, 'md_shownotes_shortcode');
-
-function shownotesshortcode_add_styles() {
-    global $shownotes_options;
-    if(isset($shownotes_options['main_css'])) {
-        wp_enqueue_style('shownotesstyle', 'http://cdn.shownot.es/include-shownotes/shownotes.css', array(), '0.1.1');
-    }
+add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
+if($osf_shortcode != 'osf-shownotes') {
+    add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 }
+
 function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
@@ -192,8 +212,6 @@ function shownotesshortcode_add_scripts() {
 if (is_admin()) {
     add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
 }
-
-add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
 function osf_specialtags($needles, $haystack) {
     // Eine Funktion um Tags zu filtern
@@ -338,7 +356,7 @@ function osf_parser($shownotes, $data) {
     } elseif(strpos($shownotes, '/HEAD')) {
         $splitAt = '/HEAD';
     }
-    
+
     if($splitAt != false) {
         $shownotes = explode($splitAt, $shownotes, 2);
     } else {
@@ -581,7 +599,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
     } else {
         $delimiter = ' &nbsp;';
     }
-    $returnstring  = '<dl>';
+    $returnstring  = '<div>';
     $filterpattern = array(
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
@@ -606,15 +624,15 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                             $returnstring .= ''; //add code, which should inserted between chapters
                         }
 
-                        $returnstring .= '<dt data-time="' . osf_convert_time($time) . '">' . $time . '</dt>' . "\n" . '<dd>';
+                        $returnstring .= "\n" . '<div class="osf_chapterbox"><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span> ';
                         if (isset($array[$arraykeys[$i]]['urls'][0])) {
-                            $returnstring .= '<strong';
+                            $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
                             $returnstring .= '><a href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><div class="osf_items"> ' . "\n";
                         } else {
-                            $returnstring .= '<strong';
+                            $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
@@ -629,13 +647,17 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         } else {
                                             $tagtext = '';
                                         }
+                                        $substart = '';
+                                        $subend   = '';
                                         if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                                             if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
-                                                    $tagtext .= ' osf_substart';
+                                                    //$tagtext .= ' osf_substart';
+                                                    $substart = '(';
                                                 }
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
-                                                    $tagtext .= ' osf_subend';
+                                                    //$tagtext .= ' osf_subend';
+                                                    $subend = ')';
                                                 }
                                             }
                                             if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
@@ -647,21 +669,31 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         $text    = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']);
                                         $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                         $subtext = trim($subtext);
-                                        $returnstring .= $subtext;
+                                        $returnstring .= $substart.$subtext.$subend;
                                     }
                                 }
                             }
                         }
-                        $returnstring .= '</div></dd>';
+                        $returnstring .= '</div></div>';
                     }
                 }
             }
         }
     }
 
-    $returnstring .= '</dl>' . "\n";
-    $returnstring = str_replace($delimiter.'</div>', '</div>', $returnstring);
-    return str_replace(',</dd>', '</dd>', $returnstring);
+    $returnstring .= '</div>' . "\n";
+    $cleanupsearch = array($delimiter.'</div>'
+                          ,',</div>'
+                          ,$delimiter.')'
+                          ,$delimiter.'(');
+
+    $cleanupreplace = array('</div>'
+                           ,'</div>'
+                           ,') '
+                           ,' (');
+
+    $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
+    return $returnstring;
 }
 
 function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 'spoiler')) {
@@ -677,7 +709,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
         '(^ *-*)'
     );
     foreach ($array as $item) {
-        if (($item['chapter']) || (($full != false) && ($item['time'] != ''))) {
+        if ((@$item['chapter']) || (($full != false) && (@$item['time'] != ''))) {
             $text = preg_replace($filterpattern, '', $item['text']);
             if (strpos($item['time'], '.')) {
                 $time = explode('.', $item['time']);
@@ -698,7 +730,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                 $subitemi = 0;
                 foreach ($item['subitems'] as $subitem) {
                     if (((($full != false) || (!$subitem['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $subitem['tags']))) || ($full == 2))) && (strlen(trim($subitem['text'])) > 2)) {
-                        if (($full == 2) && (osf_checktags($filtertags, $subitem['tags']))) {
+                        if (($full == 2) && (osf_checktags($filtertags, @$subitem['tags']))) {
                             $hide = ' osf_spoiler';
                         } else {
                             $hide = '';
@@ -738,7 +770,6 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                             }
                             $subtext .= '>' . trim($text) . '</span></li> ';
                         }
-                        //$subtext = str_replace("\n, ", ", ", $subtext);
                         $subtext = trim($subtext);
                         $returnstring .= $subtext;
                         ++$subitemi;
@@ -818,32 +849,32 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
 
 function markdown($string) {
     $rules['sm'] = array(
-        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')', // headers
-        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>', // links
-        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>', // bold emphasis
-        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>', // bold
-        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>', // emphasis
-        '/\~\~(.*?)\~\~/' => '<del>\1</del>', // del
-        '/\:\"(.*?)\"\:/' => '<q>\1</q>', // quote
-        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')', // unorderd lists
-        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')', // orderd lists
-        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')', // blockquotes
-        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')', // add paragraphs
-        '/<\/ul>(\s*)<ul>/' => '', // fix extra ul
-        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>', // fix extra ul li
-        '/(<\/ul><\/li><li><ul>)/' => '', // fix extra ul li
-        '/<\/ol><ol>/' => '', // fix extra ol
-        '/<\/blockquote><blockquote>/' => "\n" // fix extra blockquote
+        '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')',               // headers
+        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>',        // links
+        '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>',      // bold emphasis
+        '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>',                  // bold
+        '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>',                         // emphasis
+        '/\~\~(.*?)\~\~/' => '<del>\1</del>',                           // del
+        '/\:\"(.*?)\"\:/' => '<q>\1</q>',                               // quote
+        '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')',  // unorderd lists
+        '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')',                     // orderd lists
+        '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')',                    // blockquotes
+        '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')',                   // add paragraphs
+        '/<\/ul>(\s*)<ul>/' => '',                                      // fix extra ul
+        '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>',            // fix extra ul li
+        '/(<\/ul><\/li><li><ul>)/' => '',                               // fix extra ul li
+        '/<\/ol><ol>/' => '',                                           // fix extra ol
+        '/<\/blockquote><blockquote>/' => "\n"                          // fix extra blockquote
     );
 
     $rules['html'] = array(
-        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ', // url
+        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ',                                 // url
         '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a href="mailto:\2">\2</a> ', // mail
-        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>' // phone
+        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>'                                  // phone
     );
 
     $rules['tweet'] = array(
-        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ', // user
+        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ',                         // user
         '((#)(\S*))' => ' <a href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
     );
 
@@ -852,7 +883,6 @@ function markdown($string) {
 
     foreach ($rules as $rule) {
         foreach ($rule as $regex => $replace) {
-            //echo "$regex<br>";
             $string = preg_replace($regex, $replace, $string);
         }
     }
