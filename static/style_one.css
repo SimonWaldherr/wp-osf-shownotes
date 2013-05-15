@@ -1,4 +1,4 @@
-dt {
+.osf_chaptertime {
     float: left;
     margin-right: 5px;
     font-family: monospace;
@@ -6,6 +6,13 @@ dt {
     font-size: 13px;
     margin-top: 2px;
     cursor: default !important;
+}
+.osf_chapterbox {
+    margin-top: 7px;
+    margin-bottom: 23px;
+}
+.osf_chaptertime, .osf_chapter {
+    font-size: large;
 }
 .osf_items .osf_substart::before { content: '(' }
 .osf_amazon.osf_substart::before,
@@ -55,7 +62,7 @@ dt {
 }
 .osf_items .osf_substart::after { content: ', ' }
 .osf_items .osf_subend::after { content: ') ' }
-dd a:hover { text-decoration: underline }
+div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_applecom,
 .osf_flattr,
