@@ -3,8 +3,8 @@ Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 0.1.2
+Tested up to: 3.5
+Stable tag: 0.1.3
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 

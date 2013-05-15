@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.2
+ * @version 0.1.3
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.2
+Version: 0.1.3
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -27,7 +27,7 @@ function shownotesshortcode_add_styles() {
                        ,'style_one'
                        ,'style_two');
     
-    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.2' );
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.3' );
 }
 add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
