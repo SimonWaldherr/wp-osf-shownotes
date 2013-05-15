@@ -196,9 +196,11 @@ if(!isset($shownotes_options['main_md_shortcode'])) {
     $md_shortcode = $shownotes_options['main_md_shortcode'];
 }
 
-add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
-add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 add_shortcode($md_shortcode, 'md_shownotes_shortcode');
+add_shortcode($osf_shortcode, 'osf_shownotes_shortcode');
+if($osf_shortcode != 'osf-shownotes') {
+    add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
+}
 
 function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 

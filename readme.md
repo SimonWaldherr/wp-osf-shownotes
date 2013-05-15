@@ -43,6 +43,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.1.2
+* better templates
+* various improvements
+* load Pads and Padcontent via AJAX
+* better shortcode handling
+
 ###0.1.1
 * delimiter changeable
 * shortcodes changeable
