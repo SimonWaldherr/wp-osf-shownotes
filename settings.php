@@ -46,6 +46,12 @@ function shownotes_register_settings() {
                 'md_shortcode'  => 'Choose your md shortcode'
             )
         ),
+        'import' => array(
+            'title' => 'Import from ShowPad',
+            'fields' => array(
+                'podcastname' => 'Podcast Name'
+            )
+        ),
         'affiliate' => array(
             'title'  => 'Affiliate',
             'fields' => array(
@@ -143,12 +149,12 @@ function shownotes_main_css_id() {
     print "<select/>";
 }
 
-function shownotes_import_baseurl() {
+function shownotes_import_podcastname() {
     $options = get_option('shownotes_options');
-    if (!isset($options['import_baseurl'])) {
-        $options['import_baseurl'] = "";
+    if (!isset($options['import_podcastname'])) {
+        $options['import_podcastname'] = "";
     }
-    print '<input id="import_baseurl" name="shownotes_options[import_baseurl]" value="' . $options['import_baseurl'] . '" style="width:18em;" /> <i>&nbsp; enter \$\$\$ at Episode ID Position &nbsp;(e.g.: http://tools.shownot.es/showpadapi/?podcast=nsfw-&episode=\$\$\$)</i>';
+    print '<input id="import_podcastname" name="shownotes_options[import_podcastname]" value="' . $options['import_podcastname'] . '" style="width:18em;" /> <i>&nbsp; enter Podcastname in ShowPad &nbsp;(e.g.: mobilemacs)</i>';
 }
 
 function shownotes_main_tags() {

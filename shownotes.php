@@ -45,7 +45,18 @@ function add_shownotes_textarea($post) {
     $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
 
-    $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    $import_podcastname = false;
+    if(isset($shownotes_options['import_podcastname'])) {
+        if(trim($shownotes_options['import_podcastname']) != "") {
+            $import_podcastname = trim($shownotes_options['import_podcastname']);
+        }
+    }
+    
+    if($import_podcastname == false) {
+        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+    } else {
+        $baseurlstring = '<p> <select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\''.$import_podcastname.'\')</script></p>';
+    }
 
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
 }
