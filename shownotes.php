@@ -696,7 +696,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
         '(^ *-*)'
     );
     foreach ($array as $item) {
-        if (($item['chapter']) || (($full != false) && ($item['time'] != ''))) {
+        if ((@$item['chapter']) || (($full != false) && (@$item['time'] != ''))) {
             $text = preg_replace($filterpattern, '', $item['text']);
             if (strpos($item['time'], '.')) {
                 $time = explode('.', $item['time']);
@@ -717,7 +717,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                 $subitemi = 0;
                 foreach ($item['subitems'] as $subitem) {
                     if (((($full != false) || (!$subitem['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $subitem['tags']))) || ($full == 2))) && (strlen(trim($subitem['text'])) > 2)) {
-                        if (($full == 2) && (osf_checktags($filtertags, $subitem['tags']))) {
+                        if (($full == 2) && (osf_checktags($filtertags, @$subitem['tags']))) {
                             $hide = ' osf_spoiler';
                         } else {
                             $hide = '';

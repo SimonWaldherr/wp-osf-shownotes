@@ -14,32 +14,6 @@
 .osf_chaptertime, .osf_chapter {
     font-size: large;
 }
-.osf_items .osf_substart::before { content: '(' }
-.osf_amazon.osf_substart::before,
-.osf_applecom.osf_substart::before,
-.osf_flattr.osf_substart::before,
-.osf_twitter.osf_substart::before,
-.osf_wiki.osf_substart::before,
-.osf_youtube.osf_substart::before,
-.osf_youtubecom.osf_substart::before,
-.osf_youtu.be.osf_substart::before,
-.osf_glossary.osf_substart::before,
-.osf_amazonde.osf_substart::before,
-.osf_amazoncom.osf_substart::before,
-.osf_video.osf_substart::before,
-.osf_esaint.osf_substart::before,
-.osf_dlrde.osf_substart::before,
-.osf_githubcom.osf_substart::before,
-.osf_imdbcom.osf_substart::before,
-.osf_quote.osf_substart::before,
-.osf_podcast.osf_substart::before {
-    content: '(';
-    margin-left: -20px;
-    margin-right: 10px;
-    padding-right: 5px;
-}
-.osf_items .osf_substart::after { content: ', ' }
-.osf_items .osf_subend::after { content: ') ' }
 div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_applecom,
