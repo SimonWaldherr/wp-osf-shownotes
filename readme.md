@@ -8,7 +8,7 @@ Stable tag: 0.1.3
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
-Here should be a short description of the plugin, but currently there is nothing.
+simplifies Show Notes, write them in OSF, get them as HTML
 
 ##Description
 
