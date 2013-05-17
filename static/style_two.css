@@ -17,6 +17,7 @@
 div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_applecom,
+.osf_appnet,
 .osf_flattr,
 .osf_twitter,
 .osf_wiki,
@@ -40,6 +41,7 @@ div a:hover { text-decoration: underline }
 }
 .osf_amazon,
 .osf_applecom,
+.osf_appnet,
 .osf_flattr,
 .osf_twitter,
 .osf_wiki,
@@ -67,6 +69,7 @@ div a:hover { text-decoration: underline }
 .osf_youtu.be,
 .osf_video { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/youtube.png') }
 .osf_applecom { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/apple.png') }
+.osf_appnet { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/appnet.png') }
 .osf_esaint { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/esa.png') }
 .osf_dlrde { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/dlr.png') }
 .osf_githubcom { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/git.png') }

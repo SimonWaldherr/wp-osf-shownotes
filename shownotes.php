@@ -173,6 +173,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
                 $export = osf_get_shownoter($shownotesArray['header']);
             }
         }
+        if($_GET['debug'] == 'true') {
+            $export .= '<textarea>'.htmlspecialchars($shownotesString).'</textarea>';
+        }
     }
     return $export;
 }
