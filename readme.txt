@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.0.1
 Tested up to: 3.5
-Stable tag: 0.2
+Stable tag: 0.2.1
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -50,6 +50,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 4. Meta box for OSF/MD input
 
 == Changelog ==
+
+= 0.2.1 =
+* delimiter after subitem bugfix
 
 = 0.2 =
 * debug mode added
@@ -97,6 +100,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.2.1 =
+delimiter after subitem bugfix
 
 = 0.2 =
 preview added, chapter delimiter added, options improved

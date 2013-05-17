@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.2
+ * @version 0.2.1
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.2
+Version: 0.2.1
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -27,7 +27,7 @@ function shownotesshortcode_add_styles() {
                        ,'style_one'
                        ,'style_two');
     
-    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2' );
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2.1' );
 }
 add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
@@ -213,17 +213,17 @@ function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
         plugins_url('static/shownotes.js', __FILE__), 
-        array(), '0.2', false
+        array(), '0.2.1', false
     );
     wp_enqueue_script( 
         'tinyosf', 
         plugins_url('static/tinyOSF/tinyosf.js', __FILE__), 
-        array(), '0.2', false
+        array(), '0.2.1', false
     );
     wp_enqueue_script( 
         'tinyosf_exportmodules', 
         plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), 
-        array(), '0.2', false
+        array(), '0.2.1', false
     );
 }
 if (is_admin()) {
@@ -677,7 +677,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                                 }
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
                                                     //$tagtext .= ' osf_subend';
-                                                    $subend = ')';
+                                                    $subend = ')'.$delimiter;
                                                 }
                                             }
                                             if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
