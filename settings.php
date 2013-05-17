@@ -38,13 +38,14 @@ function shownotes_register_settings() {
         'main' => array(
             'title'  => 'General Settings',
             'fields' => array(
-                'mode'              => 'Select template',
+                'mode'              => 'Template',
                 'tags'              => 'Only include items with certain tags',
-                'delimiter'         => 'Choose string between items',
-                'chapter_delimiter' => 'Choose string between chapters',
-                'css_id'            => 'Select a CSS-File',
-                'osf_shortcode'     => 'Choose your osf shortcode',
-                'md_shortcode'      => 'Choose your md shortcode'
+                'delimiter'         => 'String between items',
+                'last_delimiter'    => 'String after last item',
+                'chapter_delimiter' => 'String between chapters',
+                'css_id'            => 'CSS-File',
+                'osf_shortcode'     => 'OSF shortcode',
+                'md_shortcode'      => 'Markdown shortcode'
             )
         ),
         'import' => array(
@@ -56,9 +57,9 @@ function shownotes_register_settings() {
         'affiliate' => array(
             'title'  => 'Affiliate',
             'fields' => array(
-                'amazon'       => 'Amazon.de',
-                'thomann'      => 'Thomann.de',
-                'tradedoubler' => 'Tradedoubler'
+                'amazon'       => 'Amazon.de Id',
+                'thomann'      => 'Thomann.de Id',
+                'tradedoubler' => 'Tradedoubler Id'
             )
         ),
         'info' => array(
@@ -175,6 +176,14 @@ function shownotes_main_delimiter() {
     print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> </i>';
 }
 
+function shownotes_main_last_delimiter() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_last_delimiter'])) {
+        $options['main_last_delimiter'] = '. ';
+    }
+    print '<input id="main_last_delimiter" name="shownotes_options[main_last_delimiter]" value="' . htmlspecialchars($options['main_last_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>.</code> </i>';
+}
+
 function shownotes_main_chapter_delimiter() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_chapter_delimiter'])) {
@@ -210,7 +219,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.2.1</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.2.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

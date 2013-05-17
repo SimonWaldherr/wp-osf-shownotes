@@ -43,6 +43,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.2.2
+* delimiter after last item added
+
 ###0.2.1
 * delimiter after subitem bugfix
 
