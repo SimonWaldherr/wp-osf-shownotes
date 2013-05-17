@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.0.1  
 Tested up to: 3.5  
-Stable tag: 0.2.1  
+Stable tag: 0.2.3  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -42,6 +42,8 @@ it's easy to write
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
 ##Changelog
+
+###0.2.3
 
 ###0.2.2
 * delimiter after last item added
