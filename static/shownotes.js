@@ -60,10 +60,32 @@ function getPadList(select, podcastname) {
   ajax.send();
 }
 
-function templateAssociated() {
+function templateAssociated () {
   if(document.getElementById('main_mode').value == 'block style') {
     document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'table-row';
+    document.getElementById('main_chapter_delimiter').parentNode.parentNode.style.display = 'table-row';
   } else {
     document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'none';
+    document.getElementById('main_chapter_delimiter').parentNode.parentNode.style.display = 'none';
   }
+}
+
+function previewPopup (shownotesElement, mode) {
+  var shownotes = '';
+  shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
+  if((mode === 'html')||(mode === 'source')) {
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_HTML);
+  } else if(mode === 'md') {
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_Markdown);
+  } else if(mode === 'wikigeeks') {
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_HTMLlist);
+  } else if(mode === 'chapter') {
+    shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExport_Chapter)+'</code>';
+  } else if(mode === 'glossary') {
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_Glossary);
+  }
+  shownotesPopup.document.write(shownotes);
+  shownotesPopup.document.title = 'Shownotes Preview';
+  shownotesPopup.focus();
+  return false;
 }

@@ -38,12 +38,13 @@ function shownotes_register_settings() {
         'main' => array(
             'title'  => 'General Settings',
             'fields' => array(
-                'mode'          => 'Select template',
-                'tags'          => 'Only include items with certain tags',
-                'delimiter'     => 'Choose string between items in block',
-                'css_id'        => 'Select a CSS-File',
-                'osf_shortcode' => 'Choose your osf shortcode',
-                'md_shortcode'  => 'Choose your md shortcode'
+                'mode'              => 'Select template',
+                'tags'              => 'Only include items with certain tags',
+                'delimiter'         => 'Choose string between items',
+                'chapter_delimiter' => 'Choose string between chapters',
+                'css_id'            => 'Select a CSS-File',
+                'osf_shortcode'     => 'Choose your osf shortcode',
+                'md_shortcode'      => 'Choose your md shortcode'
             )
         ),
         'import' => array(
@@ -174,6 +175,14 @@ function shownotes_main_delimiter() {
     print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> </i>';
 }
 
+function shownotes_main_chapter_delimiter() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_chapter_delimiter'])) {
+        $options['main_chapter_delimiter'] = ' &nbsp;';
+    }
+    print '<input id="main_chapter_delimiter" name="shownotes_options[main_chapter_delimiter]" value="' . htmlspecialchars($options['main_chapter_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars(' &nbsp;').'</code> </i>';
+}
+
 function shownotes_main_css() {
     $options = get_option('shownotes_options');
     $checked = '';
@@ -201,7 +210,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.1.3</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.0.1  
 Tested up to: 3.5  
-Stable tag: 0.1.3  
+Stable tag: 0.2  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -42,6 +42,15 @@ it's easy to write
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
 ##Changelog
+
+###0.2
+* debug mode added
+* only show template associated options
+* chapter delemiter added
+* preview in popup added
+
+###0.1.3
+* show all podcasts in dropdown (asterisk)
 
 ###0.1.2
 * better templates
