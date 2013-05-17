@@ -1,0 +1,3 @@
+[submodule "static/tinyOSF"]
+	path = static/tinyOSF
+	url = https://github.com/shownotes/tinyOSF.js.git

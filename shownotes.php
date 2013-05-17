@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.1.3
+ * @version 0.2
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.1.3
+Version: 0.2
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -27,7 +27,7 @@ function shownotesshortcode_add_styles() {
                        ,'style_one'
                        ,'style_two');
     
-    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.1.3' );
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2' );
 }
 add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
@@ -53,12 +53,12 @@ function add_shownotes_textarea($post) {
     }
     
     if($import_podcastname == false) {
-        $baseurlstring = '<p> <input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"></p>';
+        $baseurlstring = '<input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import">';
     } else {
-        $baseurlstring = '<p> <select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\''.$import_podcastname.'\')</script></p>';
+        $baseurlstring = '<select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\''.$import_podcastname.'\')</script>';
     }
 
-    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p>' . $baseurlstring . '</div>';
+    echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview: <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\')" value="HTML"> <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\')" value="Chapter"> </p></div>';
 }
 
 function save_shownotes() {
@@ -109,6 +109,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     }
 
     extract(shortcode_atts(array(
+       'template' => $shownotes_options['main_mode'],
        'mode' => $shownotes_options['main_mode'],
        'tags' => $default_tags
     ), $atts));
@@ -157,6 +158,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         }
 
         //parse shortcode as osf string to html
+        if($template !== $shownotes_options['main_mode']) {
+            $mode = $template;
+        }
         $shownotesArray = osf_parser($shownotesString, $data);
         if($mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
@@ -168,6 +172,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
             if(isset($shownotesArray['header'])) {
                 $export = osf_get_shownoter($shownotesArray['header']);
             }
+        }
+        if(isset($_GET['debug'])) {
+            $export .= '<textarea>'.htmlspecialchars($shownotesString).'</textarea>';
         }
     }
     return $export;
@@ -205,8 +212,18 @@ if($osf_shortcode != 'osf-shownotes') {
 function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
-        plugins_url('static/importPad.js', __FILE__), 
-        array(), '0.0.1', false
+        plugins_url('static/shownotes.js', __FILE__), 
+        array(), '0.2', false
+    );
+    wp_enqueue_script( 
+        'tinyosf', 
+        plugins_url('static/tinyOSF/tinyosf.js', __FILE__), 
+        array(), '0.2', false
+    );
+    wp_enqueue_script( 
+        'tinyosf_exportmodules', 
+        plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), 
+        array(), '0.2', false
     );
 }
 if (is_admin()) {
@@ -621,7 +638,10 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                         }
 
                         if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
-                            $returnstring .= ''; //add code, which should inserted between chapters
+                            //$returnstring .= ''; //add code, which should inserted between chapters
+                            if(isset($shownotes_options['main_chapter_delimiter'])) {
+                                $returnstring .= $shownotes_options['main_chapter_delimiter'];
+                            }
                         }
 
                         $returnstring .= "\n" . '<div class="osf_chapterbox"><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span> ';

@@ -4,11 +4,12 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.0.1
 Tested up to: 3.5
-Stable tag: 0.1.3
+Stable tag: 0.2
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
-Here should be a short description of the plugin, but currently there is nothing.
+
+simplifies Show Notes, write them in OSF, get them as HTML
 
 == Description ==
 
@@ -50,6 +51,15 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.2 =
+* debug mode added
+* only show template associated options
+* chapter delemiter added
+* preview in popup added
+
+= 0.1.3 =
+* show all podcasts in dropdown (asterisk)
+
 = 0.1.2 =
 * better templates
 * various improvements
@@ -87,6 +97,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.2 =
+preview added, chapter delimiter added, options improved
+
+= 0.1.3 =
+show all podcasts in import dropdown
 
 = 0.1.2 =
 pad import and output templates improved
