@@ -59,3 +59,11 @@ function getPadList(select, podcastname) {
   ajax.open("GET", requrl, true);
   ajax.send();
 }
+
+function templateAssociated() {
+  if(document.getElementById('main_mode').value == 'block style') {
+    document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'table-row';
+  } else {
+    document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'none';
+  }
+}

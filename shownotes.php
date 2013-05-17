@@ -212,7 +212,7 @@ if($osf_shortcode != 'osf-shownotes') {
 function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
-        plugins_url('static/importPad.js', __FILE__), 
+        plugins_url('static/shownotes.js', __FILE__), 
         array(), '0.0.1', false
     );
 }

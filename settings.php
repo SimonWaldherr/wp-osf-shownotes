@@ -131,7 +131,7 @@ function shownotes_main_mode() {
         }
     }
     print "<select/>";
-    print "<script></script>";
+    print "<script>window.onload = function () {templateAssociated();}</script>";
 }
 
 function shownotes_main_css_id() {
