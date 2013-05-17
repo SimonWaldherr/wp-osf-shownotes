@@ -109,6 +109,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     }
 
     extract(shortcode_atts(array(
+       'template' => $shownotes_options['main_mode'],
        'mode' => $shownotes_options['main_mode'],
        'tags' => $default_tags
     ), $atts));
@@ -157,6 +158,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
         }
 
         //parse shortcode as osf string to html
+        if($template !== $shownotes_options['main_mode']) {
+            $mode = $template;
+        }
         $shownotesArray = osf_parser($shownotesString, $data);
         if($mode == 'block style') {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint);
