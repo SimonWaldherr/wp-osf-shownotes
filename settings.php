@@ -173,7 +173,7 @@ function shownotes_main_delimiter() {
     if (!isset($options['main_delimiter'])) {
         $options['main_delimiter'] = ' &nbsp;';
     }
-    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> </i>';
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> (don\'t use a normal space at the end) </i>';
 }
 
 function shownotes_main_last_delimiter() {
@@ -219,7 +219,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.2.2</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.2.3</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
