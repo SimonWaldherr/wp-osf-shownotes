@@ -2,9 +2,9 @@
 Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
-Requires at least: 3.0.1
+Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -49,6 +49,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 4. Meta box for OSF/MD input
 
 == Changelog ==
+
+= 0.2.4 =
+* put osf code in a separate file
+* requires at least 3.1 (no, not really, but there is no reason to run WP3.0)
+* filter disturbing chars at beginning and end of items
+* fix custom field rename bug
 
 = 0.2.3 =
 * rename custom field shownotes to _shownotes to hide it from custon fields list
@@ -110,6 +116,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.2.4 =
+small fixes
 
 = 0.2.3 =
 shownotes custom field renamed to _shownotes to hide it from custom fields list and important improvements
