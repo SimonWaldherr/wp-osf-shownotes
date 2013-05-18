@@ -106,6 +106,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
     $export    = '';
     $post_id   = get_the_ID();
     $shownotes = get_post_meta($post_id, '_shownotes', true);
+    if($shownotes == "") {
+        $shownotes = get_post_meta($post_id, 'shownotes', true);
+    }
 
     if(isset($shownotes_options['main_tags'])) {
         $default_tags = trim($shownotes_options['main_tags']);

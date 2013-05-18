@@ -47,6 +47,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * put osf code in a separate file
 * requires at least 3.1 (no, not really, but there is no reason to run WP3.0)
 * filter disturbing chars at beginning and end of items
+* fix custom field rename bug
 
 ###0.2.3
 * rename custom field shownotes to _shownotes to hide it from custon fields list

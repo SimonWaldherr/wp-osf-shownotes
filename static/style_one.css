@@ -19,6 +19,7 @@ div a:hover { text-decoration: underline }
 .osf_applecom,
 .osf_appnet,
 .osf_flattr,
+.osf_flattrcom,
 .osf_twitter,
 .osf_wiki,
 .osf_youtube,
@@ -43,6 +44,7 @@ div a:hover { text-decoration: underline }
 .osf_applecom,
 .osf_appnet,
 .osf_flattr,
+.osf_flattrcom,
 .osf_twitter,
 .osf_wiki,
 .osf_youtube,
@@ -60,6 +62,7 @@ div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_amazonde,
 .osf_amazoncom { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/amazon.png') }
+.osf_flattrcom,
 .osf_flattr { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/flattr.png') }
 .osf_twitter { background-image: url('http://cdn.shownot.es/include-shownotes/img/hd/twitter.png') }
 .osf_wiki,
