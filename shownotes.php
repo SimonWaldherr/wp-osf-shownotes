@@ -449,8 +449,8 @@ function osf_parser($shownotes, $data) {
 
         // Zeit und Text in Array zur weitergabe speichern
         $newarray['time'] = $zeile[1];
-        $regex['search'] = array('/\s&quot;/', '/&quot;\s/', '/-/');
-        $regex['replace'] = array('&#8221; ', ' &#8222;', '&#8209;');
+        $regex['search'] = array('/\s&quot;/', '/&quot;\s/', '/ - /');
+        $regex['replace'] = array(' &#8222;', '&#8221; ', ' &#8209; ');
         $newarray['text'] = trim(preg_replace($regex['search'], $regex['replace'], ' '.htmlentities(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],

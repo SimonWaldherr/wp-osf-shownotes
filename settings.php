@@ -173,7 +173,7 @@ function shownotes_main_delimiter() {
     if (!isset($options['main_delimiter'])) {
         $options['main_delimiter'] = ' &nbsp;';
     }
-    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> </i>';
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code> (don\'t use a normal space at the end) </i>';
 }
 
 function shownotes_main_last_delimiter() {

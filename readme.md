@@ -2,9 +2,9 @@
 Contributors: simonwaldherr  
 Donate link: https://flattr.com/profile/simonwaldherr  
 Tags: shownotes, osf, markup  
-Requires at least: 3.0.1  
+Requires at least: 3.1  
 Tested up to: 3.5  
-Stable tag: 0.2.3  
+Stable tag: 0.2.4  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -48,7 +48,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * open links in new tab/window
 * podcaster template added
 * header/get persons code improved
-* change - to &#8209;
+* change - to &amp;#8209;
 * show more debug info
 
 ###0.2.2
