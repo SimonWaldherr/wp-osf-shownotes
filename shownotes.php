@@ -38,7 +38,10 @@ function add_shownotes_textarea($post) {
         return;
     }
     if (isset($post_id)) {
-        $shownotes = get_post_meta($post_id, 'shownotes', true);
+        $shownotes = get_post_meta($post_id, '_shownotes', true);
+        if($shownotes == "") {
+            $shownotes = get_post_meta($post_id, 'shownotes', true);
+        }
     } else {
         $shownotes = '';
     }
@@ -66,7 +69,7 @@ function save_shownotes() {
     if ($post_id == '') {
         return;
     }
-    $old = get_post_meta($post_id, 'shownotes', true);
+    $old = get_post_meta($post_id, '_shownotes', true);
     if (isset($_POST['shownotes'])) {
         $new = $_POST['shownotes'];
     } else {
@@ -75,10 +78,11 @@ function save_shownotes() {
 
     $shownotes = $old;
     if ($new && $new != $old) {
-        update_post_meta($post_id, 'shownotes', $new);
+        update_post_meta($post_id, '_shownotes', $new);
+        delete_post_meta($post_id, 'shownotes');
         $shownotes = $new;
     } elseif ('' == $new && $old) {
-        delete_post_meta($post_id, 'shownotes', $old);
+        delete_post_meta($post_id, '_shownotes', $old);
     }
 }
 
@@ -100,7 +104,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     global $shownotes_options;
     $export    = '';
     $post_id   = get_the_ID();
-    $shownotes = get_post_meta($post_id, 'shownotes', true);
+    $shownotes = get_post_meta($post_id, '_shownotes', true);
 
     if(isset($shownotes_options['main_tags'])) {
         $default_tags = trim($shownotes_options['main_tags']);
@@ -182,7 +186,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
 function md_shownotes_shortcode($atts, $content = "") {
     $post_id   = get_the_ID();
-    $shownotes = get_post_meta($post_id, 'shownotes', true);
+    $shownotes = get_post_meta($post_id, '_shownotes', true);
+    if($shownotes == "") {
+        $shownotes = get_post_meta($post_id, 'shownotes', true);
+    }
     if ($content !== "") {
         $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
     } else {
