@@ -172,13 +172,18 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
         } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
-        } elseif($mode == 'shownoter') {
+        } elseif(($mode == 'shownoter')||($mode == 'podcaster')) {
             if(isset($shownotesArray['header'])) {
-                $export = osf_get_shownoter($shownotesArray['header']);
+                if($mode == 'shownoter') {
+                    $export = osf_get_persons('shownoter', $shownotesArray['header']);
+                } elseif($mode == 'podcaster') {
+                    $export = osf_get_persons('podcaster', $shownotesArray['header']);
+                }
+                
             }
         }
         if(isset($_GET['debug'])) {
-            $export .= '<textarea>'.htmlspecialchars($shownotesString).'</textarea>';
+            $export .= '<textarea>'.print_r($shownotes_options, true).htmlspecialchars($shownotesString).'</textarea>';
         }
     }
     return $export;
@@ -337,35 +342,48 @@ function osf_replace_timestamps($shownotes) {
     return preg_replace($regexTS[0], $regexTS[1], $shownotes);
 }
 
-function osf_get_shownoter($header) {
-    preg_match_all('/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/', $header, $shownoter);
-    $shownoter = explode(',', $shownoter[2][0]);
-    $shownoterArray = array();
-    $i = 0;
-    foreach($shownoter as $person) {
-        $profileurl = false;
-        $name       = '';
-        $urlmatch   = preg_match_all('/\<(http[\S]+)\>/', $person, $url);
-        if($urlmatch != 0 && $urlmatch != false) {
-            $profileurl = $url[1][0];
-            $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $person));
+function osf_parse_person($string) {
+    $profileurl  = false;
+    $name        = '';
+    $urlmatch   = preg_match_all('/\<(http[\S]+)\>/', $string, $url);
+    if($urlmatch != 0 && $urlmatch != false) {
+        $profileurl = $url[1][0];
+        $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $string));
+    } else {
+        if(strpos($string, '@:adn') != false) {
+            preg_match_all('/@(\(?[\S]+\)?)@:adn/', $string, $url);
+            $profileurl = 'https://alpha.app.net/'.$url[1][0];
+            $name = trim($url[1][0]);
+        } elseif(strpos($string, '@') != false) {
+            preg_match_all('/@(\(?[\S]+\)?)/', $string, $url);
+            $profileurl = 'https://twitter.com/'.$url[1][0];
+            $name = trim($url[1][0]);
         } else {
-            if(strpos($person, '@') != false) {
-                preg_match_all('/@([\S]+)/', $person, $url);
-                $profileurl = 'https://twitter.com/'.$url[1][0];
-                $name = trim($url[1][0]);
-            } else {
-                $name = trim($person);
-            }
+            $name = trim($string);
         }
-        if($profileurl == false) {
-            $shownoterArray[$i]  = '<span>'.$name.'</span>';
+    }
+    $return['url']  = $profileurl;
+    $return['name'] = trim($name,' \s:;()"');
+    return $return;
+}
+
+function osf_get_persons($persons, $header) {
+    $regex['shownoter'] = '/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/';
+    $regex['podcaster'] = '/(Podcaster|Zusammengetragen)[^:]*:([ \S]*)/';
+    preg_match_all($regex[$persons], $header, $persons);
+    $persons = preg_split('/(,|und)/', $persons[2][0]);
+    $personsArray = array();
+    $i = 0;
+    foreach($persons as $person) {
+        $personArray = osf_parse_person($person);
+        if($personArray['url'] == false) {
+            $personsArray[$i]  = '<span>'.$personArray['name'].'</span>';
         } else {
-            $shownoterArray[$i]  = '<a href="'.$profileurl.'">'.$name.'</a>';
+            $personsArray[$i]  = '<a target="_blank" href="'.$personArray['url'].'">'.$personArray['name'].'</a>';
         }
         $i++;
     }
-    return implode(', ', $shownoterArray);
+    return implode(', ', $personsArray);
 }
 
 function osf_parser($shownotes, $data) {
@@ -431,7 +449,9 @@ function osf_parser($shownotes, $data) {
 
         // Zeit und Text in Array zur weitergabe speichern
         $newarray['time'] = $zeile[1];
-        $newarray['text'] = trim(preg_replace('/\s&quot;/', ' &#8222;', preg_replace('/&quot;\s/', '&#8221; ', ' '.htmlentities(preg_replace(array(
+        $regex['search'] = array('/\s&quot;/', '/&quot;\s/', '/-/');
+        $regex['replace'] = array('&#8221; ', ' &#8222;', '&#8209;');
+        $newarray['text'] = trim(preg_replace($regex['search'], $regex['replace'], ' '.htmlentities(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
             $pattern['urls2']
@@ -439,7 +459,7 @@ function osf_parser($shownotes, $data) {
             '',
             '',
             ''
-        ), $zeile[5]), ENT_QUOTES, 'UTF-8').' ')));
+        ), $zeile[5]), ENT_QUOTES, 'UTF-8').' '));
         $newarray['orig'] = trim(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
@@ -582,7 +602,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         $url = parse_url($subitem['urls'][0]);
         $url = explode('.', $url['host']);
         $tagtext .= ' osf_' . $url[count($url) - 2] . $url[count($url) - 1];
-        $subtext .= '<a href="' . $subitem['urls'][0] . '"';
+        $subtext .= '<a target="_blank" href="' . $subitem['urls'][0] . '"';
         if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
             $subtext .= ' class="osf_wiki ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
@@ -663,7 +683,7 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
-                            $returnstring .= '><a href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><div class="osf_items"> ' . "\n";
+                            $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><div class="osf_items"> ' . "\n";
                         } else {
                             $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
@@ -755,7 +775,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
             }
 
             if (isset($item['urls'][0])) {
-                $returnstring .= '<div><h1><a href="' . $item['urls'][0] . '">' . $text . '</a> [' . $time . ']</h1></div><ul>';
+                $returnstring .= '<div><h1><a target="_blank" href="' . $item['urls'][0] . '">' . $text . '</a> [' . $time . ']</h1></div><ul>';
             } else {
                 $returnstring .= '<div><h1>' . $text . ' [' . $time . ']</h1></div><ul>';
             }
@@ -776,7 +796,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                             $subtext = '';
                         }
                         if (isset($subitem['urls'][0])) {
-                            $subtext .= '<li><a href="' . $subitem['urls'][0] . '"';
+                            $subtext .= '<li><a target="_blank" href="' . $subitem['urls'][0] . '"';
                             if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
                                 $subtext .= ' class="osf_wiki ' . $hide . '"';
                             } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
@@ -872,7 +892,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
         $return .= '<ol>' . "\n";
         usort($content, "osf_glossarysort");
         foreach ($content as $item) {
-            $return .= '<li><a href="' . $item['url'] . '">' . $item['text'] . '</a></li>' . "\n";
+            $return .= '<li><a target="_blank" href="' . $item['url'] . '">' . $item['text'] . '</a></li>' . "\n";
         }
         $return .= '</ol>' . "\n";
     }
@@ -883,7 +903,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
 function markdown($string) {
     $rules['sm'] = array(
         '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')',               // headers
-        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\'>\1</a>',        // links
+        '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a target="_blank" href=\'\2\'>\1</a>',        // links
         '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>',      // bold emphasis
         '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>',                  // bold
         '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>',                         // emphasis
@@ -901,14 +921,14 @@ function markdown($string) {
     );
 
     $rules['html'] = array(
-        '(\s+((http(|s)://\S{0,64})\s))' => ' <a href="\2">\2</a> ',                                 // url
-        '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a href="mailto:\2">\2</a> ', // mail
-        '(\s+((\+)[0-9]{5,63}))' => ' <a href="tel:\1">call \1</a>'                                  // phone
+        '(\s+((http(|s)://\S{0,64})\s))' => ' <a target="_blank" href="\2">\2</a> ',                                 // url
+        '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a target="_blank" href="mailto:\2">\2</a> ', // mail
+        '(\s+((\+)[0-9]{5,63}))' => ' <a target="_blank" href="tel:\1">call \1</a>'                                  // phone
     );
 
     $rules['tweet'] = array(
-        '((@)(\S*))' => ' <a href=\'https://twitter.com/\2\'>\1\2</a> ',                         // user
-        '((#)(\S*))' => ' <a href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
+        '((@)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/\2\'>\1\2</a> ',                         // user
+        '((#)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
     );
 
 
