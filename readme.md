@@ -44,6 +44,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 ##Changelog
 
 ###0.2.3
+* rename custom field shownotes to _shownotes to hide it from custon fields list
+* open links in new tab/window
+* podcaster template added
+* header/get persons code improved
+* change - to &#8209;
+* show more debug info
 
 ###0.2.2
 * delimiter after last item added
