@@ -115,11 +115,17 @@ function osf_shownotes_shortcode($atts, $content = "") {
     } else {
         $default_tags = '';
     }
+    if(isset($shownotes_options['main_feed_tags'])) {
+        $feed_tags = trim($shownotes_options['main_feed_tags']);
+    } else {
+        $feed_tags = '';
+    }
 
     extract(shortcode_atts(array(
        'template' => $shownotes_options['main_mode'],
-       'mode' => $shownotes_options['main_mode'],
-       'tags' => $default_tags
+       'mode'     => $shownotes_options['main_mode'],
+       'tags'     => $default_tags,
+       'feedtags' => $feed_tags
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
@@ -141,6 +147,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         $fullmode = 'false';
 
+        if (is_feed()) {
+            $tags = $feedtags;
+        }
         if($tags == '') {
             $fullmode = 'true';
             $fullint  = 2;

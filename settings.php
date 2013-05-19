@@ -40,6 +40,7 @@ function shownotes_register_settings() {
             'fields' => array(
                 'mode'              => 'Template',
                 'tags'              => 'Only include items with certain tags',
+                'feed_tags'         => 'Only include items with certain tags in feed',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
                 'chapter_delimiter' => 'String between chapters',
@@ -166,6 +167,14 @@ function shownotes_main_tags() {
         $options['main_tags'] = "";
     }
     print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+}
+
+function shownotes_main_feed_tags() {
+    $options = get_option('shownotes_options');
+    if (!isset($options['main_feed_tags'])) {
+        $options['main_feed_tags'] = "";
+    }
+    print '<input id="main_feed_tags" name="shownotes_options[main_feed_tags]" value="' . $options['main_feed_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
 }
 
 function shownotes_main_delimiter() {
