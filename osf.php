@@ -207,8 +207,8 @@ function osf_parser($shownotes, $data) {
 
         // Zeit und Text in Array zur weitergabe speichern
         $newarray['time'] = $zeile[1];
-        $regex['search'] = array('/\s&quot;/', '/&quot;\s/', '/ - /');
-        $regex['replace'] = array(' &#8222;', '&#8221; ', ' &#8209; ');
+        $regex['search'] = array('/\s&quot;/', '/&quot;\s/', '/(\S)-(\S)/');
+        $regex['replace'] = array(' &#8222;', '&#8221; ', "$1&#8209;$2");
         $newarray['text'] = trim(preg_replace($regex['search'], $regex['replace'], ' '.htmlentities(preg_replace(array(
             $pattern['tags'],
             $pattern['urls'],
@@ -479,7 +479,6 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                         }
                                         $text    = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']);
                                         $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
-                                        $subtext = trim($subtext);
                                         $returnstring .= $substart.$subtext.$subend;
                                     }
                                 }

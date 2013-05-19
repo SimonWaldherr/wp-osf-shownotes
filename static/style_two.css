@@ -13,6 +13,7 @@
 }
 .osf_chaptertime, .osf_chapter {
     font-size: large;
+    vertical-align: text-top;
 }
 div a:hover { text-decoration: underline }
 .osf_amazon,
