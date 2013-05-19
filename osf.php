@@ -354,13 +354,26 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
     if(trim($text) == "") {
         return '';
     }
+
+    $title = '';
+    if(isset($subitem['time'])) {
+        $time = trim($subitem['time']);
+        if($time !== "") {
+            $title .= $subitem['time'].': ';
+        }
+    }
+    $title .= $text;
+    if(isset($subitem['tags'])) {
+        $title .= ' ('.implode(' ', $subitem['tags']).')';
+    }
+    
     $subtext = '';
     if (isset($subitem['urls'][0])) {
         $tagtext .= ' osf_link';
         $url = parse_url($subitem['urls'][0]);
         $url = explode('.', $url['host']);
         $tagtext .= ' osf_' . $url[count($url) - 2] . $url[count($url) - 1];
-        $subtext .= '<a target="_blank" href="' . $subitem['urls'][0] . '"';
+        $subtext .= '<a target="_blank" title="' . $title . '" href="' . $subitem['urls'][0] . '"';
         if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
             $subtext .= ' class="osf_wiki ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
@@ -380,7 +393,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         }
         $subtext .= '>' . trim($text) . '</a>';
     } else {
-        $subtext .= '<span';
+        $subtext .= '<span title="' . $title . '"';
         if ($tagtext != '') {
             $subtext .= ' class="' . $tagtext . '"';
         }
