@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.2.4
+ * @version 0.2.5
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.2.4
+Version: 0.2.5
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -28,7 +28,7 @@ function shownotesshortcode_add_styles() {
                        ,'style_one'
                        ,'style_two');
     
-    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2.4' );
+    wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2.5' );
 }
 add_action( 'wp_print_styles', 'shownotesshortcode_add_styles' );
 
@@ -110,16 +110,28 @@ function osf_shownotes_shortcode($atts, $content = "") {
         $shownotes = get_post_meta($post_id, 'shownotes', true);
     }
 
+    if(isset($shownotes_options['main_tags_mode'])) {
+        $tags_mode = trim($shownotes_options['main_tags_mode']);
+    } else {
+        $tags_mode = 'include';
+    }
     if(isset($shownotes_options['main_tags'])) {
         $default_tags = trim($shownotes_options['main_tags']);
     } else {
         $default_tags = '';
     }
+    if(isset($shownotes_options['main_tags_feed'])) {
+        $feed_tags = trim($shownotes_options['main_tags_feed']);
+    } else {
+        $feed_tags = '';
+    }
 
     extract(shortcode_atts(array(
-       'template' => $shownotes_options['main_mode'],
-       'mode' => $shownotes_options['main_mode'],
-       'tags' => $default_tags
+       'template'  => $shownotes_options['main_mode'],
+       'mode'      => $shownotes_options['main_mode'],
+       'tags_mode' => $tags_mode,
+       'tags'      => $default_tags,
+       'feedtags'  => $feed_tags
     ), $atts));
 
     if (($content !== "") || ($shownotes)) {
@@ -141,6 +153,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
 
         $fullmode = 'false';
 
+        if (is_feed()) {
+            $tags = $feedtags;
+        }
         if($tags == '') {
             $fullmode = 'true';
             $fullint  = 2;
@@ -155,6 +170,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'thomann' => $thomann,
             'tradedoubler' => $tradedoubler,
             'fullmode' => $fullmode,
+            'tagsmode' => $tags_mode,
             'tags' => $tags
         );
 
@@ -229,17 +245,17 @@ function shownotesshortcode_add_scripts() {
     wp_enqueue_script( 
         'importPad', 
         plugins_url('static/shownotes.js', __FILE__), 
-        array(), '0.2.4', false
+        array(), '0.2.5', false
     );
     wp_enqueue_script( 
         'tinyosf', 
         plugins_url('static/tinyOSF/tinyosf.js', __FILE__), 
-        array(), '0.2.4', false
+        array(), '0.2.5', false
     );
     wp_enqueue_script( 
         'tinyosf_exportmodules', 
         plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), 
-        array(), '0.2.4', false
+        array(), '0.2.5', false
     );
 }
 if (is_admin()) {

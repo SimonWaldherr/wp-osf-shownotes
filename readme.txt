@@ -2,9 +2,9 @@
 Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
-Requires at least: 3.1
+Requires at least: 3.2
 Tested up to: 3.5
-Stable tag: 0.2.4
+Stable tag: 0.2.5
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -49,6 +49,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 4. Meta box for OSF/MD input
 
 == Changelog ==
+
+= 0.2.5 =
+* delimiter bug fixed
+* titles added to items
+* switch between in- and exclude tags
+* much better tags handling
 
 = 0.2.4 =
 * put osf code in a separate file
@@ -116,6 +122,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.2.5 =
+much better tag handling and configurability added and small bugs fixed
 
 = 0.2.4 =
 small fixes
