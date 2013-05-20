@@ -413,11 +413,6 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
 
 function osf_metacast_textgen($subitem, $tagtext, $text) {
     global $shownotes_options;
-    if(isset($shownotes_options['main_delimiter'])) {
-        $delimiter = $shownotes_options['main_delimiter'];
-    } else {
-        $delimiter = ' &nbsp;';
-    }
     $delimiter = ' ';
     if(trim($text) == "") {
         return '';
@@ -439,7 +434,6 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
     
     $subtext = '';
     if(strlen($text) > 82) {
-        //$splittext = str_split(trim($text),80);
         $splittext = explode( "\n", wordwrap( $text, 70));
         $splittext = $splittext[0].'&#8230;';
     } else {

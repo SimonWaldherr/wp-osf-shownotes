@@ -126,7 +126,7 @@ function shownotes_completeness_fullmode() {
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
     $modes = array('block style', 'button style', 'list style', 'glossary', 'shownoter');
-    print '<select id="main_mode" onchange="templateAssociated();" name="shownotes_options[main_mode]">';
+    print '<select id="main_mode" onchange="templateAssociated(1);" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
             print '<option selected>'.$mode.'</option>';
@@ -135,7 +135,7 @@ function shownotes_main_mode() {
         }
     }
     print "<select/>";
-    print "<script>window.onload = function () {templateAssociated();}</script>";
+    print "<script>window.onload = function () {templateAssociated(0);}</script>";
 }
 
 function shownotes_main_css_id() {

@@ -23,7 +23,6 @@ function shownotesshortcode_add_styles() {
     global $shownotes_options;
     if(!isset($shownotes_options['css_id'])) {return false;}
     if($shownotes_options['css_id'] == '0') {return false;}
-    
     $css_styles = array(''
                        ,'style_one'
                        ,'style_two'
@@ -49,20 +48,17 @@ function add_shownotes_textarea($post) {
     }
     $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
     $baseurlstring = '';
-
     $import_podcastname = false;
     if(isset($shownotes_options['import_podcastname'])) {
         if(trim($shownotes_options['import_podcastname']) != "") {
             $import_podcastname = trim($shownotes_options['import_podcastname']);
         }
     }
-    
     if($import_podcastname == false) {
         $baseurlstring = '<input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import">';
     } else {
         $baseurlstring = '<select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\''.$import_podcastname.'\')</script>';
     }
-
     echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview: <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\')" value="HTML"> <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\')" value="Chapter"> </p></div>';
 }
 
@@ -77,7 +73,6 @@ function save_shownotes() {
     } else {
         $new = '';
     }
-
     $shownotes = $old;
     if ($new && $new != $old) {
         update_post_meta($post_id, '_shownotes', $new);
@@ -110,7 +105,6 @@ function osf_shownotes_shortcode($atts, $content = "") {
     if($shownotes == "") {
         $shownotes = get_post_meta($post_id, 'shownotes', true);
     }
-
     if(isset($shownotes_options['main_tags_mode'])) {
         $tags_mode = trim($shownotes_options['main_tags_mode']);
     } else {
@@ -126,7 +120,6 @@ function osf_shownotes_shortcode($atts, $content = "") {
     } else {
         $feed_tags = '';
     }
-
     extract(shortcode_atts(array(
        'template'  => $shownotes_options['main_mode'],
        'mode'      => $shownotes_options['main_mode'],
@@ -134,7 +127,6 @@ function osf_shownotes_shortcode($atts, $content = "") {
        'tags'      => $default_tags,
        'feedtags'  => $feed_tags
     ), $atts));
-
     if (($content !== "") || ($shownotes)) {
         if (isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') {
             $amazon = $shownotes_options['affiliate_amazon'];
@@ -151,9 +143,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
         } else {
             $tradedoubler = '16248286';
         }
-
         $fullmode = 'false';
-
         if (is_feed()) {
             $tags = $feedtags;
         }
@@ -165,7 +155,6 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $fullint  = 1;
             $tags = explode(' ', $tags);
         }
-
         $data = array(
             'amazon' => $amazon,
             'thomann' => $thomann,
@@ -174,14 +163,12 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'tagsmode' => $tags_mode,
             'tags' => $tags
         );
-
         //undo fucking wordpress shortcode cripple shit
         if ($content !== "") {
             $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
         } else {
             $shownotesString = "\n" . $shownotes . "\n";
         }
-
         //parse shortcode as osf string to html
         if($template !== $shownotes_options['main_mode']) {
             $mode = $template;
@@ -200,7 +187,6 @@ function osf_shownotes_shortcode($atts, $content = "") {
                 } elseif($mode == 'podcaster') {
                     $export = osf_get_persons('podcaster', $shownotesArray['header']);
                 }
-                
             }
         }
         if(isset($_GET['debug'])) {

@@ -60,16 +60,31 @@ function getPadList(select, podcastname) {
   ajax.send();
 }
 
-function templateAssociated () {
+function templateAssociated (change) {
+  var delimiterele, lastdelimiterele, chapterdelimiterele, cssele, i, j;
+  delimiterele = document.getElementById('main_delimiter');
+  lastdelimiterele = document.getElementById('main_last_delimiter');
+  chapterdelimiterele = document.getElementById('main_chapter_delimiter');
   document.getElementById('main_md_shortcode').parentNode.parentNode.style.display = 'none';
   if(document.getElementById('main_mode').value == 'block style') {
-    document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'table-row';
-    document.getElementById('main_last_delimiter').parentNode.parentNode.style.display = 'table-row';
-    document.getElementById('main_chapter_delimiter').parentNode.parentNode.style.display = 'table-row';
+    delimiterele.parentNode.parentNode.style.display = 'table-row';
+    lastdelimiterele.parentNode.parentNode.style.display = 'table-row';
+    chapterdelimiterele.parentNode.parentNode.style.display = 'table-row';
+  } else if(document.getElementById('main_mode').value == 'button style') {
+    delimiterele.parentNode.parentNode.style.display = 'none';
+    lastdelimiterele.parentNode.parentNode.style.display = 'none';
+    chapterdelimiterele.parentNode.parentNode.style.display = 'table-row';
   } else {
-    document.getElementById('main_delimiter').parentNode.parentNode.style.display = 'none';
-    document.getElementById('main_last_delimiter').parentNode.parentNode.style.display = 'none';
-    document.getElementById('main_chapter_delimiter').parentNode.parentNode.style.display = 'none';
+    delimiterele.parentNode.parentNode.style.display = 'none';
+    lastdelimiterele.parentNode.parentNode.style.display = 'none';
+    chapterdelimiterele.parentNode.parentNode.style.display = 'none';
+  }
+  
+  
+  if(change === 1) {
+    if(document.getElementById('main_mode').value == 'button style') {
+      document.getElementById('css_id').value = 3;
+    }
   }
 }
 

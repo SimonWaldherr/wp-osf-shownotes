@@ -37,6 +37,7 @@
 .osf_items span div,
 .osf_items a div {
     display: inline-block;
+    vertical-align: middle;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -85,11 +86,11 @@
 }
 .osf_items a div,
 .osf_items span div {
-    top: -2px;
+    top: -1px;
     max-width: 55px;
     overflow: hidden;
-    width: 6px;
-    right: -6px;
+    width: 4px;
+    right: -3px;
     position: relative;
     border-radius: 0 3px 3px 0;
 }
@@ -149,6 +150,7 @@ div a:hover { text-decoration: underline }
     background-image: url('./img/link.png');
     text-decoration: underline;
     cursor: pointer;
+    font-weight: 500;
 }
 a.osf_amazon,
 a.osf_amazonde,
