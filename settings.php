@@ -39,8 +39,9 @@ function shownotes_register_settings() {
             'title'  => 'General Settings',
             'fields' => array(
                 'mode'              => 'Template',
-                'tags'              => 'Only include items with certain tags',
-                'feed_tags'         => 'Only include items with certain tags in feed',
+                'tags_mode'         => 'switch between in- and exclude tags',
+                'tags'              => 'in/exclude items with certain tags',
+                'tags_feed'         => 'in/exclude items with certain tags in feed',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
                 'chapter_delimiter' => 'String between chapters',
@@ -161,6 +162,22 @@ function shownotes_import_podcastname() {
     print '<input id="import_podcastname" name="shownotes_options[import_podcastname]" value="' . $options['import_podcastname'] . '" style="width:18em;" /> <i>&nbsp; enter Podcastname in ShowPad &nbsp;(e.g.: mobilemacs)</i>';
 }
 
+function shownotes_main_tags_mode() {
+    $options  = get_option('shownotes_options');
+    $tags_modes = array('exclude', 'include');
+    $i = 0;
+    print '<select id="main_tags_mode" name="shownotes_options[main_tags_mode]">';
+    foreach($tags_modes as $tags_mode) {
+        if($i == $options['main_tags_mode']) {
+            print '<option value="'.$i.'" selected>'.$tags_mode.'</option>';
+        } else {
+            print '<option value="'.$i.'">'.$tags_mode.'</option>';
+        }
+        ++$i;
+    }
+    print "<select/>";
+}
+
 function shownotes_main_tags() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_tags'])) {
@@ -169,12 +186,12 @@ function shownotes_main_tags() {
     print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
 }
 
-function shownotes_main_feed_tags() {
+function shownotes_main_tags_feed() {
     $options = get_option('shownotes_options');
-    if (!isset($options['main_feed_tags'])) {
-        $options['main_feed_tags'] = "";
+    if (!isset($options['main_tags_feed'])) {
+        $options['main_tags_feed'] = "";
     }
-    print '<input id="main_feed_tags" name="shownotes_options[main_feed_tags]" value="' . $options['main_feed_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+    print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
 }
 
 function shownotes_main_delimiter() {
