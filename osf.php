@@ -465,7 +465,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
 
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
-            $subtext .= '>' . $splittext . '<div><span onclick="alert(\'' . $subitem['time'] . '\'); return false;">' . $subitem['time'] . '</span></div></a></li>' . " ";
+            $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></a></li>' . " ";
         } else {
             $subtext .= '>' . $splittext . '</a>';
         }
@@ -478,7 +478,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
             $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= '>' . $splittext . '<div><span onclick="alert(\'' . $subitem['time'] . '\'); return false;">' . $subitem['time'] . '</span></div></span>';
+            $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></span>';
         } else {
             $subtext .= '>' . $splittext . '</span>';
         }
@@ -661,7 +661,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
 
                             if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
                                 $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
-                                $subtext .= '>' . trim($text) . '<span onclick="alert(\'' . $subitem['time'] . '\'); return false;">' . $subitem['time'] . '</span></a></li>' . " ";
+                                $subtext .= '>' . trim($text) . '</a></li>' . " ";
                             } else {
                                 $subtext .= '>' . trim($text) . '</a></li>' . " ";
                             }

@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.1  
 Tested up to: 3.5  
-Stable tag: 0.2.5  
+Stable tag: 0.3.0  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 

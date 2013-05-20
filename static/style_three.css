@@ -58,7 +58,7 @@
     padding: 0 0 0 3px;
     color: #efefef;
     text-shadow: 0 -1px rgba(0,0,0,0.3);
-    font-weight: 400;
+    font-weight: 500;
     border-color: #7d7e7d #0e0e0e;
     border-radius: 0 4px 4px 0;
     opacity: 0.2;
@@ -109,6 +109,10 @@
     color: #fff;
 }
 div a:hover { text-decoration: underline }
+.osf_items span {
+    cursor: default;
+    font-weight: 500;
+}
 .osf_items a,
 .osf_items .osf_amazon,
 .osf_items .osf_applecom,
@@ -159,7 +163,7 @@ div a:hover { text-decoration: underline }
     background-image: url('./img/link.png');
     text-decoration: underline;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
 }
 a.osf_amazon,
 a.osf_amazonde,
