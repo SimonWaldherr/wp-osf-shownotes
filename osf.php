@@ -146,6 +146,7 @@ function osf_get_persons($persons, $header) {
 
 function osf_parser($shownotes, $data) {
     // Diese Funktion ist das Herzstück des OSF-Parsers
+    $tagsmode    = $data['tagsmode'];
     $specialtags = $data['tags'];
     $exportall   = $data['fullmode'];
 
@@ -233,7 +234,7 @@ function osf_parser($shownotes, $data) {
         if (count($tags[2]) > 0) {
             foreach ($tags[2] as $tag) {
                 if (strlen($tag) === 1) {
-                    switch ($tag) {
+                    switch (strtolower($tag)) {
                         case 'c':
                             $newarray['tags'][] = 'chapter';
                             break;
@@ -260,10 +261,10 @@ function osf_parser($shownotes, $data) {
                             break;
                     }
                 } else {
-                    $newarray['tags'] = $tags[2];
+                    $newarray['tags'][] = strtolower($tag);
                 }
             }
-            if (((@in_array("Chapter", $newarray['tags'])) || (@in_array("chapter", $newarray['tags']))) && ($newarray['time'] != '')) {
+            if (((@in_array("chapter", $newarray['tags']))) && ($newarray['time'] != '')) {
                 $newarray['chapter'] = true;
             }
         }
@@ -280,7 +281,7 @@ function osf_parser($shownotes, $data) {
         // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
         if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
             if (isset($newarray['tags'])) {
-                if ((osf_specialtags($newarray['tags'], $specialtags)) || ($exportall == 'true')) {
+                if (((osf_specialtags($newarray['tags'], $specialtags))&&($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags))&&($tagsmode == 1)) || ($exportall == 'true')) {
                     if (preg_match($pattern['kaskade'], $zeile[0])) {
                         $newarray['subtext']                                     = true;
                         $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
@@ -304,7 +305,7 @@ function osf_parser($shownotes, $data) {
 
         // Wenn die Zeile keine Verschachtelung darstellt
         else {
-            if ((osf_specialtags($newarray['tags'], $specialtags)) || ($exportall == 'true')) {
+            if (((osf_specialtags($newarray['tags'], $specialtags))&&($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags))&&($tagsmode == 1)) || ($exportall == 'true')) {
                 // Daten auf oberster ebene einfügen
                 $returnarray['export'][$i] = $newarray;
 
@@ -366,10 +367,14 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
     if(isset($subitem['tags'])) {
         $title .= ' ('.implode(' ', $subitem['tags']).')';
     }
+    $tagtext .= ' osf_'.implode(' osf_', $subitem['tags']);
     
     $subtext = '';
     if (isset($subitem['urls'][0])) {
-        $tagtext .= ' osf_link';
+        $tagtext .= ' osf_url';
+        if(strpos($subitem['urls'][0], 'https://') !== false) {
+            $tagtext .= ' osf_https';
+        }
         $url = parse_url($subitem['urls'][0]);
         $url = explode('.', $url['host']);
         $tagtext .= ' osf_' . $url[count($url) - 2] . $url[count($url) - 1];
@@ -482,11 +487,6 @@ function osf_export_anycast($array, $full = false, $filtertags = array(0 => 'spo
                                                 if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
                                                     //$tagtext .= ' osf_subend';
                                                     $subend = ')'.$delimiter;
-                                                }
-                                            }
-                                            if (is_array(@$array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
-                                                foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
-                                                    $tagtext .= ' osf_' . $tag;
                                                 }
                                             }
                                         }

@@ -110,6 +110,11 @@ function osf_shownotes_shortcode($atts, $content = "") {
         $shownotes = get_post_meta($post_id, 'shownotes', true);
     }
 
+    if(isset($shownotes_options['main_tags_mode'])) {
+        $tags_mode = trim($shownotes_options['main_tags_mode']);
+    } else {
+        $tags_mode = 'include';
+    }
     if(isset($shownotes_options['main_tags'])) {
         $default_tags = trim($shownotes_options['main_tags']);
     } else {
@@ -124,7 +129,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     extract(shortcode_atts(array(
        'template'  => $shownotes_options['main_mode'],
        'mode'      => $shownotes_options['main_mode'],
-       'tags_mode' => $shownotes_options['main_tags_mode'],
+       'tags_mode' => $tags_mode,
        'tags'      => $default_tags,
        'feedtags'  => $feed_tags
     ), $atts));
@@ -165,6 +170,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
             'thomann' => $thomann,
             'tradedoubler' => $tradedoubler,
             'fullmode' => $fullmode,
+            'tagsmode' => $tags_mode,
             'tags' => $tags
         );
 

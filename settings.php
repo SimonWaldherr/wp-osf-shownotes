@@ -164,7 +164,7 @@ function shownotes_import_podcastname() {
 
 function shownotes_main_tags_mode() {
     $options  = get_option('shownotes_options');
-    $tags_modes = array('exclude', 'include');
+    $tags_modes = array('include', 'exclude');
     $i = 0;
     print '<select id="main_tags_mode" name="shownotes_options[main_tags_mode]">';
     foreach($tags_modes as $tags_mode) {
