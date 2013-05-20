@@ -125,7 +125,7 @@ function shownotes_completeness_fullmode() {
 
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('block style', 'list style', 'glossary', 'shownoter');
+    $modes = array('block style', 'button style', 'list style', 'glossary', 'shownoter');
     print '<select id="main_mode" onchange="templateAssociated();" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
@@ -140,7 +140,7 @@ function shownotes_main_mode() {
 
 function shownotes_main_css_id() {
     $options  = get_option('shownotes_options');
-    $cssnames = array('none', 'icons after items', 'icons before items');
+    $cssnames = array('none', 'icons after items', 'icons before items', 'buttons');
     $i = 0;
     print '<select id="css_id" name="shownotes_options[css_id]">';
     foreach($cssnames as $cssname) {

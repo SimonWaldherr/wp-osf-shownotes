@@ -26,7 +26,8 @@ function shownotesshortcode_add_styles() {
     
     $css_styles = array(''
                        ,'style_one'
-                       ,'style_two');
+                       ,'style_two'
+                       ,'style_three');
     
     wp_enqueue_style( 'shownotesstyle', plugins_url('static/'.$css_styles[$shownotes_options['css_id']].'.css', __FILE__), array(), '0.2.5' );
 }
@@ -186,8 +187,8 @@ function osf_shownotes_shortcode($atts, $content = "") {
             $mode = $template;
         }
         $shownotesArray = osf_parser($shownotesString, $data);
-        if($mode == 'block style') {
-            $export     = osf_export_anycast($shownotesArray['export'], $fullint);
+        if(($mode == 'block style')||($mode == 'button style')) {
+            $export     = osf_export_anycast($shownotesArray['export'], $fullint, $mode);
         } elseif($mode == 'list style') {
             $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
         } elseif($mode == 'glossary') {
