@@ -43,6 +43,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.2.5
+* delimiter bug fixed
+* titles added to items
+* switch between in- and exclude tags
+* much better tags handling
+
 ###0.2.4
 * put osf code in a separate file
 * requires at least 3.1 (no, not really, but there is no reason to run WP3.0)
