@@ -30,6 +30,11 @@
     border-color: #dadada #d2d2d2 #c5c5c5;
     border-radius: 3px;
 }
+.osf_items a:hover,
+.osf_items span:hover {
+    border-color: #8d8d8d #858585 #797979;
+    color: #000;
+}
 .osf_items span,
 .osf_items a,
 .osf_items span div,
@@ -51,12 +56,12 @@
     height: 26px;
     line-height: 24px;
     padding: 0 0 0 3px;
-    color: white;
+    color: #efefef;
     text-shadow: 0 -1px rgba(0,0,0,0.3);
     font-weight: 400;
     border-color: #7d7e7d #0e0e0e;
     border-radius: 0 4px 4px 0;
-    opacity: 1;
+    opacity: 0.2;
     cursor: pointer;
     background: #7d7e7d;
     background: -moz-linear-gradient(top,#7d7e7d 0%,#0e0e0e 100%);
@@ -70,10 +75,11 @@
     -moz-transition: 0.3s ease-out;
     -o-transition: 0.3s ease-out;
     transition: 0.3s ease-out;
-    -webkit-transition-property: padding,max-width;
-    -moz-transition-property: padding,max-width;
-    -o-transition-property: padding,max-width;
-    transition-property: padding,max-width;
+
+}
+.osf_items a:hover div span,
+.osf_items span:hover div span {
+    opacity: 1;
 }
 .osf_items a:hover span,
 .osf_items span:hover span {
@@ -95,6 +101,12 @@
 .osf_items span:hover div {
     overflow: visible;
     z-index: 100;
+}
+.osf_items a div span:hover,
+.osf_items span div span:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #fff;
 }
 div a:hover { text-decoration: underline }
 .osf_items a,
@@ -121,7 +133,7 @@ div a:hover { text-decoration: underline }
     background-repeat: no-repeat;
     background-position: 3px center;
     padding-left: 22px;
-    margin-left: 4px;
+    margin-left: 0px;
 }
 .osf_items a,
 .osf_amazon,
