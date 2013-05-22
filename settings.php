@@ -44,7 +44,6 @@ function shownotes_register_settings() {
                 'tags_feed'         => 'in/exclude items with certain tags in feed',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
-                'chapter_delimiter' => 'String between chapters',
                 'css_id'            => 'CSS-File',
                 'osf_shortcode'     => 'OSF shortcode',
                 'md_shortcode'      => 'Markdown shortcode'
@@ -210,14 +209,6 @@ function shownotes_main_last_delimiter() {
     print '<input id="main_last_delimiter" name="shownotes_options[main_last_delimiter]" value="' . htmlspecialchars($options['main_last_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>.</code> </i>';
 }
 
-function shownotes_main_chapter_delimiter() {
-    $options = get_option('shownotes_options');
-    if (!isset($options['main_chapter_delimiter'])) {
-        $options['main_chapter_delimiter'] = ' &nbsp;';
-    }
-    print '<input id="main_chapter_delimiter" name="shownotes_options[main_chapter_delimiter]" value="' . htmlspecialchars($options['main_chapter_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars(' &nbsp;').'</code> </i>';
-}
-
 function shownotes_main_css() {
     $options = get_option('shownotes_options');
     $checked = '';
@@ -245,7 +236,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.3.0</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.3.1</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

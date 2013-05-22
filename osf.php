@@ -394,7 +394,7 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
         }
 
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+            //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
         $subtext .= '>' . trim($text) . '</a>';
     } else {
@@ -403,7 +403,7 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
             $subtext .= ' class="' . $tagtext . '"';
         }
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+            //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
         $subtext .= '>' . trim($text) . '</span>';
     }
@@ -464,7 +464,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         }
 
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+            //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
             $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></a></li>' . " ";
         } else {
             $subtext .= '>' . $splittext . '</a>';
@@ -475,7 +475,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
             $subtext .= ' class="' . $tagtext . '"';
         }
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+            //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></span>';
@@ -524,25 +524,23 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
 
                         if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
                             //$returnstring .= ''; //add code, which should inserted between chapters
-                            if(isset($shownotes_options['main_chapter_delimiter'])) {
-                                $returnstring .= $shownotes_options['main_chapter_delimiter'];
-                            }
                         }
 
-                        $returnstring .= "\n" . '<div class="osf_chapterbox"><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span> ';
+                        $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
                         if (isset($array[$arraykeys[$i]]['urls'][0])) {
                             $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
-                            $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><div class="osf_items"> ' . "\n";
+                            $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
                         } else {
                             $returnstring .= ' <strong';
                             if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                                 $returnstring .= ' class="osf_chapter"';
                             }
-                            $returnstring .= '>' . $text . '</strong><div class="osf_items"> ' . "\n";
+                            $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
                         }
+                        
                         if (isset($array[$arraykeys[$i]]['subitems'])) {
                             for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
@@ -588,12 +586,16 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
     $cleanupsearch = array($delimiter.'</div>'
                           ,',</div>'
                           ,$delimiter.')'
-                          ,$delimiter.'(');
+                          ,$delimiter.'('
+                          ,'osf_"'
+                          ,'osf_ ');
 
     $cleanupreplace = array($lastdelimiter.'</div>'
                            ,'</div>'
                            ,') '
-                           ,' (');
+                           ,' ('
+                           ,' '
+                           ,' ');
 
     $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
     return $returnstring;
@@ -660,7 +662,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                             }
 
                             if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-                                $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+                                //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
                                 $subtext .= '>' . trim($text) . '</a></li>' . " ";
                             } else {
                                 $subtext .= '>' . trim($text) . '</a></li>' . " ";
@@ -672,7 +674,7 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                                 $subtext .= ' class="' . $hide . '"';
                             }
                             if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-                                $subtext .= ' data-tooltip="' . $subitem['time'] . '"';
+                                //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
                             }
                             $subtext .= '>' . trim($text) . '</span></li> ';
                         }
