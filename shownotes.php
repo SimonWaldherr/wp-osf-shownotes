@@ -228,10 +228,10 @@ if($osf_shortcode != 'osf-shownotes') {
     add_shortcode('osf-shownotes', 'osf_shownotes_shortcode');
 }
 
-function shownotesshortcode_add_scripts() {
+function shownotesshortcode_add_admin_scripts() {
     wp_enqueue_script( 
         'importPad', 
-        plugins_url('static/shownotes.js', __FILE__), 
+        plugins_url('static/shownotes_admin.js', __FILE__), 
         array(), '0.3.1', false
     );
     wp_enqueue_script( 
@@ -245,8 +245,15 @@ function shownotesshortcode_add_scripts() {
         array(), '0.3.1', false
     );
 }
-if (is_admin()) {
-    add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
+function shownotesshortcode_add_scripts() {
+    wp_enqueue_script( 
+        'importPad', 
+        plugins_url('static/shownotes.js', __FILE__), 
+        array(), '0.3.1', false
+    );
 }
-
+if (is_admin()) {
+    add_action('wp_print_scripts', 'shownotesshortcode_add_admin_scripts');
+}
+add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
 ?>
