@@ -484,12 +484,14 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
             $subtext .= ' class="osf_wiki ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
             $subtext .= ' class="osf_amazon ' . $tagtext . '"';
-        } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || ($subitem['chapter'] == 'video')) {
+        } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || strstr($subitem['urls'][0], 'www.youtu.be/') || ($subitem['chapter'] == 'video')) {
             $subtext .= ' class="osf_youtube ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'flattr.com/')) {
             $subtext .= ' class="osf_flattr ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'twitter.com/')) {
             $subtext .= ' class="osf_twitter ' . $tagtext . '"';
+        } elseif (strstr($subitem['urls'][0], 'app.net/')) {
+            $subtext .= ' class="osf_appnet ' . $tagtext . '"';
         } else {
             $subtext .= ' class="' . $tagtext . '"';
         }
@@ -634,7 +636,7 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
                            ,' ');
 
     if(($template == 'button style')&&(!is_feed())) {
-        $returnstring .= '<script>window.onload = function() {osf_init("'.$usnid.'", "button");}</script>';
+        $returnstring .= '<script>osf_init("'.$usnid.'", "button");</script>';
     }
     $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
     return $returnstring;
@@ -692,12 +694,14 @@ function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 's
                                 $subtext .= ' class="osf_wiki ' . $hide . '"';
                             } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
                                 $subtext .= ' class="osf_amazon ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || ($subitem['chapter'] == 'video')) {
+                            } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || strstr($subitem['urls'][0], 'www.youtu.be/') || ($subitem['chapter'] == 'video')) {
                                 $subtext .= ' class="osf_youtube ' . $hide . '"';
                             } elseif (strstr($subitem['urls'][0], 'flattr.com/')) {
                                 $subtext .= ' class="osf_flattr ' . $hide . '"';
                             } elseif (strstr($subitem['urls'][0], 'twitter.com/')) {
                                 $subtext .= ' class="osf_twitter ' . $hide . '"';
+                            } elseif (strstr($subitem['urls'][0], 'app.net/')) {
+                                $subtext .= ' class="osf_appnet ' . $hide . '"';
                             }
 
                             if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
