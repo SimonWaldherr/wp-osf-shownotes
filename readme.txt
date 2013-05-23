@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, md, markdown, markup, podcast
 Requires at least: 3.2
 Tested up to: 3.5
-Stable tag: 0.3.0
+Stable tag: trunk
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -44,11 +44,16 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 == Screenshots ==
 
 1. Options
-2. Result (Anycast style)
-3. Result (Wikigeeks style)
-4. Meta box for OSF/MD input
+2. Result (Block style)
+3. Result (List style)
+4. Result (Button style)
+5. Meta box for OSF/MD input with Preview
 
 == Changelog ==
+
+= 0.3.1 =
+* new Screenshots
+* Wordpress SVN Bugfix
 
 = 0.3.0 =
 * new template added (buttons)
@@ -130,6 +135,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.3.1 =
+Same as last commit with changes
 
 = 0.3.0 =
 new template added, firefox style fix, better style and clean feed output
