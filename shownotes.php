@@ -177,7 +177,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
         if(($mode == 'block style')||($mode == 'button style')) {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint, $mode);
         } elseif($mode == 'list style') {
-            $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint);
+            $export     = osf_export_wikigeeks($shownotesArray['export'], $fullint, $mode);
         } elseif($mode == 'glossary') {
             $export     = osf_export_glossary($shownotesArray['export'], $fullint);
         } elseif(($mode == 'shownoter')||($mode == 'podcaster')) {

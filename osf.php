@@ -345,7 +345,7 @@ function osf_checktags($needles, $haystack) {
     return $return;
 }
 
-function osf_anycast_textgen($subitem, $tagtext, $text) {
+function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') {
     global $shownotes_options;
     if(isset($shownotes_options['main_delimiter'])) {
         $delimiter = $shownotes_options['main_delimiter'];
@@ -354,6 +354,9 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
     }
     if(trim($text) == "") {
         return '';
+    }
+    if($template == 'list style') {
+        $delimiter = '';
     }
 
     $title = '';
@@ -383,12 +386,14 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
             $subtext .= ' class="osf_wiki ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
             $subtext .= ' class="osf_amazon ' . $tagtext . '"';
-        } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || ($subitem['chapter'] == 'video')) {
+        } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || strstr($subitem['urls'][0], 'www.youtu.be/') || ($subitem['chapter'] == 'video')) {
             $subtext .= ' class="osf_youtube ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'flattr.com/')) {
             $subtext .= ' class="osf_flattr ' . $tagtext . '"';
         } elseif (strstr($subitem['urls'][0], 'twitter.com/')) {
             $subtext .= ' class="osf_twitter ' . $tagtext . '"';
+        } elseif (strstr($subitem['urls'][0], 'app.net/')) {
+            $subtext .= ' class="osf_appnet ' . $tagtext . '"';
         } else {
             $subtext .= ' class="' . $tagtext . '"';
         }
@@ -603,7 +608,7 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
                                             $subtext = osf_feed_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                         } else {
                                             if($template == 'block style') {
-                                                $subtext = osf_anycast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
+                                                $subtext = osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                             } elseif($template == 'button style') {
                                                 $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                             }
@@ -642,96 +647,126 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
     return $returnstring;
 }
 
-function osf_export_wikigeeks($array, $full = false, $filtertags = array(0 => 'spoiler')) {
-    $filtertags    = array(
-        'spoiler',
-        'trash'
-    );
-    $returnstring  = '<div class="osf_wikigeeks">';
+function osf_export_wikigeeks($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
+    if(isset($shownotes_options['main_last_delimiter'])) {
+        $lastdelimiter = $shownotes_options['main_last_delimiter'];
+    } else {
+        $lastdelimiter = '. ';
+    }
+    $delimiter = '';
+    $lastdelimiter = '';
+    
+    //$usnid = time().rand(1,90000);
+    $usnid = get_the_ID().'_'.str_replace(' ', '', $template);
+    $returnstring  = '<div id="osf_usnid_'.$usnid.'">';
     $filterpattern = array(
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
         '(^ *-*)'
     );
-    foreach ($array as $item) {
-        if ((@$item['chapter']) || (($full != false) && (@$item['time'] != ''))) {
-            $text = preg_replace($filterpattern, '', $item['text']);
-            if (strpos($item['time'], '.')) {
-                $time = explode('.', $item['time']);
-                $time = $time[0];
-            } else {
-                $time = $item['time'];
-            }
-            if (($item['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
-                $returnstring .= ''; //add code, which should inserted between chapters
-            }
-
-            if (isset($item['urls'][0])) {
-                $returnstring .= '<div><h1><a target="_blank" href="' . $item['urls'][0] . '">' . $text . '</a> [' . $time . ']</h1></div><ul>';
-            } else {
-                $returnstring .= '<div><h1>' . $text . ' [' . $time . ']</h1></div><ul>';
-            }
-            if (isset($item['subitems'])) {
-                $subitemi = 0;
-                foreach ($item['subitems'] as $subitem) {
-                    if (((($full != false) || (!$subitem['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $subitem['tags']))) || ($full == 2))) && (strlen(trim($subitem['text'])) > 2)) {
-                        if (($full == 2) && (osf_checktags($filtertags, @$subitem['tags']))) {
-                            $hide = ' osf_spoiler';
+    $arraykeys = array_keys($array);
+    for ($i = 0; $i <= count($array); $i++) {
+        if (isset($array[$arraykeys[0]])) {
+            if (isset($arraykeys[$i])) {
+                if (isset($array[$arraykeys[$i]])) {
+                    if ((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
+                        $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
+                        if (strpos($array[$arraykeys[$i]]['time'], '.')) {
+                            $time = explode('.', $array[$arraykeys[$i]]['time']);
+                            $time = $time[0];
                         } else {
-                            $hide = '';
+                            $time = $array[$arraykeys[$i]]['time'];
                         }
-
-                        $text = preg_replace($filterpattern, '', $subitem['text']);
-                        if ($subitemi) {
-                            $subtext = '';
+    
+                        if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
+                            //$returnstring .= ''; //add code, which should inserted between chapters
+                        }
+    
+                        $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
+                        if (isset($array[$arraykeys[$i]]['urls'][0])) {
+                            $returnstring .= ' <strong';
+                            if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+                                $returnstring .= ' class="osf_chapter"';
+                            }
+                            $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
                         } else {
-                            $subtext = '';
+                            $returnstring .= ' <strong';
+                            if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+                                $returnstring .= ' class="osf_chapter"';
+                            }
+                            $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
                         }
-                        if (isset($subitem['urls'][0])) {
-                            $subtext .= '<li><a target="_blank" href="' . $subitem['urls'][0] . '"';
-                            if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
-                                $subtext .= ' class="osf_wiki ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'www.amazon.')) {
-                                $subtext .= ' class="osf_amazon ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'www.youtube.com/') || strstr($subitem['urls'][0], 'www.youtu.be/') || ($subitem['chapter'] == 'video')) {
-                                $subtext .= ' class="osf_youtube ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'flattr.com/')) {
-                                $subtext .= ' class="osf_flattr ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'twitter.com/')) {
-                                $subtext .= ' class="osf_twitter ' . $hide . '"';
-                            } elseif (strstr($subitem['urls'][0], 'app.net/')) {
-                                $subtext .= ' class="osf_appnet ' . $hide . '"';
+                        
+                        if (isset($array[$arraykeys[$i]]['subitems'])) {
+                            for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
+                                if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
+                                    if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2))||($full == 2)) {
+                                        if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
+                                            $tagtext = ' osf_spoiler';
+                                        } else {
+                                            $tagtext = '';
+                                        }
+                                        $substart = '';
+                                        $subend   = '';
+                                        if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
+                                            if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
+                                                if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
+                                                    //$tagtext .= ' osf_substart';
+                                                    $substart = '<ul>';
+                                                }
+                                                if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
+                                                    //$tagtext .= ' osf_subend';
+                                                    $subend = '</ul>'.$delimiter;
+                                                }
+                                            }
+                                        }
+                                        $text    = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']);
+                                        if(is_feed()) {
+                                            $subtext = '<li>'.osf_feed_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text).'</li>';
+                                        } else {
+                                            if($template == 'list style') {
+                                                $subtext = '<li>'.osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text, 'list style').'</li>';
+                                            } elseif($template == 'button style') {
+                                                $subtext = '<li>'.osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text).'</li>';
+                                            }
+                                        }
+                                        $returnstring .= $substart.$subtext.$subend;
+                                    }
+                                }
                             }
-
-                            if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-                                //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
-                                $subtext .= '>' . trim($text) . '</a></li>' . " ";
-                            } else {
-                                $subtext .= '>' . trim($text) . '</a></li>' . " ";
-                            }
-                            
-                        } else {
-                            $subtext .= '<li><span';
-                            if ($hide != '') {
-                                $subtext .= ' class="' . $hide . '"';
-                            }
-                            if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-                                //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
-                            }
-                            $subtext .= '>' . trim($text) . '</span></li> ';
                         }
-                        $subtext = trim($subtext);
-                        $returnstring .= $subtext;
-                        ++$subitemi;
+                        $returnstring .= '</ul></div>';
                     }
                 }
             }
-            $returnstring .= '</ul>';
         }
     }
-
+    
     $returnstring .= '</div>' . "\n";
+    $cleanupsearch = array($delimiter.'</div>'
+                          ,',</div>'
+                          ,$delimiter.')'
+                          ,$delimiter.'('
+                          ,'osf_"'
+                          ,'osf_ '
+                          ,'<li></li>');
+    
+    $cleanupreplace = array($lastdelimiter.'</div>'
+                           ,'</div>'
+                           ,') '
+                           ,' ('
+                           ,' '
+                           ,' '
+                           ,'');
+    
+    $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
     return $returnstring;
 }
 
