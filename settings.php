@@ -44,7 +44,6 @@ function shownotes_register_settings() {
                 'tags_feed'         => 'in/exclude items with certain tags in feed',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
-                'chapter_delimiter' => 'String between chapters',
                 'css_id'            => 'CSS-File',
                 'osf_shortcode'     => 'OSF shortcode',
                 'md_shortcode'      => 'Markdown shortcode'
@@ -125,8 +124,8 @@ function shownotes_completeness_fullmode() {
 
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('block style', 'list style', 'glossary', 'shownoter');
-    print '<select id="main_mode" onchange="templateAssociated();" name="shownotes_options[main_mode]">';
+    $modes = array('block style', 'button style', 'list style', 'glossary', 'shownoter');
+    print '<select id="main_mode" onchange="templateAssociated(1);" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
             print '<option selected>'.$mode.'</option>';
@@ -135,12 +134,12 @@ function shownotes_main_mode() {
         }
     }
     print "<select/>";
-    print "<script>window.onload = function () {templateAssociated();}</script>";
+    print "<script>window.onload = function () {templateAssociated(0);}</script>";
 }
 
 function shownotes_main_css_id() {
     $options  = get_option('shownotes_options');
-    $cssnames = array('none', 'icons after items', 'icons before items');
+    $cssnames = array('none', 'icons after items', 'icons before items', 'buttons');
     $i = 0;
     print '<select id="css_id" name="shownotes_options[css_id]">';
     foreach($cssnames as $cssname) {
@@ -183,7 +182,7 @@ function shownotes_main_tags() {
     if (!isset($options['main_tags'])) {
         $options['main_tags'] = "";
     }
-    print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+    print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
 function shownotes_main_tags_feed() {
@@ -191,31 +190,23 @@ function shownotes_main_tags_feed() {
     if (!isset($options['main_tags_feed'])) {
         $options['main_tags_feed'] = "";
     }
-    print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+    print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
 function shownotes_main_delimiter() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_delimiter'])) {
-        $options['main_delimiter'] = ' &nbsp;';
+        $options['main_delimiter'] = '&nbsp;—&#32;';
     }
-    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code></i>';
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;—&#32;').'</code></i>';
 }
 
 function shownotes_main_last_delimiter() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_last_delimiter'])) {
-        $options['main_last_delimiter'] = '. ';
+        $options['main_last_delimiter'] = '.';
     }
     print '<input id="main_last_delimiter" name="shownotes_options[main_last_delimiter]" value="' . htmlspecialchars($options['main_last_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>.</code> </i>';
-}
-
-function shownotes_main_chapter_delimiter() {
-    $options = get_option('shownotes_options');
-    if (!isset($options['main_chapter_delimiter'])) {
-        $options['main_chapter_delimiter'] = ' &nbsp;';
-    }
-    print '<input id="main_chapter_delimiter" name="shownotes_options[main_chapter_delimiter]" value="' . htmlspecialchars($options['main_chapter_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars(' &nbsp;').'</code> </i>';
 }
 
 function shownotes_main_css() {
@@ -245,7 +236,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.2.5</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.3.0</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
