@@ -637,9 +637,6 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
         $returnstring .= '<script>window.onload = function() {osf_init("'.$usnid.'", "button");}</script>';
     }
     $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
-    if(is_feed()) {
-        $returnstring = str_replace(array('<', '>'), array('&lt;', '&gt;'), $returnstring);
-    }
     return $returnstring;
 }
 

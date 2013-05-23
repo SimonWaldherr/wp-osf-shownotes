@@ -182,7 +182,7 @@ function shownotes_main_tags() {
     if (!isset($options['main_tags'])) {
         $options['main_tags'] = "";
     }
-    print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+    print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
 function shownotes_main_tags_feed() {
@@ -190,21 +190,21 @@ function shownotes_main_tags_feed() {
     if (!isset($options['main_tags_feed'])) {
         $options['main_tags_feed'] = "";
     }
-    print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to main all tags)</i>';
+    print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
 function shownotes_main_delimiter() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_delimiter'])) {
-        $options['main_delimiter'] = ' &nbsp;';
+        $options['main_delimiter'] = '&nbsp;—&#32;';
     }
-    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;-&nbsp;').'</code></i>';
+    print '<input id="main_delimiter" name="shownotes_options[main_delimiter]" value="' . htmlspecialchars($options['main_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>'.htmlspecialchars('&nbsp;—&#32;').'</code></i>';
 }
 
 function shownotes_main_last_delimiter() {
     $options = get_option('shownotes_options');
     if (!isset($options['main_last_delimiter'])) {
-        $options['main_last_delimiter'] = '. ';
+        $options['main_last_delimiter'] = '.';
     }
     print '<input id="main_last_delimiter" name="shownotes_options[main_last_delimiter]" value="' . htmlspecialchars($options['main_last_delimiter']) . '" style="width:8em;" /> <i>&nbsp; e.g.: <code>.</code> </i>';
 }
