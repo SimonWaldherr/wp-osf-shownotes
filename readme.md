@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.1  
 Tested up to: 3.5  
-Stable tag: 0.3.0  
+Stable tag: trunk  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -41,7 +41,27 @@ it's easy to write
 
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
+##Screenshots
+
+1. [Options](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-1.png)
+2. [Result (Block style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-2.png)
+3. [Result (List style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-3.png)
+4. [Result (Button style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-4.png)
+5. [Meta box for OSF/MD input with Preview](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-5.png)
+
 ##Changelog
+
+###0.3.1
+* new Screenshots
+* Wordpress SVN Bugfix
+
+###0.3.0
+* new template added (buttons)
+* firefox style fix
+* better style
+* small fixes
+* better output
+* clean feed output
 
 ###0.3.0
 * new template added (buttons)
