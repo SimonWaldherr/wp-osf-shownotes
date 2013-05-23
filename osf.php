@@ -465,7 +465,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
 
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
             //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
-            $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></a></li>' . " ";
+            $subtext .= '>' . $splittext . '<div><span class="osf_timebutton">' . $subitem['time'] . '</span></div></a></li>' . " ";
         } else {
             $subtext .= '>' . $splittext . '</a>';
         }
@@ -478,7 +478,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
             //$subtext .= ' data-tooltip="' . $subitem['time'] . '"';
         }
         if ((isset($subitem['time'])) && (trim($subitem['time']) != '')) {
-            $subtext .= '>' . $splittext . '<div><span onclick="document.location.hash = \'#t=' . $subitem['time'] . '\'; return false;">' . $subitem['time'] . '</span></div></span>';
+            $subtext .= '>' . $splittext . '<div><span class="osf_timebutton">' . $subitem['time'] . '</span></div></span>';
         } else {
             $subtext .= '>' . $splittext . '</span>';
         }
@@ -500,15 +500,16 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
     } else {
         $lastdelimiter = '. ';
     }
-
-    $returnstring  = '<div>';
+    //$usnid = time().rand(1,90000);
+    $usnid = get_the_ID().'_'.str_replace(' ', '', $template);
+    $returnstring  = '<div id="osf_usnid_'.$usnid.'">';
     $filterpattern = array(
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
         '(^ *-*)'
     );
-    $arraykeys     = array_keys($array);
+    $arraykeys = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
         if (isset($array[$arraykeys[0]])) {
             if (isset($arraykeys[$i])) {
@@ -596,6 +597,9 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
                            ,' ('
                            ,' '
                            ,' ');
+    if($template != 'block style') {
+        $returnstring .= '<script>window.onload = function() {osf_init("'.$usnid.'", "button");}</script>';
+    }
 
     $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
     return $returnstring;
