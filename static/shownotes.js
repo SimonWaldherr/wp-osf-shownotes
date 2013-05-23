@@ -7,7 +7,7 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.3.1
+ * Version: 0.3.0
  */
 
 function hashTime() {

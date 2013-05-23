@@ -1,3 +1,15 @@
+/*
+ * shownotes
+ *
+ * Copyright 2013, Simon Waldherr - http://simon.waldherr.eu/
+ * Released under the MIT Licence
+ * http://opensource.org/licenses/MIT
+ *
+ * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
+ * Wordpress: http://wordpress.org/plugins/shownotes/
+ * Version: 0.3.0
+ */
+
 function importShownotes(textarea, importid, baseurl) {
   var ajax, ajaxTimeout, requrl;
   ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;

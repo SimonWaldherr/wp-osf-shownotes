@@ -4,7 +4,7 @@ Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup  
 Requires at least: 3.1  
 Tested up to: 3.5  
-Stable tag: 0.3.1  
+Stable tag: 0.3.0  
 License: MIT License  
 License URI: http://opensource.org/licenses/mit-license.php  
 
@@ -43,15 +43,13 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
-###0.3.1
-* small fixes
-* better output
-* clean feed output
-
 ###0.3.0
 * new template added (buttons)
 * firefox style fix
 * better style
+* small fixes
+* better output
+* clean feed output
 
 ###0.2.5
 * delimiter bug fixed
