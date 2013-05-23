@@ -46,6 +46,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 ###0.3.1
 * small fixes
 * better output
+* clean feed output
 
 ###0.3.0
 * new template added (buttons)

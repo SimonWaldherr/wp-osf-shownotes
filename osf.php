@@ -411,6 +411,38 @@ function osf_anycast_textgen($subitem, $tagtext, $text) {
     return $subtext;
 }
 
+function osf_feed_textgen($subitem, $tagtext, $text) {
+    global $shownotes_options;
+    if(isset($shownotes_options['main_delimiter'])) {
+        $delimiter = $shownotes_options['main_delimiter'];
+    } else {
+        $delimiter = ' &nbsp;';
+    }
+    if(trim($text) == "") {
+        return '';
+    }
+
+    $title = '';
+    if(isset($subitem['time'])) {
+        $time = trim($subitem['time']);
+        if($time !== "") {
+            $title .= $subitem['time'].': ';
+        }
+    }
+    $title .= $text;
+
+    $subtext = '';
+    if (isset($subitem['urls'][0])) {
+        $url = parse_url($subitem['urls'][0]);
+        $url = explode('.', $url['host']);
+        $subtext .= '<a href="' . $subitem['urls'][0] . '">' . trim($text) . '</a>';
+    } else {
+        $subtext .= '<span>' . trim($text) . '</span>';
+    }
+    $subtext .= $delimiter;
+    return $subtext;
+}
+
 function osf_metacast_textgen($subitem, $tagtext, $text) {
     global $shownotes_options;
     $delimiter = ' ';
@@ -430,7 +462,6 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
         $title .= ' ('.implode(' ', $subitem['tags']).')';
         $tagtext .= ' osf_'.implode(' osf_', $subitem['tags']);
     }
-    
     
     $subtext = '';
     if(strlen($text) > 82) {
@@ -566,10 +597,14 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
                                             }
                                         }
                                         $text    = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']);
-                                        if($template == 'block style') {
-                                            $subtext = osf_anycast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
+                                        if(is_feed()) {
+                                            $subtext = osf_feed_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
                                         } else {
-                                            $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
+                                            if($template == 'block style') {
+                                                $subtext = osf_anycast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
+                                            } elseif($template == 'button style') {
+                                                $subtext = osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text);
+                                            }
                                         }
                                         $returnstring .= $substart.$subtext.$subend;
                                     }
