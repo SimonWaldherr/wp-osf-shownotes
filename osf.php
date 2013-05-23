@@ -27,7 +27,7 @@ function osf_affiliate_generator($url, $data) {
         } else {
             $pid = '';
         }
-        $aid  = '?ie=UTF8&linkCode=as2&tag=' . $amazon;
+        $aid  = '?ie=UTF8&amp;linkCode=as2&amp;tag=' . $amazon;
         $purl = 'http://www.amazon.de/gp/product/' . $pid . '/' . $aid;
     } elseif ((strstr($url, 'www.amazon.com/') && strstr($url, 'p/')) && ($amazon != '')) {
         if (strstr($url, "dp/")) {
@@ -37,16 +37,16 @@ function osf_affiliate_generator($url, $data) {
         } else {
             $pid = '';
         }
-        $aid  = '?ie=UTF8&linkCode=as2&tag=' . $amazon;
+        $aid  = '?ie=UTF8&linkCode=as2&amp;tag=' . $amazon;
         $purl = 'http://www.amazon.com/gp/product/' . $pid . '/' . $aid;
     } elseif ((strstr($url, 'thomann.de/de/')) && ($thomann != '')) {
         $thomannurl = explode('.de/', $url);
-        $purl       = 'http://www.thomann.de/index.html?partner_id=' . $thomann . '&page=/' . $thomannurl[1];
+        $purl       = 'http://www.thomann.de/index.html?partner_id=' . $thomann . '&amp;page=/' . $thomannurl[1];
     } elseif ((strstr($url, 'itunes.apple.com/de')) && ($tradedoubler != '')) {
         if (strstr($url, '?')) {
-            $purl = 'http://clkde.Tradedoubler.com/click?p=23761&a=' . $tradedoubler . '&url=' . urlencode($url . '&partnerId=2003');
+            $purl = 'http://clkde.Tradedoubler.com/click?p=23761&amp;a=' . $tradedoubler . '&amp;url=' . urlencode($url . '&amp;partnerId=2003');
         } else {
-            $purl = 'http://clkde.Tradedoubler.com/click?p=23761&a=' . $tradedoubler . '&url=' . urlencode($url . '?partnerId=2003');
+            $purl = 'http://clkde.Tradedoubler.com/click?p=23761&amp;a=' . $tradedoubler . '&amp;url=' . urlencode($url . '?partnerId=2003');
         }
     } else {
         $purl = $url;
@@ -861,7 +861,7 @@ function markdown($string) {
 
     $rules['tweet'] = array(
         '((@)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/\2\'>\1\2</a> ',                         // user
-        '((#)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/#!/search/?src=hash&q=%23\2\'>\1\2</a> ' // hashtag
+        '((#)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/#!/search/?src=hash&amp;q=%23\2\'>\1\2</a> ' // hashtag
     );
 
 
