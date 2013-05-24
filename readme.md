@@ -54,6 +54,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 ###0.3.1
 * new Screenshots
 * Wordpress SVN Bugfix
+* added upgrade code in settings
 
 ###0.3.0
 * new template added (buttons)
