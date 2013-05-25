@@ -173,6 +173,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
         if($template !== $shownotes_options['main_mode']) {
             $mode = $template;
         }
+        
+        if($mode == 'block') {$mode = 'block style';}
+        if($mode == 'list') {$mode = 'list style';}
+        
         $shownotesArray = osf_parser($shownotesString, $data);
         if(($mode == 'block style')||($mode == 'button style')) {
             $export     = osf_export_anycast($shownotesArray['export'], $fullint, $mode);

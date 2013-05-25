@@ -178,7 +178,7 @@ function osf_parser($shownotes, $data) {
     $pattern['tags']    = '((\s#)(\S*))';
     $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
     $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
-    $pattern['kaskade'] = '/^([\t ]*-+ )/';
+    $pattern['kaskade'] = '/^([\t ]*[\-\–\—]+ )/';
 
     // danach werden mittels des zeilen-Patterns die Shownotes in Zeilen/items geteilt
     preg_match_all($pattern['zeilen'], $shownotes, $zeilen, PREG_SET_ORDER);
@@ -545,7 +545,7 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *-*)'
+        '(^ *[\-\–\—]*)'
     );
     $arraykeys = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
@@ -669,7 +669,7 @@ function osf_export_wikigeeks($array, $full = false, $template, $filtertags = ar
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *-*)'
+        '(^ *[\-\–\—]*)'
     );
     $arraykeys = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
@@ -798,7 +798,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
         '(\s(#)(\S*))',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *-*)'
+        '(^ *[\-\–\—]*)'
     );
     $arraykeys     = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
