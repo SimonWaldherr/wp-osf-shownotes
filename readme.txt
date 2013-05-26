@@ -29,11 +29,11 @@ convert OSF to HTML
 
 = What is OSF? =
 
-a simple format for (Podcast-) Shownotes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
+a simple format for (Podcast-) show notes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
 
 = Why should i use it? =
 
-it's easy to write
+it's easy to write, you get better results in less time and it's automatically changes links to affiliate links
 
 == Support ==
 
@@ -50,6 +50,14 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 5. Meta box for OSF/MD input with Preview
 
 == Changelog ==
+
+= 0.3.2 =
+* added hierarchy at list template
+* added upgrade code in settings
+* works even without chapters and times
+* more valid HTML
+* better feed code
+* code cleanup
 
 = 0.3.1 =
 * new Screenshots
@@ -135,6 +143,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.3.2 =
+hierarchy at list mode, upgrade code in settings and works without chapters and times
 
 = 0.3.1 =
 Same as last commit with changes
