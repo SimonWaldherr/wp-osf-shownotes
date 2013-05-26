@@ -292,7 +292,8 @@ function osf_parser($shownotes, $data) {
     }
     
     // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
-    if (((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0]))) && (!$newarray['chapter'])) {
+    //if (((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0]))) && (!$newarray['chapter'])) {
+    if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
       if (isset($newarray['tags'])) {
         if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
           if (preg_match($pattern['kaskade'], $zeile[0])) {
@@ -306,7 +307,7 @@ function osf_parser($shownotes, $data) {
         }
       } elseif ($exportall == 'true') {
         if (preg_match($pattern['kaskade'], $zeile[0])) {
-          $newarray['subtext']                   = true;
+          $newarray['subtext'] = true;
           $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
         } else {
           $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
@@ -555,6 +556,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
   );
   $arraykeys   = array_keys($array);
   for ($i = 0; $i <= count($array); $i++) {
+    //if (isset($array[$arraykeys[0]]) && (@$array[$arraykeys[0]]['subitems'][0]['text'] != '')) {
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
