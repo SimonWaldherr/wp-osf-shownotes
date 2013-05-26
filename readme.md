@@ -51,6 +51,18 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.3.3
+* empty chapters fix
+* chapter without time fix
+
+###0.3.2
+* added hierarchy at list template
+* added upgrade code in settings
+* works even without chapters and times
+* more valid HTML
+* better feed code
+* code cleanup
+
 ###0.3.1
 * new Screenshots
 * Wordpress SVN Bugfix
