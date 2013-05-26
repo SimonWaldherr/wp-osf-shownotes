@@ -179,9 +179,9 @@ function osf_parser($shownotes, $data) {
   $shownotes = "\n" . osf_replace_timestamps("\n" . $shownotes);
   
   // zuerst werden die regex-Definitionen zum erkennen von Zeilen, Tags, URLs und subitems definiert
-  $pattern['zeilen']  = '/(((\d\d:)?\d\d:\d\d)(\\.\d\d\d)?)*(.+)/';
-  $pattern['tags']  = '((\s#)(\S*))';
-  $pattern['urls']  = '(\s+((http(|s)://\S{0,256})\s))';
+  $pattern['zeilen']  = '/(((\d+:)?\d+:\d+)(\\.\d+)?)*(.+)/';
+  $pattern['tags']    = '((\s#)(\S*))';
+  $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
   $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
   $pattern['kaskade'] = '/^([\t ]*[\-\–\—]+ )/';
   
@@ -277,7 +277,7 @@ function osf_parser($shownotes, $data) {
           $newarray['tags'][] = strtolower($tag);
         }
       }
-      if (((@in_array("chapter", $newarray['tags']))) && ($newarray['time'] != '')) {
+      if (@in_array("chapter", $newarray['tags'])) {
         $newarray['chapter'] = true;
       }
     }
@@ -533,7 +533,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
 }
 
 //HTML export im anyca.st style
-function osf_export_anycast($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
+function osf_export_block($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
   global $shownotes_options;
   if (isset($shownotes_options['main_delimiter'])) {
     $delimiter = $shownotes_options['main_delimiter'];
@@ -558,16 +558,16 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
-          if ((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
-            $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
-            if (strpos($array[$arraykeys[$i]]['time'], '.')) {
+          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+            $text = preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']);
+            if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
               $time = $time[0];
             } else {
-              $time = $array[$arraykeys[$i]]['time'];
+              $time = @$array[$arraykeys[$i]]['time'];
             }
             
-            if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
+            if ((@$array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
               //$returnstring .= ''; //add code, which should inserted between chapters
             }
             
@@ -580,7 +580,7 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
               $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
               $returnstring .= ' <strong';
-              if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if ((@$array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
@@ -656,7 +656,7 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
   return $returnstring;
 }
 
-function osf_export_wikigeeks($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
+function osf_export_list($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
   global $shownotes_options;
   if (isset($shownotes_options['main_delimiter'])) {
     $delimiter = $shownotes_options['main_delimiter'];
@@ -684,16 +684,16 @@ function osf_export_wikigeeks($array, $full = false, $template, $filtertags = ar
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
-          if ((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
-            $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
-            if (strpos($array[$arraykeys[$i]]['time'], '.')) {
+          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+            $text = preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']);
+            if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
               $time = $time[0];
             } else {
-              $time = $array[$arraykeys[$i]]['time'];
+              $time = @$array[$arraykeys[$i]]['time'];
             }
             
-            if (($array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
+            if ((@$array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
               //$returnstring .= ''; //add code, which should inserted between chapters
             }
             
@@ -706,7 +706,7 @@ function osf_export_wikigeeks($array, $full = false, $template, $filtertags = ar
               $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
               $returnstring .= ' <strong';
-              if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if ((@$array[$arraykeys[$i]]['chapter']) && ($time != '')) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
@@ -816,7 +816,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
   );
   $arraykeys   = array_keys($array);
   for ($i = 0; $i <= count($array); $i++) {
-    if ((@$array[$arraykeys[$i]]['chapter']) || ((@$full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) {
+    if (((@$array[$arraykeys[$i]]['chapter']) || ((@$full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
       if (isset($array[$arraykeys[$i]]['subitems'])) {
         for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
           if ((@$array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && (@$array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
