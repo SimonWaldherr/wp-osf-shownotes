@@ -292,7 +292,7 @@ function osf_parser($shownotes, $data) {
     }
     
     // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
-    if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
+    if (((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0]))) && (!$newarray['chapter'])) {
       if (isset($newarray['tags'])) {
         if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
           if (preg_match($pattern['kaskade'], $zeile[0])) {
@@ -574,13 +574,13 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
               $returnstring .= ' <strong';
-              if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
               $returnstring .= ' <strong';
-              if ((@$array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
@@ -700,13 +700,13 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
               $returnstring .= ' <strong';
-              if (($array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
               $returnstring .= ' <strong';
-              if ((@$array[$arraykeys[$i]]['chapter']) && ($time != '')) {
+              if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
               $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
