@@ -10,16 +10,11 @@ function shownotes_settings_page() {
  <div class="wrap">
     <h2> Shownotes Options</h2>
     <form method="post" action="options.php">
-      <?php
-    settings_fields('shownotes_options');
-?>
-     <?php
-    do_settings_sections('shownotes');
-?>
+      <?php settings_fields('shownotes_options'); ?>
+      <?php do_settings_sections('shownotes'); ?>
      <p class="submit">
-       <input name="Submit" type="submit" class="button button-primary" value="<?php
-    esc_attr_e('Save Changes');
-?>" />
+       <input name="Submit" type="submit" class="button button-primary" 
+       value="<?php esc_attr_e('Save Changes'); ?>" />
       </p>
     </form>
   </div>
@@ -61,7 +56,7 @@ function shownotes_register_settings() {
         'affiliate' => array(
             'title'  => 'Affiliate',
             'fields' => array(
-                'amazon'       => 'Amazon.de Id',
+                'amazon'       => 'Amazon Id',
                 'thomann'      => 'Thomann.de Id',
                 'tradedoubler' => 'Tradedoubler Id'
             )

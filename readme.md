@@ -29,11 +29,11 @@ convert OSF to HTML
 
 ###What is OSF?
 
-a simple format for (Podcast-) Shownotes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
+a simple format for (Podcast-) show notes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
 
 ###Why should i use it?
 
-it's easy to write
+it's easy to write, you get better results in less time and it's automatically changes links to affiliate links
 
 ##Support
 

@@ -542,10 +542,10 @@ function osf_export_anycast($array, $full = false, $template, $filtertags = arra
     $usnid = get_the_ID().'_'.str_replace(' ', '', $template);
     $returnstring  = '<div id="osf_usnid_'.$usnid.'">';
     $filterpattern = array(
-        '(\s(#)(\S*))',
-        '(\<((http(|s)://[\S#?-]{0,128})>))',
-        '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *[\-\–\—]*)'
+        '/(\s(#)(\S*))/',
+        '/(\<((http(|s)://[\S#?-]{0,128})>))/',
+        '/(\s+((http(|s)://[\S#?-]{0,128})\s))/',
+        '/(^ *[\-\–\—]*)/'
     );
     $arraykeys = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
@@ -666,10 +666,10 @@ function osf_export_wikigeeks($array, $full = false, $template, $filtertags = ar
     $usnid = get_the_ID().'_'.str_replace(' ', '', $template);
     $returnstring  = '<div id="osf_usnid_'.$usnid.'">';
     $filterpattern = array(
-        '(\s(#)(\S*))',
+        '/(\s(#)(\S*))/',
         '(\<((http(|s)://[\S#?-]{0,128})>))',
         '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *[\-\–\—]*)'
+        '/(^ *[\-\–\—]*)/'
     );
     $arraykeys = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
@@ -795,10 +795,10 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
     $linksbytag = array();
 
     $filterpattern = array(
-        '(\s(#)(\S*))',
-        '(\<((http(|s)://[\S#?-]{0,128})>))',
-        '(\s+((http(|s)://[\S#?-]{0,128})\s))',
-        '(^ *[\-\–\—]*)'
+        '/(\s(#)(\S*))/',
+        '/(\<((http(|s)://[\S#?-]{0,128})>))/',
+        '/(\s+((http(|s)://[\S#?-]{0,128})\s))/',
+        '/(^ *[\-\–\—]*)/'
     );
     $arraykeys     = array_keys($array);
     for ($i = 0; $i <= count($array); $i++) {
