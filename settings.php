@@ -6,19 +6,12 @@ if (is_admin()) {
 }
 
 function shownotes_settings_page() {
-?>
- <div class="wrap">
-    <h2> Shownotes Options</h2>
-    <form method="post" action="options.php">
-      <?php settings_fields('shownotes_options'); ?>
-      <?php do_settings_sections('shownotes'); ?>
-     <p class="submit">
-       <input name="Submit" type="submit" class="button button-primary" 
-       value="<?php esc_attr_e('Save Changes'); ?>" />
-      </p>
-    </form>
-  </div>
-<?php
+  print '<div class="wrap"><h2>Shownotes Options</h2><form method="post" action="options.php">';
+  settings_fields('shownotes_options');
+  do_settings_sections('shownotes');
+  print '<p class="submit"><input name="Submit" type="submit" class="button button-primary" value="';
+  esc_attr_e('Save Changes');
+  print '" /></p></form></div>';
 }
 
 
