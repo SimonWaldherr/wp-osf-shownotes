@@ -830,7 +830,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
   $return = '';
   
   foreach ($linksbytag as $tagname => $content) {
-    $return .= '<h1>' . $tagname . '</h1>' . "\n";
+    $return .= '<h2>' . $tagname . '</h2>' . "\n";
     $return .= '<ol>' . "\n";
     usort($content, "osf_glossarysort");
     foreach ($content as $item) {
