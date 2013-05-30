@@ -183,7 +183,7 @@ function osf_parser($shownotes, $data) {
   $pattern['tags']    = '((\s#)(\S*))';
   $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
   $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
-  $pattern['kaskade'] = '/^([\t ]*[\-\–\—]+ )/';
+  $pattern['kaskade'] = '/^([\t ]* *[\-\–\—]+ )/';
   
   // danach werden mittels des zeilen-Patterns die Shownotes in Zeilen/items geteilt
   preg_match_all($pattern['zeilen'], $shownotes, $zeilen, PREG_SET_ORDER);
@@ -577,13 +577,13 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
               if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
               $returnstring .= ' <strong';
               if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '>' . $text . '</strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><p class="osf_items"> ' . "\n";
             }
             
             if (isset($array[$arraykeys[$i]]['subitems'])) {
@@ -622,7 +622,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
                 }
               }
             }
-            $returnstring .= '</div></div>';
+            $returnstring .= '</p></div>';
           }
         }
       }
@@ -632,6 +632,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
   $returnstring .= '</div>' . "\n";
   $cleanupsearch = array(
     $delimiter . '</div>',
+    $delimiter . '</p>',
     ',</div>',
     $delimiter . ')',
     $delimiter . '(',
@@ -641,6 +642,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
   
   $cleanupreplace = array(
     $lastdelimiter . '</div>',
+    $lastdelimiter . '</p>',
     '</div>',
     ') ',
     ' (',
