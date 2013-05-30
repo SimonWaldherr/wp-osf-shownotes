@@ -247,6 +247,7 @@ function osf_parser($shownotes, $data) {
     
     // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
     $newarray['chapter'] = false;
+    //$newarray['tags'][] = 'rank'.$kaskade;
     if (count($tags[2]) > 0) {
       foreach ($tags[2] as $tag) {
         if (strlen($tag) === 1) {
@@ -387,9 +388,6 @@ function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') 
   if (isset($subitem['tags'])) {
     $title .= ' (' . implode(' ', $subitem['tags']) . ')';
     $tagtext .= ' osf_' . implode(' osf_', $subitem['tags']);
-  }
-  if ($subitem['rank'] !== 0) {
-    $title .= ' ('.$subitem['rank'].')';
   }
   
   $subtext = '';
@@ -605,10 +603,10 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
                     $subend   = '';
                     if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                       if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
-                        if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
+                        if ((@$array[$arraykeys[$i]]['subitems'][$ii - 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
                           $substart = '(';
                         }
-                        if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
+                        if ((@$array[$arraykeys[$i]]['subitems'][$ii + 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
                           $subend = ')' . $delimiter;
                         }
                       }
@@ -733,11 +731,16 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
                     $subend   = '';
                     if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                       if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
-                        if (!@$array[$arraykeys[$i]]['subitems'][$ii - 1]['subtext']) {
+                        if ((@$array[$arraykeys[$i]]['subitems'][$ii - 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
                           //$tagtext .= ' osf_substart';
-                          $substart = '<ul>';
+                          //$substart = '<ul>';
+                          if ($array[$arraykeys[$i]]['subitems'][$ii]['rank'] > 1) {
+                            $substart = '<ul class="osf_rank'.$array[$arraykeys[$i]]['subitems'][$ii]['rank'].'">';
+                          } else {
+                            $substart = '<ul>';
+                          }
                         }
-                        if (!@$array[$arraykeys[$i]]['subitems'][$ii + 1]['subtext']) {
+                        if ((@$array[$arraykeys[$i]]['subitems'][$ii + 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
                           //$tagtext .= ' osf_subend';
                           $subend = '</ul>' . $delimiter;
                         }
