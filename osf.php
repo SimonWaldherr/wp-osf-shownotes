@@ -207,6 +207,8 @@ function osf_parser($shownotes, $data) {
     preg_match_all($pattern['tags'], $text, $tags, PREG_PATTERN_ORDER);
     preg_match_all($pattern['urls'], $text, $urls, PREG_PATTERN_ORDER);
     preg_match_all($pattern['urls2'], $text, $urls2, PREG_PATTERN_ORDER);
+    preg_match_all($pattern['kaskade'], $text, $kaskade, PREG_PATTERN_ORDER);
+    $kaskade = strlen(trim(@$kaskade[0][0]));
     
     // array mit URLs im format <url> mit array mit URLs im format  url  zusammenführen
     $urls = array_merge($urls[2], $urls2[2]);
@@ -241,6 +243,7 @@ function osf_parser($shownotes, $data) {
       '',
       ''
     ), $zeile[5]));
+    $newarray['rank'] = $kaskade;
     
     // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
     $newarray['chapter'] = false;
@@ -384,6 +387,9 @@ function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') 
   if (isset($subitem['tags'])) {
     $title .= ' (' . implode(' ', $subitem['tags']) . ')';
     $tagtext .= ' osf_' . implode(' osf_', $subitem['tags']);
+  }
+  if ($subitem['rank'] !== 0) {
+    $title .= ' ('.$subitem['rank'].')';
   }
   
   $subtext = '';
