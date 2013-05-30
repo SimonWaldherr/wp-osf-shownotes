@@ -247,7 +247,6 @@ function osf_parser($shownotes, $data) {
     
     // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
     $newarray['chapter'] = false;
-    //$newarray['tags'][] = 'rank'.$kaskade;
     if (count($tags[2]) > 0) {
       foreach ($tags[2] as $tag) {
         if (strlen($tag) === 1) {
@@ -571,10 +570,6 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
               $time = @$array[$arraykeys[$i]]['time'];
             }
             
-            if ((@$array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
-              //$returnstring .= ''; //add code, which should inserted between chapters
-            }
-            
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
               $returnstring .= ' <strong';
@@ -699,10 +694,6 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
               $time = @$array[$arraykeys[$i]]['time'];
             }
             
-            if ((@$array[$arraykeys[$i]]['chapter']) && ($full != false) && ($time != '') && ($time != '00:00:00')) {
-              //$returnstring .= ''; //add code, which should inserted between chapters
-            }
-            
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
               $returnstring .= ' <strong';
@@ -732,16 +723,9 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
                     if (isset($array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) {
                       if ($array[$arraykeys[$i]]['subitems'][$ii]['subtext']) {
                         if ((@$array[$arraykeys[$i]]['subitems'][$ii - 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
-                          //$tagtext .= ' osf_substart';
-                          //$substart = '<ul>';
-                          if ($array[$arraykeys[$i]]['subitems'][$ii]['rank'] > 1) {
-                            $substart = '<ul class="osf_rank'.$array[$arraykeys[$i]]['subitems'][$ii]['rank'].'">';
-                          } else {
-                            $substart = '<ul>';
-                          }
+                          $substart = '<ul class="osf_rank'.$array[$arraykeys[$i]]['subitems'][$ii]['rank'].'">';
                         }
                         if ((@$array[$arraykeys[$i]]['subitems'][$ii + 1]['rank']) < (@$array[$arraykeys[$i]]['subitems'][$ii]['rank'])) {
-                          //$tagtext .= ' osf_subend';
                           $subend = '</ul>' . $delimiter;
                         }
                       }
@@ -860,32 +844,32 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
 
 function markdown($string) {
   $rules['sm'] = array(
-    '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')', // headers
+    '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')',                        // headers
     '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a target="_blank" href=\'\2\'>\1</a>', // links
-    '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>', // bold emphasis
-    '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>', // bold
-    '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>', // emphasis
-    '/\~\~(.*?)\~\~/' => '<del>\1</del>', // del
-    '/\:\"(.*?)\"\:/' => '<q>\1</q>', // quote
-    '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')', // unorderd lists
-    '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')', // orderd lists
-    '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')', // blockquotes
-    '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')', // add paragraphs
-    '/<\/ul>(\s*)<ul>/' => '', // fix extra ul
-    '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>', // fix extra ul li
-    '/(<\/ul><\/li><li><ul>)/' => '', // fix extra ul li
-    '/<\/ol><ol>/' => '', // fix extra ol
-    '/<\/blockquote><blockquote>/' => "\n" // fix extra blockquote
+    '/(\*\*\*|___)(.*?)\1/' => '<em><strong>\2</strong></em>',               // bold emphasis
+    '/(\*\*|__)(.*?)\1/' => '<strong>\2</strong>',                           // bold
+    '/(\*|_)([\w| ]+)\1/' => '<em>\2</em>',                                  // emphasis
+    '/\~\~(.*?)\~\~/' => '<del>\1</del>',                                    // del
+    '/\:\"(.*?)\"\:/' => '<q>\1</q>',                                        // quote
+    '/\n([*]+)\s([[:print:]]*)/e' => 'md_ulist(\'\\1\', \'\\2\')',           // unorderd lists
+    '/\n[0-9]+\.(.*)/e' => 'md_olist(\'\\1\')',                              // orderd lists
+    '/\n&gt;(.*)/e' => 'md_blockquote(\'\\1\')',                             // blockquotes
+    '/\n([^\n]+)\n/e' => 'md_paragraph(\'\\1\')',                            // add paragraphs
+    '/<\/ul>(\s*)<ul>/' => '',                                               // fix extra ul
+    '/(<\/li><\/ul><\/li><li><ul><li>)/' => '</li><li>',                     // fix extra ul li
+    '/(<\/ul><\/li><li><ul>)/' => '',                                        // fix extra ul li
+    '/<\/ol><ol>/' => '',                                                    // fix extra ol
+    '/<\/blockquote><blockquote>/' => "\n"                                   // fix extra blockquote
   );
   
   $rules['html'] = array(
-    '(\s+((http(|s)://\S{0,64})\s))' => ' <a target="_blank" href="\2">\2</a> ', // url
+    '(\s+((http(|s)://\S{0,64})\s))' => ' <a target="_blank" href="\2">\2</a> ',                                 // url
     '(\s+(([a-zA-Z0-9.,+_-]{1,63}[@][a-zA-Z0-9.,-]{0,254})))' => ' <a target="_blank" href="mailto:\2">\2</a> ', // mail
-    '(\s+((\+)[0-9]{5,63}))' => ' <a target="_blank" href="tel:\1">call \1</a>' // phone
+    '(\s+((\+)[0-9]{5,63}))' => ' <a target="_blank" href="tel:\1">call \1</a>'                                  // phone
   );
   
   $rules['tweet'] = array(
-    '((@)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/\2\'>\1\2</a> ', // user
+    '((@)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/\2\'>\1\2</a> ',                             // user
     '((#)(\S*))' => ' <a target="_blank" href=\'https://twitter.com/#!/search/?src=hash&amp;q=%23\2\'>\1\2</a> ' // hashtag
   );
   
