@@ -94,12 +94,14 @@ function shownotes_version() {
         return ($versionint+0);
     }
     $options = get_option('shownotes_options');
-    $version = '0.3.1';
+    $version = '0.3.3';
     if(isset($options['version'])) {
         $lastversion = $options['version'];
         if($version != $lastversion) {
             print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
-            
+            if(versionInt($lastversion) < versionInt('0.3.2')) {
+                print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p>';
+            }
             if(versionInt($lastversion) < versionInt('0.3.1')) {
                 print '<p>This is how upgrade notices would look like</p>';
                 // here can also be a upgrade code
@@ -116,7 +118,7 @@ function shownotes_version() {
 
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('block style', 'button style', 'list style', 'glossary', 'shownoter');
+    $modes = array('block style', 'button style', 'list style', 'clean osf', 'glossary', 'shownoter');
     print '<select id="main_mode" onchange="templateAssociated(1);" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
@@ -244,7 +246,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.3.1</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.3.3</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at

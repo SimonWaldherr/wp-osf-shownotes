@@ -1,3 +1,6 @@
 [submodule "static/tinyOSF"]
 	path = static/tinyOSF
 	url = https://github.com/shownotes/tinyOSF.js.git
+[submodule "static/majaX"]
+	path = static/majaX
+	url = https://github.com/SimonWaldherr/majaX.js.git

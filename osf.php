@@ -653,7 +653,6 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
     $returnstring .= '<script>osf_init("' . $usnid . '", "button");</script>';
   }
   $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
-  
   return $returnstring;
 }
 
@@ -775,6 +774,76 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
   
   $returnstring = str_replace($cleanupsearch, $cleanupreplace, $returnstring);
   
+  return $returnstring;
+}
+
+function osf_export_osf($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
+  global $shownotes_options;
+  $returnstring  = '';
+  $filterpattern = array(
+    '(\s(#)(\S*))',
+    '(\<((http(|s)://[\S#?-]{0,128})>))',
+    '(\s+((http(|s)://[\S#?-]{0,128})\s))',
+    '(^ *[\-\–\—]*)'
+  );
+  $arraykeys   = array_keys($array);
+  for ($i = 0; $i <= count($array); $i++) {
+    if (isset($array[$arraykeys[0]])) {
+      if (isset($arraykeys[$i])) {
+        if (isset($array[$arraykeys[$i]])) {
+          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+            $text = trim(preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']));
+            if($text != '') {
+              if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
+                $time = explode('.', $array[$arraykeys[$i]]['time']);
+                $time = $time[0];
+                $returnstring .= $time.' ';
+              } else {
+                $time = @$array[$arraykeys[$i]]['time'];
+                $returnstring .= $time.' ';
+              }
+              $returnstring .= $text;
+              if (isset($array[$arraykeys[$i]]['urls'][0])) {
+                $returnstring .= ' &lt;' . $array[$arraykeys[$i]]['urls'][0] . '&gt; ';
+              }
+              if(count(@$array[$arraykeys[$i]]['tags']) !== 0) {
+                $returnstring .= ' #'.implode(' #', @$array[$arraykeys[$i]]['tags']);
+              }
+              $returnstring .= "<br/> \n";
+            }
+            if (isset($array[$arraykeys[$i]]['subitems'])) {
+              for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
+                if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
+                  $text = trim(preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']));
+                  if($text != '') {
+                    if (strpos(@$array[$arraykeys[$i]]['subitems'][$ii]['time'], '.')) {
+                      $time = explode('.', @$array[$arraykeys[$i]]['subitems'][$ii]['time']);
+                      $time = $time[0];
+                      $returnstring .= $time.' ';
+                    } else {
+                      $time = @$array[$arraykeys[$i]]['subitems'][$ii]['time'];
+                      $returnstring .= $time.' ';
+                    }
+                    if(@$array[$arraykeys[$i]]['subitems'][$ii]['rank'] != 0) {
+                      $returnstring .= str_repeat('-', $array[$arraykeys[$i]]['subitems'][$ii]['rank']).' ';
+                    }
+                    $returnstring .= $text;
+                    if (isset($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0])) {
+                      $returnstring .= ' &lt;' . $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] . '&gt; ';
+                    }
+                    if(count(@$array[$arraykeys[$i]]['subitems'][$ii]['tags']) !== 0) {
+                      $returnstring .= ' #'.implode(' #', @$array[$arraykeys[$i]]['subitems'][$ii]['tags']);
+                    }
+                    $returnstring .= "<br/> \n";
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   return $returnstring;
 }
 
