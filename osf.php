@@ -847,6 +847,54 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
   return $returnstring;
 }
 
+function osf_export_chapterlist($array) {
+  $returnstring = '';
+  foreach ($array as $item) {
+    if ($item['chapter']) {
+      $filterpattern = array(
+        '((#)(\S*))',
+        '(\<((http(|s)://\S{0,128})>))',
+        '(\s+((http(|s)://\S{0,128})\s))'
+      );
+      $text = preg_replace($filterpattern, '', $item['orig']);
+      if (strpos($item['time'], '.')) {
+        $returnstring .= $item['time'] . ' ' . $text . "\n";
+      } else {
+        $returnstring .= $item['time'] . '.000 ' . $text . "\n";
+      }
+    }
+  }
+  $returnstring = preg_replace('(\s+\n)', "\n", $returnstring);
+  return $returnstring;
+}
+
+function osf_export_psc($array) {
+  $returnstring = '<!-- specify chapter information -->' . "\n" . '<sc:chapters version="1.0">' . "\n";
+  foreach ($array as $item) {
+    if ($item['chapter']) {
+      $filterpattern = array(
+        '((#)(\S*))',
+        '(\<((http(|s)://[\S#?-]{0,128})>))',
+        '(\s+((http(|s)://[\S#?-]{0,128})\s))'
+      );
+      $text          = trim(preg_replace($filterpattern, '', $item['text']));
+      if (strpos($item['time'], '.')) {
+        $time = $item['time'];
+      } else {
+        $time = $item['time'] . '.000 ';
+      }
+      $returnstring .= '<sc:chapter start="' . $time . '" title="' . $text . '"';
+      if (isset($item['urls'][0])) {
+        $returnstring .= ' href="' . $item['urls'][0] . '"';
+      }
+      $returnstring .= ' />' . "\n";
+    }
+  }
+  $returnstring .= '</sc:chapters>' . "\n";
+  $returnstring = preg_replace('(\s+")', '"', $returnstring);
+  return $returnstring;
+}
+
 function osf_glossarysort($a, $b) {
   $ax = str_split(strtolower(trim($a['text'])));
   $bx = str_split(strtolower(trim($b['text'])));
