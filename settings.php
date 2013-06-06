@@ -100,7 +100,7 @@ function shownotes_version() {
         if($version != $lastversion) {
             print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
             if(versionInt($lastversion) < versionInt('0.3.2')) {
-                print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p>';
+                print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p><p>it also has new icons for links</p>';
             }
             if(versionInt($lastversion) < versionInt('0.3.1')) {
                 print '<p>This is how upgrade notices would look like</p>';
@@ -181,7 +181,7 @@ function shownotes_main_last_delimiter() {
 
 function shownotes_main_css_id() {
     $options  = get_option('shownotes_options');
-    $cssnames = array('none', 'icons after items', 'icons before items', 'buttons');
+    $cssnames = array('none', 'icons after items', 'icons before items', 'new icons before items', 'buttons');
     $i = 0;
     print '<select id="css_id" name="shownotes_options[css_id]">';
     foreach($cssnames as $cssname) {

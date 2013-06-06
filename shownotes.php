@@ -31,7 +31,8 @@ function shownotesshortcode_add_styles() {
     '',
     'style_one',
     'style_two',
-    'style_three'
+    'style_three',
+    'style_four'
   );
 
   wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.3.3');
