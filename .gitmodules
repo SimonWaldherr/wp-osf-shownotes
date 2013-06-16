@@ -4,3 +4,6 @@
 [submodule "static/majaX"]
 	path = static/majaX
 	url = https://github.com/SimonWaldherr/majaX.js.git
+[submodule "static/fontawesome"]
+	path = static/fontawesome
+	url = https://github.com/FortAwesome/Font-Awesome.git
