@@ -15,6 +15,7 @@
 }
 
 .osf_chaptertime, .osf_chapter {
+    display: inline-block;
     font-size: large;
     vertical-align: text-top;
 }

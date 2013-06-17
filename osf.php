@@ -295,11 +295,11 @@ function osf_parser($shownotes, $data) {
     }
     
     // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
-    if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
+    if (!$newarray['chapter']) {
       if (isset($newarray['tags'])) {
-        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
+        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ($tagsmode == 1) || ($exportall == 'true')) {
           if (preg_match($pattern['kaskade'], $zeile[0])) {
-            $newarray['subtext']                   = true;
+            $newarray['subtext'] = true;
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
           } else {
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
@@ -572,17 +572,17 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
             
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</h'.(@$array[$arraykeys[$i]]['rank']+2).'><div class="osf_items"> ' . "\n";
             } else {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '>' . $text . '</strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><p class="osf_items"> ' . "\n";
+              $returnstring .= '>' . $text . '</h'.(@$array[$arraykeys[$i]]['rank']+2).'> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><p class="osf_items"> ' . "\n";
             }
             
             if (isset($array[$arraykeys[$i]]['subitems'])) {
@@ -684,7 +684,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
-          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+          if ((@$array[$arraykeys[$i]]['chapter']) || ($i == 0)) {
             $text = preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']);
             if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
@@ -695,17 +695,17 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
             
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></h'.(@$array[$arraykeys[$i]]['rank']+2).'><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
+              $returnstring .= '>' . $text . '</h'.(@$array[$arraykeys[$i]]['rank']+2).'><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
             }
             
             if (isset($array[$arraykeys[$i]]['subitems'])) {
@@ -733,11 +733,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
                     if (is_feed()) {
                       $subtext = '<li>' . osf_feed_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text) . '</li>';
                     } else {
-                      if ($template == 'list style') {
-                        $subtext = '<li>' . osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text, 'list style') . '</li>';
-                      } elseif ($template == 'button style') {
-                        $subtext = '<li>' . osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text) . '</li>';
-                      }
+                      $subtext = '<li>' . osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text, 'list style') . '</li>';
                     }
                     $returnstring .= $substart . $subtext . $subend;
                   }
