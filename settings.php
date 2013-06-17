@@ -181,7 +181,7 @@ function shownotes_main_last_delimiter() {
 
 function shownotes_main_css_id() {
     $options  = get_option('shownotes_options');
-    $cssnames = array('none', 'icons after items', 'icons before items', 'new icons before items', 'buttons');
+    $cssnames = array('none', 'icons after items', 'icons before items', 'new icons before items', 'buttons', 'fontawesome');
     $i = 0;
     print '<select id="css_id" name="shownotes_options[css_id]">';
     foreach($cssnames as $cssname) {
