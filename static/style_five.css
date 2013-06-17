@@ -23,6 +23,27 @@
  *  Twitter: http://twitter.com/byscuits
  *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
  */
+
+
+.osf_chaptertime {
+    margin-left: 10px;
+    font-family: monospace;
+    font-weight: 300;
+    font-size: 13px;
+    margin-top: 2px;
+    cursor: default !important;
+}
+.osf_chapterbox {
+    margin-top: 7px;
+    margin-bottom: 23px;
+}
+.osf_chaptertime, .osf_chapter {
+    display: inline-block;
+    font-size: large;
+    vertical-align: text-top;
+}
+
+
 /* FONT PATH
  * -------------------------- */
 @font-face {
@@ -34,21 +55,13 @@
 }
 /* FONT AWESOME CORE
  * -------------------------- */
-[class^="icon-"],
-[class*=" icon-"] {
-  font-family: FontAwesome;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: inherit;
-  -webkit-font-smoothing: antialiased;
-  *margin-right: .3em;
-}
+
 [class^="osf_"]:before,
 [class*=" osf_"]:before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
-  text-decoration: none;
+  text-decoration: none !important;
   color: black;
   -webkit-font-smoothing: antialiased;
   margin-right: .3em;
@@ -62,41 +75,6 @@
 .osf_large:before {
   vertical-align: -10%;
   font-size: 1.3333333333333333em;
-}
-/* makes sure icons active on rollover in links */
-a [class^="icon-"],
-a [class*=" icon-"] {
-  display: inline;
-}
-/* increased font size for icon-large */
-[class^="icon-"].osf_fixed-width,
-[class*=" icon-"].osf_fixed-width {
-  display: inline-block;
-  width: 1.1428571428571428em;
-  text-align: right;
-  padding-right: 0.2857142857142857em;
-}
-[class^="icon-"].osf_fixed-width.osf_large,
-[class*=" icon-"].osf_fixed-width.osf_large {
-  width: 1.4285714285714286em;
-}
-.icons-ul {
-  margin-left: 2.142857142857143em;
-  list-style-type: none;
-}
-.icons-ul > li {
-  position: relative;
-}
-.icons-ul .osf_li {
-  position: absolute;
-  left: -2.142857142857143em;
-  width: 2.142857142857143em;
-  text-align: center;
-  line-height: inherit;
-}
-[class^="icon-"].hide,
-[class*=" icon-"].hide {
-  display: none;
 }
 .osf_muted {
   color: #eeeeee;
@@ -164,97 +142,6 @@ a [class*=" icon-"] {
 [class*=" icon-"].pull-right {
   margin-left: .3em;
 }
-/* BOOTSTRAP SPECIFIC CLASSES
- * -------------------------- */
-/* Bootstrap 2.0 sprites.less reset */
-[class^="icon-"],
-[class*=" icon-"] {
-  display: inline;
-  width: auto;
-  height: auto;
-  line-height: normal;
-  vertical-align: baseline;
-  background-image: none;
-  background-position: 0% 0%;
-  background-repeat: repeat;
-  margin-top: 0;
-}
-/* more sprites.less reset */
-.osf_white,
-.nav-pills > .active > a > [class^="icon-"],
-.nav-pills > .active > a > [class*=" icon-"],
-.nav-list > .active > a > [class^="icon-"],
-.nav-list > .active > a > [class*=" icon-"],
-.navbar-inverse .nav > .active > a > [class^="icon-"],
-.navbar-inverse .nav > .active > a > [class*=" icon-"],
-.dropdown-menu > li > a:hover > [class^="icon-"],
-.dropdown-menu > li > a:hover > [class*=" icon-"],
-.dropdown-menu > .active > a > [class^="icon-"],
-.dropdown-menu > .active > a > [class*=" icon-"],
-.dropdown-submenu:hover > a > [class^="icon-"],
-.dropdown-submenu:hover > a > [class*=" icon-"] {
-  background-image: none;
-}
-/* keeps Bootstrap styles with and without icons the same */
-.btn [class^="icon-"].osf_large,
-.nav [class^="icon-"].osf_large,
-.btn [class*=" icon-"].osf_large,
-.nav [class*=" icon-"].osf_large {
-  line-height: .9em;
-}
-.btn [class^="icon-"].osf_spin,
-.nav [class^="icon-"].osf_spin,
-.btn [class*=" icon-"].osf_spin,
-.nav [class*=" icon-"].osf_spin {
-  display: inline-block;
-}
-.nav-tabs [class^="icon-"],
-.nav-pills [class^="icon-"],
-.nav-tabs [class*=" icon-"],
-.nav-pills [class*=" icon-"],
-.nav-tabs [class^="icon-"].osf_large,
-.nav-pills [class^="icon-"].osf_large,
-.nav-tabs [class*=" icon-"].osf_large,
-.nav-pills [class*=" icon-"].osf_large {
-  line-height: .9em;
-}
-.btn [class^="icon-"].pull-left.osf_2x,
-.btn [class*=" icon-"].pull-left.osf_2x,
-.btn [class^="icon-"].pull-right.osf_2x,
-.btn [class*=" icon-"].pull-right.osf_2x {
-  margin-top: .18em;
-}
-.btn [class^="icon-"].osf_spin.osf_large,
-.btn [class*=" icon-"].osf_spin.osf_large {
-  line-height: .8em;
-}
-.btn.btn-small [class^="icon-"].pull-left.osf_2x,
-.btn.btn-small [class*=" icon-"].pull-left.osf_2x,
-.btn.btn-small [class^="icon-"].pull-right.osf_2x,
-.btn.btn-small [class*=" icon-"].pull-right.osf_2x {
-  margin-top: .25em;
-}
-.btn.btn-large [class^="icon-"],
-.btn.btn-large [class*=" icon-"] {
-  margin-top: 0;
-}
-.btn.btn-large [class^="icon-"].pull-left.osf_2x,
-.btn.btn-large [class*=" icon-"].pull-left.osf_2x,
-.btn.btn-large [class^="icon-"].pull-right.osf_2x,
-.btn.btn-large [class*=" icon-"].pull-right.osf_2x {
-  margin-top: .05em;
-}
-.btn.btn-large [class^="icon-"].pull-left.osf_2x,
-.btn.btn-large [class*=" icon-"].pull-left.osf_2x {
-  margin-right: .2em;
-}
-.btn.btn-large [class^="icon-"].pull-right.osf_2x,
-.btn.btn-large [class*=" icon-"].pull-right.osf_2x {
-  margin-left: .2em;
-}
-/* EXTRAS
- * -------------------------- */
-/* Stacked and layered icon */
 .osf_stack {
   position: relative;
   display: inline-block;
@@ -277,105 +164,6 @@ a [class*=" icon-"] {
 .osf_stack .osf_stack-base {
   font-size: 2em;
   *line-height: 1em;
-}
-/* Animated rotating icon */
-.osf_spin {
-  display: inline-block;
-  -moz-animation: spin 2s infinite linear;
-  -o-animation: spin 2s infinite linear;
-  -webkit-animation: spin 2s infinite linear;
-  animation: spin 2s infinite linear;
-}
-a .osf_spin {
-  display: inline-block;
-  text-decoration: none;
-}
-@-moz-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-  }
-  100% {
-    -moz-transform: rotate(359deg);
-  }
-}
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-  }
-}
-@-o-keyframes spin {
-  0% {
-    -o-transform: rotate(0deg);
-  }
-  100% {
-    -o-transform: rotate(359deg);
-  }
-}
-@-ms-keyframes spin {
-  0% {
-    -ms-transform: rotate(0deg);
-  }
-  100% {
-    -ms-transform: rotate(359deg);
-  }
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(359deg);
-  }
-}
-/* Icon rotations and mirroring */
-.osf_rotate-90:before {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
-}
-.osf_rotate-180:before {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
-}
-.osf_rotate-270:before {
-  -webkit-transform: rotate(270deg);
-  -moz-transform: rotate(270deg);
-  -ms-transform: rotate(270deg);
-  -o-transform: rotate(270deg);
-  transform: rotate(270deg);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-.osf_flip-horizontal:before {
-  -webkit-transform: scale(-1, 1);
-  -moz-transform: scale(-1, 1);
-  -ms-transform: scale(-1, 1);
-  -o-transform: scale(-1, 1);
-  transform: scale(-1, 1);
-}
-.osf_flip-vertical:before {
-  -webkit-transform: scale(1, -1);
-  -moz-transform: scale(1, -1);
-  -ms-transform: scale(1, -1);
-  -o-transform: scale(1, -1);
-  transform: scale(1, -1);
-}
-/* ensure rotation occurs inside anchor tags */
-a .osf_rotate-90:before,
-a .osf_rotate-180:before,
-a .osf_rotate-270:before,
-a .osf_flip-horizontal:before,
-a .osf_flip-vertical:before {
-  display: inline-block;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
@@ -555,10 +343,10 @@ a .osf_flip-vertical:before {
 .osf_indent-right:before {
   content: "\f03c";
 }
-.osf_facetime-video:before {
+.osf_facetime-video:before, .osf_video:before {
   content: "\f03d";
 }
-.osf_picture:before {
+.osf_picture:before, .osf_image:before {
   content: "\f03e";
 }
 .osf_pencil:before {
@@ -727,7 +515,7 @@ a .osf_flip-vertical:before {
 .osf_retweet:before {
   content: "\f079";
 }
-.osf_shopping-cart:before {
+.osf_shopping-cart:before, .osf_shopping:before {
   content: "\f07a";
 }
 .osf_folder-close:before {
@@ -815,13 +603,13 @@ a .osf_flip-vertical:before {
 .osf_phone-sign:before {
   content: "\f098";
 }
-.osf_twitter:before {
+.osf_twitter:before, .osf_twittercom:before {
   content: "\f099";
 }
-.osf_facebook:before {
+.osf_facebook:before, .osf_facebookcom:before {
   content: "\f09a";
 }
-.osf_github:before {
+.osf_github:before, .osf_githubcom:before {
   content: "\f09b";
 }
 .osf_unlock:before {
@@ -939,7 +727,7 @@ a .osf_flip-vertical:before {
 .osf_truck:before {
   content: "\f0d1";
 }
-.osf_pinterest:before {
+.osf_pinterest:before, .osf_pinterestcom:before {
   content: "\f0d2";
 }
 .osf_pinterest-sign:before {
@@ -948,7 +736,7 @@ a .osf_flip-vertical:before {
 .osf_google-plus-sign:before {
   content: "\f0d4";
 }
-.osf_google-plus:before {
+.osf_google-plus:before, .osf_googlecom:before {
   content: "\f0d5";
 }
 .osf_money:before {
@@ -981,7 +769,7 @@ a .osf_flip-vertical:before {
 .osf_envelope:before {
   content: "\f0e0";
 }
-.osf_linkedin:before {
+.osf_linkedin:before, .osf_linkedincom:before {
   content: "\f0e1";
 }
 .osf_rotate-left:before,
@@ -1372,10 +1160,10 @@ a .osf_flip-vertical:before {
 .osf_youtube-sign:before {
   content: "\f166";
 }
-.osf_youtube:before {
+.osf_youtube:before, .osf_youtubecom:before {
   content: "\f167";
 }
-.osf_xing:before {
+.osf_xing:before, .osf_xingcom:before {
   content: "\f168";
 }
 .osf_xing-sign:before {
@@ -1384,28 +1172,28 @@ a .osf_flip-vertical:before {
 .osf_youtube-play:before {
   content: "\f16a";
 }
-.osf_dropbox:before {
+.osf_dropbox:before, .osf_dropboxcom:before {
   content: "\f16b";
 }
-.osf_stackexchange:before {
+.osf_stackexchange:before, .osf_stackexchangecom:before {
   content: "\f16c";
 }
-.osf_instagram:before {
+.osf_instagram:before, .osf_instagramcom:before {
   content: "\f16d";
 }
-.osf_flickr:before {
+.osf_flickr:before, .osf_flickrcom:before {
   content: "\f16e";
 }
-.osf_adn:before {
+.osf_adn:before, .osf_appnet:before {
   content: "\f170";
 }
-.osf_bitbucket:before {
+.osf_bitbucket:before, .osf_bitbucketcom:before {
   content: "\f171";
 }
 .osf_bitbucket-sign:before {
   content: "\f172";
 }
-.osf_tumblr:before {
+.osf_tumblr:before, .osf_tumblrcom:before {
   content: "\f173";
 }
 .osf_tumblr-sign:before {
@@ -1423,7 +1211,7 @@ a .osf_flip-vertical:before {
 .osf_long-arrow-right:before {
   content: "\f178";
 }
-.osf_apple:before {
+.osf_apple:before, .osf_applecom:before {
   content: "\f179";
 }
 .osf_windows:before {
@@ -1441,10 +1229,10 @@ a .osf_flip-vertical:before {
 .osf_skype:before {
   content: "\f17e";
 }
-.osf_foursquare:before {
+.osf_foursquare:before, .osf_foursquarecom:before {
   content: "\f180";
 }
-.osf_trello:before {
+.osf_trello:before, .osf_trellocom:before {
   content: "\f181";
 }
 .osf_female:before {
@@ -1462,7 +1250,7 @@ a .osf_flip-vertical:before {
 .osf_moon:before {
   content: "\f186";
 }
-.osf_archive:before {
+.osf_archive:before, .osf_archiveorg:before {
   content: "\f187";
 }
 .osf_bug:before {
