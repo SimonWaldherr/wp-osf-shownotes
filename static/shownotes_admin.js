@@ -7,7 +7,7 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.3.2
+ * Version: 0.3.3
  */
 
 function importShownotes(textarea, importid, baseurl) {
@@ -98,15 +98,15 @@ function previewPopup (shownotesElement, mode) {
   var shownotes = '';
   shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
   if((mode === 'html')||(mode === 'source')) {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_HTML);
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules['html']);
   } else if(mode === 'md') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_Markdown);
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
   } else if(mode === 'wikigeeks') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_HTMLlist);
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
   } else if(mode === 'chapter') {
-    shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExport_Chapter)+'</code>';
+    shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExportModules[mode])+'</code>';
   } else if(mode === 'glossary') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExport_Glossary);
+    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
   }
   shownotesPopup.document.write(shownotes);
   shownotesPopup.document.title = 'Shownotes Preview';

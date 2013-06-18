@@ -94,12 +94,14 @@ function shownotes_version() {
         return ($versionint+0);
     }
     $options = get_option('shownotes_options');
-    $version = '0.3.2';
+    $version = '0.3.3';
     if(isset($options['version'])) {
         $lastversion = $options['version'];
         if($version != $lastversion) {
             print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
-            
+            if(versionInt($lastversion) < versionInt('0.3.2')) {
+                print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p><p>it also has new icons for links</p>';
+            }
             if(versionInt($lastversion) < versionInt('0.3.1')) {
                 print '<p>This is how upgrade notices would look like</p>';
                 // here can also be a upgrade code
@@ -116,7 +118,7 @@ function shownotes_version() {
 
 function shownotes_main_mode() {
     $options = get_option('shownotes_options');
-    $modes = array('block style', 'button style', 'list style', 'glossary', 'shownoter');
+    $modes = array('block style', 'button style', 'list style', 'clean osf', 'glossary', 'shownoter');
     print '<select id="main_mode" onchange="templateAssociated(1);" name="shownotes_options[main_mode]">';
     foreach($modes as $mode) {
         if($mode == $options['main_mode']) {
@@ -179,7 +181,7 @@ function shownotes_main_last_delimiter() {
 
 function shownotes_main_css_id() {
     $options  = get_option('shownotes_options');
-    $cssnames = array('none', 'icons after items', 'icons before items', 'buttons');
+    $cssnames = array('none', 'icons after items', 'icons before items', 'new icons before items', 'buttons', 'fontawesome');
     $i = 0;
     print '<select id="css_id" name="shownotes_options[css_id]">';
     foreach($cssnames as $cssname) {
@@ -244,9 +246,19 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.3.2</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.3.3</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
+  <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement("script"), t = document.getElementsByTagName("script")[0];
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "http://api.flattr.com/js/0.6/load.js?mode=auto";
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */</script></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
   <a href="https://github.com/SimonWaldherr/wp-osf-shownotes">github.com/SimonWaldherr/wp-osf-shownotes</a></p>
   <p>If you found a bug, please tell us your WP- and ps- (and PPP- if you use PPP) Version. <br/>Also your 

@@ -51,6 +51,15 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.3.3.alpha =
+* empty chapters fix
+* chapter without time fix
+* add more hierarchy (ranks)
+* improvements for instaca.st
+* some small improvements
+* font awesome icons added
+* API Cache on Serverside added
+
 = 0.3.2 =
 * added hierarchy at list template
 * added upgrade code in settings
@@ -143,6 +152,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * working Version with meta_box and shortcode content.
 
 == Upgrade Notice ==
+
+= 0.3.3.alpha =
+0.3.3 testversion with many fixes, but maybe bugs too. A lot of hierarchy added and font awesome style
 
 = 0.3.2 =
 hierarchy at list mode, upgrade code in settings and works without chapters and times
