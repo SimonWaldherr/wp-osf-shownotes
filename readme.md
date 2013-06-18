@@ -51,12 +51,14 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
-###0.3.3
+###0.3.3.alpha
 * empty chapters fix
 * chapter without time fix
 * add more hierarchy (ranks)
 * improvements for instaca.st
 * some small improvements
+* font awesome icons added
+* API Cache on Serverside added
 
 ###0.3.2
 * added hierarchy at list template

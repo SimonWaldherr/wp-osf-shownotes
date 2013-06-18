@@ -249,6 +249,16 @@ function shownotes_info() {
     print '<p>This is <strong>Version 0.3.3</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
+  <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement("script"), t = document.getElementsByTagName("script")[0];
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "http://api.flattr.com/js/0.6/load.js?mode=auto";
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */</script></p>
   <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
   <a href="https://github.com/SimonWaldherr/wp-osf-shownotes">github.com/SimonWaldherr/wp-osf-shownotes</a></p>
   <p>If you found a bug, please tell us your WP- and ps- (and PPP- if you use PPP) Version. <br/>Also your 
