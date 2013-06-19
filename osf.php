@@ -10,7 +10,6 @@ function osf_specialtags($needles, $haystack) {
       }
     }
   }
-  
   return $return;
 }
 
@@ -52,7 +51,6 @@ function osf_affiliate_generator($url, $data) {
   } else {
     $purl = $url;
   }
-  
   return $purl;
 }
 
@@ -70,11 +68,11 @@ function osf_time_from_timestamp($utimestamp) {
   // Diese Funktion wandelt Zeitangaben im UNIX-Timestamp Format in relative Zeitangaben im Format 01:23:45 um
   global $osf_starttime;
   if (strpos($utimestamp, ':') != false) {
-    $pause     = explode(':', $utimestamp);
+    $pause = explode(':', $utimestamp);
     $osf_starttime = $osf_starttime + $pause[1] - $pause[0];
   }
   $duration = $utimestamp - $osf_starttime;
-  $sec    = $duration % 60;
+  $sec = $duration % 60;
   if ($sec < 10) {
     $sec = '0' . $sec;
   }
@@ -86,7 +84,6 @@ function osf_time_from_timestamp($utimestamp) {
   if ($hour < 10) {
     $hour = '0' . $hour;
   }
-  
   return "\n" . $hour . ':' . $min . ':' . $sec;
 }
 
@@ -94,38 +91,36 @@ function osf_replace_timestamps($shownotes) {
   // Durchsucht die Shownotes nach Zeitangaben (UNIX-Timestamp) und übergibt sie an die Funktion osf_time_from_timestamp()
   global $osf_starttime;
   preg_match_all('/\n[0-9]{9,15}/', $shownotes, $unixtimestamps);
-  $osf_starttime = @$unixtimestamps[0][0];
-  $regexTS     = array(
+  $osf_starttime = $unixtimestamps[0][0];
+  $regexTS = array(
     '/\n[0-9:]{9,23}/e',
     'osf_time_from_timestamp(\'\\0\')'
   );
-  
   return preg_replace($regexTS[0], $regexTS[1], $shownotes);
 }
 
 function osf_parse_person($string) {
   $profileurl = false;
-  $name     = '';
-  $urlmatch   = preg_match_all('/\<(http[\S]+)\>/', $string, $url);
+  $name = '';
+  $urlmatch = preg_match_all('/\<(http[\S]+)\>/', $string, $url);
   if ($urlmatch != 0 && $urlmatch != false) {
     $profileurl = $url[1][0];
-    $name     = trim(preg_replace('/\<(http[\S]+)\>/', '', $string));
+    $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $string));
   } else {
     if (strpos($string, '@:adn') != false) {
       preg_match_all('/@(\(?[\S]+\)?)@:adn/', $string, $url);
       $profileurl = 'https://alpha.app.net/' . $url[1][0];
-      $name     = trim($url[1][0]);
+      $name = trim($url[1][0]);
     } elseif (strpos($string, '@') != false) {
       preg_match_all('/@(\(?[\S]+\)?)/', $string, $url);
       $profileurl = 'https://twitter.com/' . $url[1][0];
-      $name     = trim($url[1][0]);
+      $name = trim($url[1][0]);
     } else {
       $name = trim($string);
     }
   }
   $return['url']  = $profileurl;
   $return['name'] = trim($name, ' :;()"');
-  
   return $return;
 }
 
@@ -135,7 +130,7 @@ function osf_get_persons($persons, $header) {
   preg_match_all($regex[$persons], $header, $persons);
   $persons    = preg_split('/(,|und)/', $persons[2][0]);
   $personsArray = array();
-  $i      = 0;
+  $i = 0;
   foreach ($persons as $person) {
     $personArray = osf_parse_person($person);
     if ($personArray['url'] == false) {
@@ -145,7 +140,6 @@ function osf_get_persons($persons, $header) {
     }
     $i++;
   }
-  
   return implode(', ', $personsArray);
 }
 
@@ -208,7 +202,12 @@ function osf_parser($shownotes, $data) {
     preg_match_all($pattern['urls'], $text, $urls, PREG_PATTERN_ORDER);
     preg_match_all($pattern['urls2'], $text, $urls2, PREG_PATTERN_ORDER);
     preg_match_all($pattern['kaskade'], $text, $kaskade, PREG_PATTERN_ORDER);
-    $kaskade = strlen(trim(@$kaskade[0][0]));
+    if (isset($kaskade[0][0])) {
+      $kaskade = strlen(trim($kaskade[0][0]));
+    } else {
+      $kaskade = 0;
+    }
+    
     
     // array mit URLs im format <url> mit array mit URLs im format  url  zusammenführen
     $urls = array_merge($urls[2], $urls2[2]);
@@ -280,8 +279,10 @@ function osf_parser($shownotes, $data) {
           $newarray['tags'][] = strtolower($tag);
         }
       }
-      if (@in_array("chapter", $newarray['tags'])) {
-        $newarray['chapter'] = true;
+      if (isset($newarray['tags'])) {
+        if (in_array("chapter", $newarray['tags'])) {
+          $newarray['chapter'] = true;
+        }
       }
     }
     
@@ -295,11 +296,11 @@ function osf_parser($shownotes, $data) {
     }
     
     // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
-    if ((preg_match($pattern['kaskade'], $zeile[0])) || (!preg_match('/(\d\d:\d\d:\d\d)/', $zeile[0])) || (!$newarray['chapter'])) {
+    if (!$newarray['chapter']) {
       if (isset($newarray['tags'])) {
-        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
+        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ($tagsmode == 1) || ($exportall == 'true')) {
           if (preg_match($pattern['kaskade'], $zeile[0])) {
-            $newarray['subtext']                   = true;
+            $newarray['subtext'] = true;
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
           } else {
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
@@ -561,28 +562,40 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
-          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
-            $text = preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']);
-            if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
+          if (!isset($array[$arraykeys[$i]]['time'])) {
+            $array[$arraykeys[$i]]['time'] = '';
+          }
+          if (!isset($array[$arraykeys[$i]]['chapter'])) {
+            $array[$arraykeys[$i]]['chapter'] = false;
+          }
+          if (!isset($array[$arraykeys[$i]]['text'])) {
+            $array[$arraykeys[$i]]['text'] = '';
+          }
+          if (!isset($array[$arraykeys[$i]]['rank'])) {
+            $array[$arraykeys[$i]]['rank'] = 0;
+          }
+          if ((($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+            $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
+            if (strpos($array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
               $time = $time[0];
             } else {
-              $time = @$array[$arraykeys[$i]]['time'];
+              $time = $array[$arraykeys[$i]]['time'];
             }
             
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.($array[$arraykeys[$i]]['rank']+2);
               if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</h'.($array[$arraykeys[$i]]['rank']+2).'><div class="osf_items"> ' . "\n";
             } else {
-              $returnstring .= ' <strong';
-              if (@$array[$arraykeys[$i]]['chapter']) {
+              $returnstring .= ' <h'.($array[$arraykeys[$i]]['rank']+2);
+              if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '>' . $text . '</strong> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><p class="osf_items"> ' . "\n";
+              $returnstring .= '>' . $text . '</h'.($array[$arraykeys[$i]]['rank']+2).'> <span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><p class="osf_items"> ' . "\n";
             }
             
             if (isset($array[$arraykeys[$i]]['subitems'])) {
@@ -684,7 +697,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
-          if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+          if ((@$array[$arraykeys[$i]]['chapter']) || ($i == 0)) {
             $text = preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']);
             if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
@@ -695,17 +708,17 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
             
             $returnstring .= "\n" . '<div class="osf_chapterbox"> ';
             if (isset($array[$arraykeys[$i]]['urls'][0])) {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if ($array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
+              $returnstring .= '><a target="_blank" href="' . $array[$arraykeys[$i]]['urls'][0] . '">' . $text . '</a></h'.(@$array[$arraykeys[$i]]['rank']+2).'><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><div class="osf_items"> ' . "\n";
             } else {
-              $returnstring .= ' <strong';
+              $returnstring .= ' <h'.(@$array[$arraykeys[$i]]['rank']+2);
               if (@$array[$arraykeys[$i]]['chapter']) {
                 $returnstring .= ' class="osf_chapter"';
               }
-              $returnstring .= '>' . $text . '</strong><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
+              $returnstring .= '>' . $text . '</h'.(@$array[$arraykeys[$i]]['rank']+2).'><span class="osf_chaptertime" data-time="' . osf_convert_time($time) . '">' . $time . '</span><ul class="osf_items"> ' . "\n";
             }
             
             if (isset($array[$arraykeys[$i]]['subitems'])) {
@@ -733,11 +746,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
                     if (is_feed()) {
                       $subtext = '<li>' . osf_feed_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text) . '</li>';
                     } else {
-                      if ($template == 'list style') {
-                        $subtext = '<li>' . osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text, 'list style') . '</li>';
-                      } elseif ($template == 'button style') {
-                        $subtext = '<li>' . osf_metacast_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text) . '</li>';
-                      }
+                      $subtext = '<li>' . osf_item_textgen($array[$arraykeys[$i]]['subitems'][$ii], $tagtext, $text, 'list style') . '</li>';
                     }
                     $returnstring .= $substart . $subtext . $subend;
                   }
@@ -907,12 +916,13 @@ function osf_glossarysort($a, $b) {
     }
   } else {
     for ($i = 0; $i <= count($ax); $i++) {
-      if (ord($ax[$i]) != ord($bx[$i])) {
-        return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+      if (isset($ax[$i], $bx[$i])) {
+        if (ord($ax[$i]) != ord($bx[$i])) {
+          return (ord($ax[$i]) < ord($bx[$i])) ? -1 : 1;
+        }
       }
     }
   }
-  
   return 0;
 }
 
@@ -927,15 +937,24 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
     '(^ *[\-\–\—]*)'
   );
   $arraykeys   = array_keys($array);
+  if (!isset($full)) {
+    $full = false;
+  }
   for ($i = 0; $i <= count($array); $i++) {
-    if (((@$array[$arraykeys[$i]]['chapter']) || ((@$full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+    if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
       if (isset($array[$arraykeys[$i]]['subitems'])) {
         for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
-          if ((@$array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && (@$array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
-            foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
-              if (($showtags[0] == '') || (array_search($tag, $showtags) !== false)) {
-                $linksbytag[$tag][$ii]['url']  = $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0];
-                $linksbytag[$tag][$ii]['text'] = $array[$arraykeys[$i]]['subitems'][$ii]['text'];
+          if (isset($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0], $array[$arraykeys[$i]]['subitems'][$ii]['text'])) {
+            if (($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && ($array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
+              if (isset($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
+                if (is_array($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
+                  foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {
+                    if (($showtags[0] == '') || (array_search($tag, $showtags) !== false)) {
+                      $linksbytag[$tag][$ii]['url']  = $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0];
+                      $linksbytag[$tag][$ii]['text'] = $array[$arraykeys[$i]]['subitems'][$ii]['text'];
+                    }
+                  }
+                }
               }
             }
           }
