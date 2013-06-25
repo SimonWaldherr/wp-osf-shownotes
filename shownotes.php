@@ -122,8 +122,8 @@ function osf_shownotes_shortcode($atts, $content = "") {
   } else {
     $default_tags = '';
   }
-  if (isset($shownotes_options['main_tags_feed'])) {
-    $feed_tags = trim($shownotes_options['main_tags_feed']);
+  if (isset($shownotes_options['main_tags'])) {
+    $feed_tags = trim($shownotes_options['main_tags']);
   } else {
     $feed_tags = '';
   }

@@ -271,6 +271,9 @@ function osf_parser($shownotes, $data) {
             case 'a':
               $newarray['tags'][] = 'audio';
               break;
+            case 'q':
+              $newarray['tags'][] = 'quote';
+              break;
             case 'i':
               $newarray['tags'][] = 'image';
               break;
@@ -391,6 +394,24 @@ function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') 
   }
   
   $subtext = '';
+  
+  if(isset($shownotes_options['main_tagdecoration'])) {
+    if(!isset($subitem['tags'])) {
+      $text = '<small>'.trim($text).'</small>';
+    } elseif(in_array('topic', $subitem['tags'])) {
+      $text = '<strong>'.trim($text).'</strong>';
+    } elseif (in_array('quote', $subitem['tags'])) {
+      $text = '<em>'.trim($text).'</em>';
+    } elseif (count($subitem['tags']) == 0) {
+      $text = '<small>'.trim($text).'</small>';
+    } else {
+      $text = trim($text);
+    }
+  } else {
+    $text = trim($text);
+  }
+  
+  
   if (isset($subitem['urls'][0])) {
     $tagtext .= ' osf_url';
     if (strpos($subitem['urls'][0], 'https://') !== false) {
@@ -416,13 +437,13 @@ function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') 
       $subtext .= ' class="' . $tagtext . '"';
     }
     
-    $subtext .= '>' . trim($text) . '</a>';
+    $subtext .= '>' . $text . '</a>';
   } else {
     $subtext .= '<span title="' . $title . '"';
     if ($tagtext != '') {
       $subtext .= ' class="' . $tagtext . '"';
     }
-    $subtext .= '>' . trim($text) . '</span>';
+    $subtext .= '>' . $text . '</span>';
   }
   $subtext .= $delimiter;
   

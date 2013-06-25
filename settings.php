@@ -30,9 +30,9 @@ function shownotes_register_settings() {
             'title'  => 'General Settings',
             'fields' => array(
                 'mode'              => 'Template',
-                'tags_mode'         => 'switch between in- and exclude tags',
-                'tags'              => 'in/exclude items with certain tags',
-                'tags_feed'         => 'in/exclude items with certain tags in feed',
+                'tags_mode'         => 'Tag mode',
+                'tags'              => '',
+                'tagdecoration'     => 'Special tag decoration',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
                 'css_id'            => 'CSS-File',
@@ -112,7 +112,7 @@ function shownotes_version() {
     } else {
         $options['version'] = $version;
         update_option( 'shownotes_options', $options );
-        print '<h3>Version</h3><p>Congratulations, you just installed the <b>shownotes</b> plugin <b>version '.$version.'</b><br/>you can get more informations about OSF <a href="http://shownotes.github.io/OSF-in-a-Nutshell/">here</a>, use our <a href="http://pad.shownotes.org/">ShowPad <i>(Etherpad)</i></a> to write your show notes or follow us at <a href="Twitter">http://twitter.com/dieshownotes</a> and <a href="https://alpha.app.net/shownotes">App.net</a>.</p>';
+        print '<h3>Version</h3><p>Congratulations, you just installed the <b>shownotes</b> plugin <b>version '.$version.'</b><br/>you can get more informations about OSF <a href="http://shownotes.github.io/OSF-in-a-Nutshell/">here</a>, use our <a href="http://pad.shownotes.org/">ShowPad <i>(Etherpad)</i></a> to write your show notes or follow us at <a href="http://twitter.com/dieshownotes">Twitter</a> and <a href="https://alpha.app.net/shownotes">App.net</a>.</p>';
     }
 }
 
@@ -133,7 +133,7 @@ function shownotes_main_mode() {
 
 function shownotes_main_tags_mode() {
     $options  = get_option('shownotes_options');
-    $tags_modes = array('include', 'exclude');
+    $tags_modes = array('only use items with the following tags', 'use all items except items with following tags');
     $i = 0;
     print '<select id="main_tags_mode" name="shownotes_options[main_tags_mode]">';
     foreach($tags_modes as $tags_mode) {
@@ -161,6 +161,16 @@ function shownotes_main_tags_feed() {
         $options['main_tags_feed'] = "";
     }
     print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
+}
+
+function shownotes_main_tagdecoration() { 
+    $options = get_option('shownotes_options');
+    $checked = "";
+    if ( isset( $options['main_tagdecoration'] ) )
+        $checked = "checked ";
+    print "<input id='pwpenclosure2' name='shownotes_options[main_tagdecoration]' 
+        $checked type='checkbox' value='1' />&nbsp;&nbsp;
+        (topics bold, quotes italic, non-tagged small)";
 }
 
 function shownotes_main_delimiter() {
