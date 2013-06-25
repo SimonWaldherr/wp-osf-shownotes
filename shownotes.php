@@ -79,7 +79,7 @@ function save_shownotes() {
   if (isset($_POST['shownotes'])) {
     $new = $_POST['shownotes'];
   } else {
-    $new = '';
+    return;
   }
   $shownotes = $old;
   if ($new && $new != $old) {
