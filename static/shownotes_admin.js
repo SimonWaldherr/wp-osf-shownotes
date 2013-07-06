@@ -11,65 +11,28 @@
  */
 
 function importShownotes(textarea, importid, baseurl) {
-  var ajax, ajaxTimeout, requrl;
-  ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;
-  
-  ajaxTimeout = window.setTimeout(function () {
-    ajax.abort();
-  }, 6000);
-  
-  ajax.onreadystatechange = function () {
-    var selectEle, itemsArray, itemsString, i;
-    if (ajax.readyState === 4) {
-      if (ajax.status === 200) {
-        clearTimeout(ajaxTimeout);
-        if (ajax.status !== 200) {
-  
-        } else {
-          textarea.value = ajax.responseText;
-        }
-      }
-    }
-  };
-  
+  var requrl;
   requrl = baseurl.replace("$$$", importid);
-  ajax.open("GET", requrl, true);
-  ajax.send();
+  majaX({url: requrl}, function (resp) {
+    textarea.value = resp;
+  });
 }
 
 function getPadList(select, podcastname) {
-  var ajax, ajaxTimeout, requrl, padslist, returnstring = '';
-  ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;
-  
-  ajaxTimeout = window.setTimeout(function () {
-    ajax.abort();
-  }, 6000);
-  
-  ajax.onreadystatechange = function () {
-    var selectEle, itemsArray, itemsString, i;
-    if (ajax.readyState === 4) {
-      if (ajax.status === 200) {
-        clearTimeout(ajaxTimeout);
-        if (ajax.status !== 200) {
-  
-        } else {
-          padslist = JSON.parse(ajax.responseText);
-          for(var i = 0; i < padslist.length; i++) {
-            returnstring += '<option>'+padslist[i].docname+'</option>';
-          }
-          select.innerHTML = returnstring;
-        }
-      }
-    }
-  };
+  var requrl, padslist, returnstring = '';
   if(podcastname.trim() == "*") {
     requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/';
   } else {
     requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search='+podcastname.trim();
   }
   
-  ajax.open("GET", requrl, true);
-  ajax.send();
+  majaX({url: requrl, type: 'json'}, function (resp) {
+    padslist = resp;
+    for(var i = 0; i < padslist.length; i++) {
+      returnstring += '<option>'+padslist[i].docname+'</option>';
+    }
+    select.innerHTML = returnstring;
+  })
 }
 
 function templateAssociated (change) {
@@ -94,22 +57,37 @@ function templateAssociated (change) {
   }
 }
 
-function previewPopup (shownotesElement, mode) {
-  var shownotes = '';
-  shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
-  if((mode === 'html')||(mode === 'source')) {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules['html']);
-  } else if(mode === 'md') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
-  } else if(mode === 'wikigeeks') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
-  } else if(mode === 'chapter') {
-    shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExportModules[mode])+'</code>';
-  } else if(mode === 'glossary') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
+function previewPopup (shownotesElement, emode, forceDL, apiurl) {
+  var shownotes = '', action;
+  //if((mode === 'html')||(mode === 'source')) {
+  //  shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules['html']);
+  //} else if(mode === 'md') {
+  //  shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
+  //} else if(mode === 'wikigeeks') {
+  //  shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
+  //} else if(mode === 'chapter') {
+  //  shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExportModules[mode])+'</code>';
+  //} else if(mode === 'glossary') {
+  //  shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
+  //}
+
+  if (forceDL === true) {
+    forceDL = 'true';
   }
-  shownotesPopup.document.write(shownotes);
-  shownotesPopup.document.title = 'Shownotes Preview';
-  shownotesPopup.focus();
+  
+  action = document.forms["post"].action;
+  console.log(action);
   return false;
+  document.forms["post"].action = apiurl;
+  
+  majaX({url:apiurl,method:'POST',data:{fdl:forceDL,mode:emode,shownotes:encodeURIComponent(shownotesElement.value)}}, function (resp) {
+    if (forceDL !== 'true') {
+      shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
+      shownotesPopup.document.write(resp);
+      shownotesPopup.document.title = 'Shownotes Preview';
+      shownotesPopup.focus();
+    }
+  });
+  document.forms["post"].action = action;
+  //return false;
 }

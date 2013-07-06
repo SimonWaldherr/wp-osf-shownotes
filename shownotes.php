@@ -67,7 +67,7 @@ function add_shownotes_textarea($post) {
   } else {
     $baseurlstring = '<select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\'' . $import_podcastname . '\')</script>';
   }
-  echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview: <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\')" value="HTML"> <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\')" value="Chapter"> </p></div>';
+  echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview: <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\', false, \''.plugins_url('api.php' , __FILE__ ).'\'); return false;" value="HTML"> <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', false, \''.plugins_url('api.php' , __FILE__ ).'\'); return false;" value="Chapter"> &#124; Download:  <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', true \''.plugins_url('api.php' , __FILE__ ).'\'); return false;" value="Chapter"> </p></div>';
 }
 
 function save_shownotes() {
