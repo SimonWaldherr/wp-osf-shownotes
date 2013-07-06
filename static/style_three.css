@@ -1,1 +1,100 @@
-.osf_chaptertime{margin-left:10px;font-family:monospace;font-weight:300;font-size:13px;margin-top:2px;cursor:default !important;}.osf_chapterbox{margin-top:7px;margin-bottom:23px;}.osf_chaptertime,.osf_chapter{display:inline-block;font-size:large;vertical-align:text-top;}div a:hover{text-decoration:underline}.osf_amazon,.osf_applecom,.osf_appnet,.osf_flattr,.osf_flattrcom,.osf_twitter,.osf_wiki,.osf_wikipediaorg,.osf_youtube,.osf_youtubecom,.osf_youtu.be,.osf_glossary,.osf_amazonde,.osf_amazoncom,.osf_video,.osf_esaint,.osf_dlrde,.osf_githubcom,.osf_imdbcom,.osf_flickrcom,.osf_tumblrcom,.osf_soundcloudcom,.osf_yahoocom,.osf_xingcom,.osf_podcast{background-repeat:no-repeat;background-position:0 center;padding-left:18px;margin-left:4px;}.osf_amazon,.osf_applecom,.osf_appnet,.osf_flattr,.osf_flattrcom,.osf_twitter,.osf_wiki,.osf_wikipediaorg,.osf_youtube,.osf_youtubecom,.osf_glossary,.osf_amazonde,.osf_amazoncom,.osf_video,.osf_esaint,.osf_dlrde,.osf_githubcom,.osf_imdbcom,.osf_flickrcom,.osf_tumblrcom,.osf_soundcloudcom,.osf_yahoocom,.osf_xingcom,.osf_podcast{background-size:16px 16px}.osf_amazon,.osf_amazonde,.osf_amazoncom{background-image:url('./img/vsmi/amazon.png')}.osf_flattrcom,.osf_flattr{background-image:url('./img/vsmi/flattr.png')}.osf_twitter{background-image:url('./img/vsmi/twitter.png')}.osf_wiki,.osf_wikipediaorg,.osf_glossary{background-image:url('./img/vsmi/wikipedia.png')}.osf_youtube,.osf_youtubecom,.osf_youtu.be,.osf_video{background-image:url('./img/vsmi/youtube.png')}.osf_applecom{background-image:url('./img/vsmi/apple.png')}.osf_appnet{background-image:url('./img/vsmi/appdotnet.png')}.osf_esaint{background-image:url('./img/vsmi/esa.png')}.osf_dlrde{background-image:url('./img/vsmi/dlr.png')}.osf_githubcom{background-image:url('./img/vsmi/github.png')}.osf_imdbcom{background-image:url('./img/vsmi/imdb.png')}.osf_quote{background-image:url('./img/vsmi/quote.png')}.osf_podcast{background-image:url('./img/vsmi/podcast.png')}.osf_flickrcom{background-image:url('./img/vsmi/flickr.png')}.osf_tumblrcom{background-image:url('./img/vsmi/tumblr.png')}.osf_soundcloudcom{background-image:url('./img/vsmi/soundcloud.png')}.osf_yahoocom{background-image:url('./img/vsmi/yahoo.png')}.osf_xingcom{background-image:url('./img/vsmi/xing.png')}
+
+.osf_chaptertime {
+    margin-left: 10px;
+    font-family: monospace;
+    font-weight: 300;
+    font-size: 13px;
+    margin-top: 2px;
+    cursor: default !important;
+}
+.osf_chapterbox {
+    margin-top: 7px;
+    margin-bottom: 23px;
+}
+.osf_chaptertime,
+.osf_chapter {
+    display: inline-block;
+    font-size: large;
+    vertical-align: text-top;
+}
+div a:hover { text-decoration: underline }
+.osf_amazon,
+.osf_applecom,
+.osf_appnet,
+.osf_flattr,
+.osf_flattrcom,
+.osf_twitter,
+.osf_wiki,
+.osf_wikipediaorg,
+.osf_youtube,
+.osf_youtubecom,
+.osf_youtu.be,
+.osf_glossary,
+.osf_amazonde,
+.osf_amazoncom,
+.osf_video,
+.osf_esaint,
+.osf_dlrde,
+.osf_githubcom,
+.osf_imdbcom,
+.osf_flickrcom,
+.osf_tumblrcom,
+.osf_soundcloudcom,
+.osf_yahoocom,
+.osf_xingcom,
+.osf_podcast {
+    background-repeat: no-repeat;
+    background-position: 0 center;
+    padding-left: 18px;
+    margin-left: 4px;
+}
+.osf_amazon,
+.osf_applecom,
+.osf_appnet,
+.osf_flattr,
+.osf_flattrcom,
+.osf_twitter,
+.osf_wiki,
+.osf_wikipediaorg,
+.osf_youtube,
+.osf_youtubecom,
+.osf_glossary,
+.osf_amazonde,
+.osf_amazoncom,
+.osf_video,
+.osf_esaint,
+.osf_dlrde,
+.osf_githubcom,
+.osf_imdbcom,
+.osf_flickrcom,
+.osf_tumblrcom,
+.osf_soundcloudcom,
+.osf_yahoocom,
+.osf_xingcom,
+.osf_podcast { background-size: 16px 16px }
+.osf_amazon,
+.osf_amazonde,
+.osf_amazoncom { background-image: url('./img/vsmi/amazon.png') }
+.osf_flattrcom,
+.osf_flattr { background-image: url('./img/vsmi/flattr.png') }
+.osf_twitter { background-image: url('./img/vsmi/twitter.png') }
+.osf_wiki,
+.osf_wikipediaorg,
+.osf_glossary { background-image: url('./img/vsmi/wikipedia.png') }
+.osf_youtube,
+.osf_youtubecom,
+.osf_youtu.be,
+.osf_video { background-image: url('./img/vsmi/youtube.png') }
+.osf_applecom { background-image: url('./img/vsmi/apple.png') }
+.osf_appnet { background-image: url('./img/vsmi/appdotnet.png') }
+.osf_esaint { background-image: url('./img/vsmi/esa.png') }
+.osf_dlrde { background-image: url('./img/vsmi/dlr.png') }
+.osf_githubcom { background-image: url('./img/vsmi/github.png') }
+.osf_imdbcom { background-image: url('./img/vsmi/imdb.png') }
+.osf_quote { background-image: url('./img/vsmi/quote.png') }
+.osf_podcast { background-image: url('./img/vsmi/podcast.png') }
+.osf_flickrcom { background-image: url('./img/vsmi/flickr.png') }
+.osf_tumblrcom { background-image: url('./img/vsmi/tumblr.png') }
+.osf_soundcloudcom { background-image: url('./img/vsmi/soundcloud.png') }
+.osf_yahoocom { background-image: url('./img/vsmi/yahoo.png') }
+.osf_xingcom { background-image: url('./img/vsmi/xing.png') }
