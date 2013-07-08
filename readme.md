@@ -51,6 +51,10 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.3.4
+* more stable as 0.3.3
+* save and preselect ShowPad Pad name
+
 ###0.3.3.alpha
 * empty chapters fix
 * chapter without time fix

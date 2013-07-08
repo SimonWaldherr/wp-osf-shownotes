@@ -32,6 +32,7 @@ function shownotes_register_settings() {
                 'mode'              => 'Template',
                 'tags_mode'         => 'Tag mode',
                 'tags'              => '',
+                'untagged'          => 'include untagged items',
                 'tagdecoration'     => 'Special tag decoration',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
@@ -94,11 +95,19 @@ function shownotes_version() {
         return ($versionint+0);
     }
     $options = get_option('shownotes_options');
-    $version = '0.3.3';
+    $version = '0.3.4';
+    $infofoo = array('foo' => versionInt($options['version']), 'bar' => versionInt('0.3.2'));
+    
     if(isset($options['version'])) {
         $lastversion = $options['version'];
         if($version != $lastversion) {
             print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+            if(versionInt($lastversion) < versionInt('0.3.4')) {
+                print '<p>this version fixes a few bugs and use the PHP Parser for preview</p>';
+            }
+            if(versionInt($lastversion) < versionInt('0.3.3')) {
+                print '<p>more hierarchy, better chapter handling, font-awesome icons added, feed improvements</p>';
+            }
             if(versionInt($lastversion) < versionInt('0.3.2')) {
                 print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p><p>it also has new icons for links</p>';
             }
@@ -114,6 +123,10 @@ function shownotes_version() {
         update_option( 'shownotes_options', $options );
         print '<h3>Version</h3><p>Congratulations, you just installed the <b>shownotes</b> plugin <b>version '.$version.'</b><br/>you can get more informations about OSF <a href="http://shownotes.github.io/OSF-in-a-Nutshell/">here</a>, use our <a href="http://pad.shownotes.org/">ShowPad <i>(Etherpad)</i></a> to write your show notes or follow us at <a href="http://twitter.com/dieshownotes">Twitter</a> and <a href="https://alpha.app.net/shownotes">App.net</a>.</p>';
     }
+    if (!isset($options['version'])) {
+        $options['version'] = $version;
+    }
+    print '<input id="version" name="shownotes_options[version]" value="' . htmlspecialchars($options['version']) . '" style="display:none;" />';
 }
 
 function shownotes_main_mode() {
@@ -163,12 +176,21 @@ function shownotes_main_tags_feed() {
     print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
+function shownotes_main_untagged() { 
+    $options = get_option('shownotes_options');
+    $checked = "";
+    if ( isset( $options['main_untagged'] ) )
+        $checked = "checked ";
+    print "<input id='main_untagged' name='shownotes_options[main_untagged]' 
+        $checked type='checkbox' value='1' />";
+}
+
 function shownotes_main_tagdecoration() { 
     $options = get_option('shownotes_options');
     $checked = "";
     if ( isset( $options['main_tagdecoration'] ) )
         $checked = "checked ";
-    print "<input id='pwpenclosure2' name='shownotes_options[main_tagdecoration]' 
+    print "<input id='main_tagdecoration' name='shownotes_options[main_tagdecoration]' 
         $checked type='checkbox' value='1' />&nbsp;&nbsp;
         (topics bold, quotes italic, non-tagged small)";
 }
@@ -256,7 +278,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
     $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
     $dirname    = explode('/wp-content', dirname(__FILE__));
-    print '<p>This is <strong>Version 0.3.3</strong> of the <strong> Shownotes</strong>.<br>
+    print '<p>This is <strong>Version 0.3.4</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">

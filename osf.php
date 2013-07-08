@@ -91,12 +91,19 @@ function osf_replace_timestamps($shownotes) {
   // Durchsucht die Shownotes nach Zeitangaben (UNIX-Timestamp) und übergibt sie an die Funktion osf_time_from_timestamp()
   global $osf_starttime;
   preg_match_all('/\n[0-9]{9,15}/', $shownotes, $unixtimestamps);
-  $osf_starttime = $unixtimestamps[0][0];
-  $regexTS = array(
-    '/\n[0-9:]{9,23}/e',
-    'osf_time_from_timestamp(\'\\0\')'
-  );
-  return preg_replace($regexTS[0], $regexTS[1], $shownotes);
+  if (isset($unixtimestamps)) {
+    if (isset($unixtimestamps[0])) {
+      if (isset($unixtimestamps[0][0])) {
+        $osf_starttime = $unixtimestamps[0][0];
+        $regexTS = array(
+          '/\n[0-9:]{9,23}/e',
+          'osf_time_from_timestamp(\'\\0\')'
+        );
+        return preg_replace($regexTS[0], $regexTS[1], $shownotes);
+      }
+    }
+  }
+  return $shownotes;
 }
 
 function osf_parse_person($string) {

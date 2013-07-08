@@ -29,10 +29,14 @@ function getPadList(select, podcastname) {
   majaX({url: requrl, type: 'json'}, function (resp) {
     padslist = resp;
     for(var i = 0; i < padslist.length; i++) {
-      returnstring += '<option>'+padslist[i].docname+'</option>';
+      if (shownotesname === padslist[i].docname) {
+        returnstring += '<option selected>'+padslist[i].docname+'</option>';
+      } else {
+        returnstring += '<option>'+padslist[i].docname+'</option>';
+      }
     }
     select.innerHTML = returnstring;
-  })
+  });
 }
 
 function templateAssociated (change) {
