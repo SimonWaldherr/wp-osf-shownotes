@@ -32,7 +32,7 @@ function shownotes_register_settings() {
                 'mode'              => 'Template',
                 'tags_mode'         => 'Tag mode',
                 'tags'              => '',
-                'untagged'          => 'include untagged items',
+                'untagged'          => 'hide untagged items',
                 'tagdecoration'     => 'Special tag decoration',
                 'delimiter'         => 'String between items',
                 'last_delimiter'    => 'String after last item',
@@ -179,20 +179,19 @@ function shownotes_main_tags_feed() {
 function shownotes_main_untagged() { 
     $options = get_option('shownotes_options');
     $checked = "";
-    if ( isset( $options['main_untagged'] ) )
+    if ( isset( $options['main_untagged'] ) ) {
         $checked = "checked ";
-    print "<input id='main_untagged' name='shownotes_options[main_untagged]' 
-        $checked type='checkbox' value='1' />";
+    }
+    print "<input id='main_untagged' name='shownotes_options[main_untagged]' $checked type='checkbox' value='1' />";
 }
 
 function shownotes_main_tagdecoration() { 
     $options = get_option('shownotes_options');
     $checked = "";
-    if ( isset( $options['main_tagdecoration'] ) )
+    if ( isset( $options['main_tagdecoration'] ) ) {
         $checked = "checked ";
-    print "<input id='main_tagdecoration' name='shownotes_options[main_tagdecoration]' 
-        $checked type='checkbox' value='1' />&nbsp;&nbsp;
-        (topics bold, quotes italic, non-tagged small)";
+    }
+    print "<input id='main_tagdecoration' name='shownotes_options[main_tagdecoration]' $checked type='checkbox' value='1' />&nbsp;&nbsp; (topics bold, quotes italic, non-tagged small)";
 }
 
 function shownotes_main_delimiter() {

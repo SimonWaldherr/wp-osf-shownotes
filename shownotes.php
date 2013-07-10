@@ -170,6 +170,13 @@ function osf_shownotes_shortcode($atts, $content = "") {
       $fullint = 1;
       $tags = explode(' ', $tags);
     }
+    if (!isset($shownotes_options['main_untagged'])) {
+      $fullint = 2;
+      $fullmode = 'true';
+    } else {
+      $fullint = 1;
+      $fullmode = 'false';
+    }
     $data = array(
       'amazon'       => $amazon,
       'thomann'      => $thomann,

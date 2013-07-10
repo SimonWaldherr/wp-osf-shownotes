@@ -602,7 +602,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
           if (!isset($array[$arraykeys[$i]]['rank'])) {
             $array[$arraykeys[$i]]['rank'] = 0;
           }
-          if ((($array[$arraykeys[$i]]['chapter']) || (($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
+          if ($array[$arraykeys[$i]]['chapter'] || ((($full != false) && ($array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
             $text = preg_replace($filterpattern, '', $array[$arraykeys[$i]]['text']);
             if (strpos($array[$arraykeys[$i]]['time'], '.')) {
               $time = explode('.', $array[$arraykeys[$i]]['time']);
@@ -629,7 +629,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
+                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
                     if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                       $tagtext = ' osf_spoiler';
                     } else {
@@ -752,7 +752,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, $array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
+                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
                     if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                       $tagtext = ' osf_spoiler';
                     } else {
