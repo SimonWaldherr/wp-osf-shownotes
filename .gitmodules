@@ -7,3 +7,6 @@
 [submodule "static/fontawesome"]
 	path = static/fontawesome
 	url = https://github.com/FortAwesome/Font-Awesome.git
+[submodule "static/img/bwi"]
+	path = static/img/bwi
+	url = https://SimonWaldherr@github.com/SimonWaldherr/BitmapWebIcons.git
