@@ -22,6 +22,7 @@ div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_applecom,
 .osf_appnet,
+.osf_facebookcom,
 .osf_flattr,
 .osf_flattrcom,
 .osf_twitter,
@@ -39,6 +40,7 @@ div a:hover { text-decoration: underline }
 .osf_shopping,
 .osf_amazonde,
 .osf_amazoncom,
+.osf_paypal.com,
 .osf_video,
 .osf_esaint,
 .osf_dlrde,
@@ -47,10 +49,13 @@ div a:hover { text-decoration: underline }
 .osf_flickrcom,
 .osf_tumblrcom,
 .osf_soundcloudcom,
+.osf_stackoverflow,
 .osf_yahoocom,
 .osf_xingcom,
 .osf_xenimde,
 .osf_quote,
+.osf_rss,
+.osf_feed,
 .osf_podcast {
   background-repeat: no-repeat;
   background-position: 0 center;
@@ -61,19 +66,24 @@ div a:hover { text-decoration: underline }
 
 .osf_heisede { background-image: url('./img/bwi/heise.png') }
 .osf_link { background-image: url('./img/bwi/link.png') }
-.osf_shopping { background-image: url('./img/bwi/shopping.png') }
 .osf_amazon,
 .osf_amazonde,
 .osf_amazoncom { background-image: url('./img/bwi/amazon.png') }
+.osf_shopping { background-image: url('./img/bwi/shopping.png') }
+.osf_rss,
+.osf_feed { background-image: url('./img/bwi/rss.png') }
 .osf_googlede,
 .osf_googlecom,
 .osf_google { background-image: url('./img/bwi/google.png') }
+.osf_facebookcom { background-image: url('./img/bwi/facebook.png') }
 .osf_flattrcom,
 .osf_flattr { background-image: url('./img/bwi/flattr.png') }
 .osf_twitter { background-image: url('./img/bwi/twitter.png') }
 .osf_wiki,
 .osf_wikipediaorg,
 .osf_glossary { background-image: url('./img/bwi/wikipedia.png') }
+.osf_paypal.com { background-image: url('./img/bwi/paypal.png') }
+.osf_stackoverflow { background-image: url('./img/bwi/stackoverflow.png') }
 .osf_youtube,
 .osf_youtubecom,
 .osf_youtu.be,
