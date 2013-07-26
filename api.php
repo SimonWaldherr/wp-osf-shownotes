@@ -1,16 +1,27 @@
 <?php
 
-include_once 'osf.php';
-
 $fdl       = $_POST['fdl'];
+$fdlid     = $_GET['fdlid'];
 $emode     = $_POST['mode'];
 $preview   = $_POST['preview'];
 $shownotes = urldecode($_POST['shownotes']);
 
-if (isset($fdl)) {
-  header("Content-Disposition: attachment; filename=\"shownotes.txt\"");
+if (isset($fdlid)) {
+  if (is_numeric($fdlid)) {
+    if ($_GET['fdname'] != '') {
+      $fdname = $_GET['fdname'] . '.mp4chaps.txt';
+    } else {
+      $fdname = $fdlid . '.mp4chaps.txt';
+    }
+    header('Content-Disposition: attachment; filename="' . $fdname . '"');
+    $filecontent = file_get_contents('./cache/' . $fdlid . '.mp4chaps.txt');
+    unlink('./cache/' . $fdlid . '.mp4chaps.txt');
+    echo $filecontent;
+    die();
+  }
 }
 
+include_once 'osf.php';
 
 $amazon = 'shownot.es-21';
 $thomann = '93439';
@@ -50,7 +61,6 @@ function is_feed() {
 }
 
 if (($emode == 'block style') || ($emode == 'button style')) {
-  //echo $shownotesArray['export'];
   $export = osf_export_block($shownotesArray['export'], $fullint, $emode);
 } elseif ($emode == 'list style') {
   $export = osf_export_list($shownotesArray['export'], $fullint, $emode);
@@ -72,29 +82,38 @@ if (($emode == 'block style') || ($emode == 'button style')) {
 
 if (isset($preview) && ($preview != 'false')) {
   if (($emode == 'clean osf')||($emode == 'chapter')) {
-      $export = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kapitelmarken</title></head><body><pre>' . $export . '</pre></body></html>';
-    } else {
-      $export = '<!DOCTYPE html><html>
-  <head>
-    <meta charset="utf-8">
-    <title>tinyOSF.js</title>
-    <link rel="icon" href="http://shownotes.github.io/tinyOSF.js/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="http://shownotes.github.io/tinyOSF.js/shownotes.css" type="text/css" media="screen">
-    <link rel="stylesheet" href="http://shownotes.github.io/tinyOSF.js/style.css" type="text/css" media="screen">
-    <script src="http://shownotes.github.io/tinyOSF.js/tinyosf_exportmodules.js"></script>
-    <script src="http://shownotes.github.io/tinyOSF.js/tinyosf.js"></script>
-    <style>.osf_chaptertime, .osf_chapter {vertical-align: middle !important;}</style>
-  </head>
-  <body>
-    <div id="parsedBox">
-      <div id="parsed">' . $export . '</div>
-      <div id="footer">&nbsp;<span>© 2013 <a href="http://shownot.es/">shownot.es</a></span></div>
-    </div>
-  </body>
-  </html>';
-    }
+    $export = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kapitelmarken</title></head><body><pre>' . $export . '</pre></body></html>';
+  } else {
+    $export = '<!DOCTYPE html><html>
+<head>
+  <meta charset="utf-8">
+  <title>tinyOSF.js</title>
+  <link rel="icon" href="http://shownotes.github.io/tinyOSF.js/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="http://shownotes.github.io/tinyOSF.js/shownotes.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="http://shownotes.github.io/tinyOSF.js/style.css" type="text/css" media="screen">
+  <script src="http://shownotes.github.io/tinyOSF.js/tinyosf_exportmodules.js"></script>
+  <script src="http://shownotes.github.io/tinyOSF.js/tinyosf.js"></script>
+  <style>.osf_chaptertime, .osf_chapter {vertical-align: middle !important;}</style>
+</head>
+<body>
+  <div id="parsedBox">
+    <div id="parsed">' . $export . '</div>
+    <div id="footer">&nbsp;<span>© 2013 <a href="http://shownot.es/">shownot.es</a></span></div>
+  </div>
+</body>
+</html>';
+  }
 }
 
-echo $export;
+if (isset($fdl)) {
+  $fdlid = round(rand(10000,900000000)*time()/300000);
+  if (!is_dir('./cache/')) {
+    mkdir('./cache/', 0666);
+  }
+  file_put_contents('./cache/' . $fdlid . '.mp4chaps.txt', $export);
+  echo $fdlid;
+} else {
+  echo $export;
+}
 
 ?>

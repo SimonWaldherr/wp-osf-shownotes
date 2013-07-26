@@ -74,18 +74,16 @@ function previewPopup(shownotesElement, emode, forceDL, apiurl) {
     preview = 'false';
   }
 
-  //action = document.forms.post.action;
-  //return false;
-  //document.forms["post"].action = apiurl;
-
-  majaX({url: apiurl, method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
+  majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
     if (forceDL !== 'true') {
       shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
       shownotesPopup.document.write(resp);
       shownotesPopup.document.title = 'Shownotes Preview';
       shownotesPopup.focus();
+    } else {
+      window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
     }
   });
-  //document.forms.post.action = action;
+
   return false;
 }
