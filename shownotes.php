@@ -2,7 +2,7 @@
 
 /**
  * @package Shownotes
- * @version 0.3.3
+ * @version 0.3.5
  */
 
 /*
@@ -10,7 +10,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.3.3
+Version: 0.3.5
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -36,7 +36,7 @@ function shownotesshortcode_add_styles() {
     'style_five'
   );
 
-  wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.3.3');
+  wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.3.5');
 }
 add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
@@ -48,13 +48,19 @@ function add_shownotes_textarea($post) {
   }
   if (isset($post_id)) {
     $shownotes = get_post_meta($post_id, '_shownotes', true);
+    if (@get_post_meta($post_id, '_shownotesname', true) != '') {
+      $shownotesname = get_post_meta($post_id, '_shownotesname', true);
+    } else {
+      $shownotesname = '';
+    }
+    
     if ($shownotes == "") {
       $shownotes = get_post_meta($post_id, 'shownotes', true);
     }
   } else {
     $shownotes = '';
   }
-  $baseurl = 'http://tools.shownot.es/showpadapi/?id=$$$';
+  $baseurl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getPad/?id=$$$';
   $baseurlstring = '';
   $import_podcastname = false;
   if (isset($shownotes_options['import_podcastname'])) {
@@ -63,11 +69,14 @@ function add_shownotes_textarea($post) {
     }
   }
   if ($import_podcastname == false) {
-    $baseurlstring = '<input type="text" id="importId" name="" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import">';
+    $baseurlstring = '<input type="text" id="importId" name="shownotesname" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import">';
   } else {
-    $baseurlstring = '<select id="importId" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\'' . $import_podcastname . '\')</script>';
+    $baseurlstring = '<select id="importId" name="shownotesname" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\'' . $import_podcastname . '\')</script>';
   }
-  echo '<div id="add_shownotes" class="shownotesdiv"><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview: <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\')" value="HTML"> <input type="button" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\')" value="Chapter"> </p></div>';
+  echo '<div id="add_shownotes" class="shownotesdiv"><script>var shownotesname = \'' . $shownotesname . '\';</script><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' &#124; Preview:
+<input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\', false, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="HTML">
+<input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', false, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Chapter"> &#124; Download:
+<input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', true, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Chapter"> </p></div>';
 }
 
 function save_shownotes() {
@@ -78,12 +87,14 @@ function save_shownotes() {
   $old = get_post_meta($post_id, '_shownotes', true);
   if (isset($_POST['shownotes'])) {
     $new = $_POST['shownotes'];
+    $name = $_POST['shownotesname'];
   } else {
-    $new = '';
+    return;
   }
   $shownotes = $old;
   if ($new && $new != $old) {
     update_post_meta($post_id, '_shownotes', $new);
+    update_post_meta($post_id, '_shownotesname', $name);
     delete_post_meta($post_id, 'shownotes');
     $shownotes = $new;
   } elseif ('' == $new && $old) {
@@ -122,8 +133,8 @@ function osf_shownotes_shortcode($atts, $content = "") {
   } else {
     $default_tags = '';
   }
-  if (isset($shownotes_options['main_tags_feed'])) {
-    $feed_tags = trim($shownotes_options['main_tags_feed']);
+  if (isset($shownotes_options['main_tags'])) {
+    $feed_tags = trim($shownotes_options['main_tags']);
   } else {
     $feed_tags = '';
   }
@@ -161,6 +172,13 @@ function osf_shownotes_shortcode($atts, $content = "") {
     } else {
       $fullint = 1;
       $tags = explode(' ', $tags);
+    }
+    if (!isset($shownotes_options['main_untagged'])) {
+      $fullint = 2;
+      $fullmode = 'true';
+    } else {
+      $fullint = 1;
+      $fullmode = 'false';
     }
     $data = array(
       'amazon'       => $amazon,
@@ -251,13 +269,13 @@ if ($osf_shortcode != 'osf-shownotes') {
 }
 
 function shownotesshortcode_add_admin_scripts() {
-  wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.3.3', false);
-  wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.3.3', false);
-  wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.3.3', false);
-  wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.3.3', false);
+  wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.3.5', false);
+  wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.3.5', false);
+  wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.3.5', false);
+  wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.3.5', false);
 }
 function shownotesshortcode_add_scripts() {
-  wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.3.3', false);
+  wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.3.5', false);
 }
 if (is_admin()) {
   add_action('wp_print_scripts', 'shownotesshortcode_add_admin_scripts');

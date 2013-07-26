@@ -10,16 +10,20 @@
  * Version: 0.3.3
  */
 
+/*jslint browser: true, indent: 2 */
+
 function hashTime() {
-  document.location.hash = '#t='+this.innerHTML;
+  "use strict";
+  document.location.hash = '#t=' + this.innerHTML;
   return false;
 }
 
 function osf_init(divid, template) {
-  if(template === 'button') {
-    var i, timebuttons, div = document.getElementById('osf_usnid_'+divid);
+  "use strict";
+  if (template === 'button') {
+    var i, timebuttons, div = document.getElementById('osf_usnid_' + divid);
     timebuttons = div.getElementsByClassName('osf_timebutton');
-    for(i = 0; i < timebuttons.length; i++) {
+    for (i = 0; i < timebuttons.length; i += 1) {
       timebuttons[i].onclick = hashTime;
     }
   }

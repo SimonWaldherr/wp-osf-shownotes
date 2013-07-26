@@ -10,106 +10,80 @@
  * Version: 0.3.3
  */
 
+/*global majaX, shownotesname */
+
 function importShownotes(textarea, importid, baseurl) {
-  var ajax, ajaxTimeout, requrl;
-  ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;
-  
-  ajaxTimeout = window.setTimeout(function () {
-    ajax.abort();
-  }, 6000);
-  
-  ajax.onreadystatechange = function () {
-    var selectEle, itemsArray, itemsString, i;
-    if (ajax.readyState === 4) {
-      if (ajax.status === 200) {
-        clearTimeout(ajaxTimeout);
-        if (ajax.status !== 200) {
-  
-        } else {
-          textarea.value = ajax.responseText;
-        }
-      }
-    }
-  };
-  
+  "use strict";
+  var requrl;
   requrl = baseurl.replace("$$$", importid);
-  ajax.open("GET", requrl, true);
-  ajax.send();
+  majaX({url: requrl}, function (resp) {
+    textarea.value = resp;
+  });
 }
 
 function getPadList(select, podcastname) {
-  var ajax, ajaxTimeout, requrl, padslist, returnstring = '';
-  ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;
-  
-  ajaxTimeout = window.setTimeout(function () {
-    ajax.abort();
-  }, 6000);
-  
-  ajax.onreadystatechange = function () {
-    var selectEle, itemsArray, itemsString, i;
-    if (ajax.readyState === 4) {
-      if (ajax.status === 200) {
-        clearTimeout(ajaxTimeout);
-        if (ajax.status !== 200) {
-  
-        } else {
-          padslist = JSON.parse(ajax.responseText);
-          for(var i = 0; i < padslist.length; i++) {
-            returnstring += '<option>'+padslist[i].docname+'</option>';
-          }
-          select.innerHTML = returnstring;
-        }
-      }
-    }
-  };
-  if(podcastname.trim() == "*") {
+  "use strict";
+  var requrl, padslist, returnstring = '', i;
+  if (podcastname.trim() === "*") {
     requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/';
   } else {
-    requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search='+podcastname.trim();
+    requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search=' + podcastname.trim();
   }
-  
-  ajax.open("GET", requrl, true);
-  ajax.send();
+
+  majaX({url: requrl, type: 'json'}, function (resp) {
+    padslist = resp;
+    for (i = 0; i < padslist.length; i += 1) {
+      if (shownotesname === padslist[i].docname) {
+        returnstring += '<option selected>' + padslist[i].docname + '</option>';
+      } else {
+        returnstring += '<option>' + padslist[i].docname + '</option>';
+      }
+    }
+    select.innerHTML = returnstring;
+  });
 }
 
-function templateAssociated (change) {
-  var delimiterele, lastdelimiterele, chapterdelimiterele, cssele, i, j;
+function templateAssociated(change) {
+  "use strict";
+  var delimiterele, lastdelimiterele;
   delimiterele = document.getElementById('main_delimiter');
   lastdelimiterele = document.getElementById('main_last_delimiter');
   document.getElementById('main_md_shortcode').parentNode.parentNode.style.display = 'none';
-  if(document.getElementById('main_mode').value == 'block style') {
+  if (document.getElementById('main_mode').value === 'block style') {
     delimiterele.parentNode.parentNode.style.display = 'table-row';
     lastdelimiterele.parentNode.parentNode.style.display = 'table-row';
-  } else if(document.getElementById('main_mode').value == 'button style') {
+  } else if (document.getElementById('main_mode').value === 'button style') {
     delimiterele.parentNode.parentNode.style.display = 'none';
     lastdelimiterele.parentNode.parentNode.style.display = 'none';
   } else {
     delimiterele.parentNode.parentNode.style.display = 'none';
     lastdelimiterele.parentNode.parentNode.style.display = 'none';
   }
-  if(change === 1) {
-    if(document.getElementById('main_mode').value == 'button style') {
+  if (change === 1) {
+    if (document.getElementById('main_mode').value === 'button style') {
       document.getElementById('css_id').value = 3;
     }
   }
 }
 
-function previewPopup (shownotesElement, mode) {
-  var shownotes = '';
-  shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
-  if((mode === 'html')||(mode === 'source')) {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules['html']);
-  } else if(mode === 'md') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
-  } else if(mode === 'wikigeeks') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
-  } else if(mode === 'chapter') {
-    shownotes = '<code style="white-space: pre;">'+osfExport(osfParser(shownotesElement.value),osfExportModules[mode])+'</code>';
-  } else if(mode === 'glossary') {
-    shownotes = osfExport(osfParser(shownotesElement.value),osfExportModules[mode]);
+function previewPopup(shownotesElement, emode, forceDL, apiurl) {
+  "use strict";
+  var preview = 'true', action, shownotesPopup;
+  if (forceDL === true) {
+    forceDL = 'true';
+    preview = 'false';
   }
-  shownotesPopup.document.write(shownotes);
-  shownotesPopup.document.title = 'Shownotes Preview';
-  shownotesPopup.focus();
+
+  majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
+    if (forceDL !== 'true') {
+      shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+      shownotesPopup.document.write(resp);
+      shownotesPopup.document.title = 'Shownotes Preview';
+      shownotesPopup.focus();
+    } else {
+      window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
+    }
+  });
+
   return false;
 }

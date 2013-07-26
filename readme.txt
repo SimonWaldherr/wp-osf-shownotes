@@ -10,9 +10,11 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 simplifies Show Notes, write them in OSF, get them as HTML
 
+
 == Description ==
 
 This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">Shownotes in OSF</a> to HTML
+
 
 == Installation ==
 
@@ -20,6 +22,7 @@ This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blo
 2. Activate the plugin through the `Plugins` menu in WordPress
 3. Use the `[shownotes]` shortcode in your post or page with the options on the front page.
 4. Visit the options page
+
 
 == Frequently Asked Questions ==
 
@@ -35,11 +38,13 @@ a simple format for (Podcast-) show notes, more informations about OSF are at th
 
 it's easy to write, you get better results in less time and it's automatically changes links to affiliate links
 
+
 == Support ==
 
 = only on GitHub =
 
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
+
 
 == Screenshots ==
 
@@ -49,9 +54,19 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 4. Result (Button style)
 5. Meta box for OSF/MD input with Preview
 
+
 == Changelog ==
 
-= 0.3.3.alpha =
+= 0.3.5 =
+* more and nicer icons
+* preview via php parser (instead of tinyOSF)
+* API added
+
+= 0.3.4 =
+* more stable as 0.3.3
+* save and preselect ShowPad Pad name
+
+= 0.3.3 =
 * empty chapters fix
 * chapter without time fix
 * add more hierarchy (ranks)
@@ -151,9 +166,16 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * first Version on Wordpress.org.
 * working Version with meta_box and shortcode content.
 
+
 == Upgrade Notice ==
 
-= 0.3.3.alpha =
+= 0.3.5 =
+more and nicer icons and preview via php parser (instead of tinyOSF)
+
+= 0.3.4 =
+saves pad names and is more stable as 0.3.3
+
+= 0.3.3 =
 0.3.3 testversion with many fixes, but maybe bugs too. A lot of hierarchy added and font awesome style
 
 = 0.3.2 =
