@@ -68,23 +68,24 @@ function templateAssociated(change) {
 
 function previewPopup(shownotesElement, emode, forceDL, apiurl) {
   "use strict";
-  var action, shownotesPopup;
+  var preview = 'true', action, shownotesPopup;
   if (forceDL === true) {
     forceDL = 'true';
+    preview = 'false';
   }
 
-  action = document.forms.post.action;
+  //action = document.forms.post.action;
   //return false;
   //document.forms["post"].action = apiurl;
 
-  majaX({url: apiurl, method: 'POST', data: {fdl: forceDL, mode: emode, shownotes: encodeURIComponent(shownotesElement.value)}}, function (resp) {
+  majaX({url: apiurl, method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
     if (forceDL !== 'true') {
-      shownotesPopup = window.open('', "Shownotes Preview", "width=400,height=300,resizable=yes");
+      shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
       shownotesPopup.document.write(resp);
       shownotesPopup.document.title = 'Shownotes Preview';
       shownotesPopup.focus();
     }
   });
-  document.forms.post.action = action;
+  //document.forms.post.action = action;
   return false;
 }

@@ -51,11 +51,16 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.3.5
+* more and nicer icons
+* preview via php parser (instead of tinyOSF)
+* API added
+
 ###0.3.4
 * more stable as 0.3.3
 * save and preselect ShowPad Pad name
 
-###0.3.3.alpha
+###0.3.3
 * empty chapters fix
 * chapter without time fix
 * add more hierarchy (ranks)
