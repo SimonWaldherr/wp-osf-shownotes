@@ -7,9 +7,10 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.3.3
+ * Version: 0.3.5
  */
 
+/*jslint browser: true, indent: 2 */
 /*global majaX, shownotesname */
 
 function importShownotes(textarea, importid, baseurl) {
@@ -23,7 +24,11 @@ function importShownotes(textarea, importid, baseurl) {
 
 function getPadList(select, podcastname) {
   "use strict";
-  var requrl, padslist, returnstring = '', i;
+  var requrl,
+    padslist,
+    returnstring = '',
+    i;
+
   if (podcastname.trim() === "*") {
     requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/';
   } else {
@@ -68,7 +73,9 @@ function templateAssociated(change) {
 
 function previewPopup(shownotesElement, emode, forceDL, apiurl) {
   "use strict";
-  var preview = 'true', action, shownotesPopup;
+  var preview = 'true',
+    shownotesPopup;
+
   if (forceDL === true) {
     forceDL = 'true';
     preview = 'false';
