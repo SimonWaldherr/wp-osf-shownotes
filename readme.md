@@ -51,6 +51,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.3.6
+* small fixes
+
 ###0.3.5
 * more and nicer icons
 * preview via php parser (instead of tinyOSF)

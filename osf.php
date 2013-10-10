@@ -223,13 +223,19 @@ function osf_parser($shownotes, $data) {
     $newarray['time'] = $zeile[1];
     $regex['search']  = array(
       '/\s&quot;/',
+      '/\s"/',
       '/&quot;\s/',
-      '/(\S)-(\S)/'
+      '/"\s/',
+      '/(\S)-(\S)/',
+      '/\x27/'
     );
     $regex['replace'] = array(
       ' &#8222;',
+      ' &#8222;',
       '&#8221; ',
-      "$1&#8209;$2"
+      '&#8221; ',
+      "$1&#8209;$2",
+      '&#39;'
     );
     $newarray['text'] = trim(preg_replace($regex['search'], $regex['replace'], ' ' . htmlentities(preg_replace(array(
       $pattern['tags'],
@@ -677,7 +683,9 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
     $delimiter . ')',
     $delimiter . '(',
     'osf_"',
-    'osf_ '
+    'osf_ ',
+    '<div class="osf_chapterbox">  <h2></h2> <span class="osf_chaptertime" data-time=""></span><p class="osf_items"> 
+</p></div>'
   );
   
   $cleanupreplace = array(
@@ -686,6 +694,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
     '</div>',
     ') ',
     ' (',
+    ' ',
     ' ',
     ' '
   );
@@ -796,7 +805,9 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
     $delimiter . '(',
     'osf_"',
     'osf_ ',
-    '<li></li>'
+    '<li></li>',
+    '<div class="osf_chapterbox">  <h2></h2><span class="osf_chaptertime" data-time=""></span><ul class="osf_items"> 
+</ul></div>'
   );
   
   $cleanupreplace = array(
@@ -806,6 +817,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
     ' (',
     ' ',
     ' ',
+    '',
     ''
   );
   
@@ -1006,7 +1018,7 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
   return $return;
 }
 
-function markdown($string) {
+function shownotes_markdown($string) {
   $rules['sm'] = array(
     '/\n(#+)(.*)/e' => 'md_header(\'\\1\', \'\\2\')',                        // headers
     '/\[([^\[]+)\]\(([^\)]+)\)/' => '<a target="_blank" href=\'\2\'>\1</a>', // links
