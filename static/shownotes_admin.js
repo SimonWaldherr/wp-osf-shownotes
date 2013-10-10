@@ -80,17 +80,23 @@ function previewPopup(shownotesElement, emode, forceDL, apiurl) {
     forceDL = 'true';
     preview = 'false';
   }
-
-  majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
-    if (forceDL !== 'true') {
-      shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
-      shownotesPopup.document.write(resp);
-      shownotesPopup.document.title = 'Shownotes Preview';
-      shownotesPopup.focus();
-    } else {
-      window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
-    }
-  });
-
+  if (emode === "audacity" || emode === "reaper") {
+    shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+    shownotesPopup.document.write('<div style="white-space:pre;word-wrap:break-word;">'+tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotesElement.value)), osfExportModules[emode])+'</div>');
+    shownotesPopup.document.title = 'Shownotes Preview';
+    shownotesPopup.focus();
+    return false;
+  } else {
+    majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
+      if (forceDL !== 'true') {
+        shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+        shownotesPopup.document.write(resp);
+        shownotesPopup.document.title = 'Shownotes Preview';
+        shownotesPopup.focus();
+      } else {
+        window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
+      }
+    });
+  }
   return false;
 }
