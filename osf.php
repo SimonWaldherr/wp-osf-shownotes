@@ -135,7 +135,7 @@ function osf_get_persons($persons, $header) {
   $regex['shownoter'] = '/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/';
   $regex['podcaster'] = '/(Podcaster|Zusammengetragen)[^:]*:([ \S]*)/';
   preg_match_all($regex[$persons], $header, $persons);
-  $persons    = preg_split('/(,|und)/', $persons[2][0]);
+  $persons    = preg_split('/(,| und | and )/', $persons[2][0]);
   $personsArray = array();
   $i = 0;
   foreach ($persons as $person) {
