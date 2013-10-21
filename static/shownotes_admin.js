@@ -7,9 +7,10 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.3.3
+ * Version: 0.3.5
  */
 
+/*jslint browser: true, indent: 2 */
 /*global majaX, shownotesname */
 
 function importShownotes(textarea, importid, baseurl) {
@@ -23,7 +24,11 @@ function importShownotes(textarea, importid, baseurl) {
 
 function getPadList(select, podcastname) {
   "use strict";
-  var requrl, padslist, returnstring = '', i;
+  var requrl,
+    padslist,
+    returnstring = '',
+    i;
+
   if (podcastname.trim() === "*") {
     requrl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getList/';
   } else {
@@ -68,22 +73,30 @@ function templateAssociated(change) {
 
 function previewPopup(shownotesElement, emode, forceDL, apiurl) {
   "use strict";
-  var preview = 'true', action, shownotesPopup;
+  var preview = 'true',
+    shownotesPopup;
+
   if (forceDL === true) {
     forceDL = 'true';
     preview = 'false';
   }
-
-  majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
-    if (forceDL !== 'true') {
-      shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
-      shownotesPopup.document.write(resp);
-      shownotesPopup.document.title = 'Shownotes Preview';
-      shownotesPopup.focus();
-    } else {
-      window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
-    }
-  });
-
+  if (emode === "audacity" || emode === "reaper") {
+    shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+    shownotesPopup.document.write('<div style="white-space:pre;word-wrap:break-word;">'+tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotesElement.value)), osfExportModules[emode])+'</div>');
+    shownotesPopup.document.title = 'Shownotes Preview';
+    shownotesPopup.focus();
+    return false;
+  } else {
+    majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
+      if (forceDL !== 'true') {
+        shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+        shownotesPopup.document.write(resp);
+        shownotesPopup.document.title = 'Shownotes Preview';
+        shownotesPopup.focus();
+      } else {
+        window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
+      }
+    });
+  }
   return false;
 }
