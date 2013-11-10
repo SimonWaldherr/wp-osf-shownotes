@@ -10,3 +10,6 @@
 [submodule "static/img/bwi"]
 	path = static/img/bwi
 	url = https://SimonWaldherr@github.com/SimonWaldherr/BitmapWebIcons.git
+[submodule "OSFphp"]
+	path = OSFphp
+	url = https://github.com/SimonWaldherr/OSF.php.git

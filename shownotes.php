@@ -16,7 +16,7 @@ License: MIT License
 */
 
 include_once 'settings.php';
-include_once 'osf.php';
+include_once './OSFphp/osf.php';
 $shownotes_options = get_option('shownotes_options');
 
 function shownotesshortcode_add_styles() {
