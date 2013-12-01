@@ -145,8 +145,9 @@ function osf_shownotes_shortcode($atts, $content = "") {
     'tags'      => $default_tags,
     'feedtags'  => $feed_tags
   ), $atts));
+  $randomSupport = rand(0,10);
   if (($content !== "") || ($shownotes)) {
-    if (isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') {
+    if ((isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') && ($randomSupport < 7)) {
       $amazon = $shownotes_options['affiliate_amazon'];
     } else {
       $amazon = 'shownot.es-21';

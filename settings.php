@@ -14,7 +14,6 @@ function shownotes_settings_page() {
   print '" /></p></form></div>';
 }
 
-
 function shownotes_create_menu() {
   add_options_page(' Shownotes Options', ' Shownotes', 'manage_options', 'shownotes', 'shownotes_settings_page');
 }
@@ -23,40 +22,40 @@ function shownotes_register_settings() {
   $ps = 'shownotes';
   $settings = array(
     'version' => array(
-      'title'  => '',
+      'title'    => '',
       'function' => true
     ),
     'main' => array(
       'title'  => 'General Settings',
       'fields' => array(
-        'mode'        => 'Template',
-        'tags_mode'     => 'Tag mode',
-        'tags'        => '',
-        'untagged'      => 'hide untagged items',
+        'mode'            => 'Template',
+        'tags_mode'       => 'Tag mode',
+        'tags'            => '',
+        'untagged'        => 'hide untagged items',
         'tagdecoration'   => 'Special tag decoration',
-        'delimiter'     => 'String between items',
+        'delimiter'       => 'String between items',
         'last_delimiter'  => 'String after last item',
-        'css_id'      => 'CSS-File',
+        'css_id'          => 'CSS-File',
         'osf_shortcode'   => 'OSF shortcode',
         'md_shortcode'    => 'Markdown shortcode'
       )
     ),
     'import' => array(
-      'title' => 'Import from ShowPad',
+      'title'  => 'Import from ShowPad',
       'fields' => array(
         'podcastname' => 'Podcast Name'
       )
     ),
     'affiliate' => array(
-      'title'  => 'Affiliate',
-      'fields' => array(
-        'amazon'     => 'Amazon Id',
-        'thomann'    => 'Thomann.de Id',
+      'title'    => 'Affiliate',
+      'fields'   => array(
+        'amazon'       => 'Amazon Id',
+        'thomann'      => 'Thomann.de Id',
         'tradedoubler' => 'Tradedoubler Id'
       )
     ),
     'info' => array(
-      'title'  => 'Information',
+      'title'    => 'Information',
       'function' => true
     )
   );
@@ -96,8 +95,7 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.3.7';
-  $infofoo = array('foo' => versionInt($options['version']), 'bar' => versionInt('0.3.2'));
+  $version = '0.3.8';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
@@ -288,7 +286,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.3.7</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.3.8</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">
