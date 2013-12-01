@@ -101,8 +101,11 @@ function shownotes_version() {
     $lastversion = $options['version'];
     if($version != $lastversion) {
       print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+      if(versionInt($lastversion) < versionInt('0.3.8')) {
+        print '<p>change internal structure (use a git submodule)</p>';
+      }
       if(versionInt($lastversion) < versionInt('0.3.7')) {
-        //print '<p></p>';
+        print '<p>many small fixes</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.6')) {
         print '<p>small fix for shownoters and podcasters with &#34;und&#34; in their names or urls</p>';
