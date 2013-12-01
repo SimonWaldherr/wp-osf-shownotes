@@ -68,6 +68,12 @@ div a:hover { text-decoration: underline }
 .osf_quote,
 .osf_rss,
 .osf_feed,
+.osf_crefm,
+.osf_einschlafen-podcastde,
+.osf_firtzorg,
+.osf_hoersuppede,
+.osf_raumzeit-podcastde,
+.osf_wrintde,
 .osf_podcast {
   background-repeat: no-repeat;
   background-position: 0 center;
@@ -155,3 +161,15 @@ div a:hover { text-decoration: underline }
 .osf_xingcom { background-image: url('./img/bwi/xing.png') }
 
 .osf_xenimde { background-image: url('./img/bwi/xenim.png') }
+
+.osf_crefm { background-image: url('./img/bwi/cre.png') }
+
+.osf_einschlafen-podcastde { background-image: url('./img/bwi/einschlafen.png') }
+
+.osf_firtzorg { background-image: url('./img/bwi/firtz.png') }
+
+.osf_hoersuppede { background-image: url('./img/bwi/hoersuppe.png') }
+
+.osf_raumzeit-podcastde { background-image: url('./img/bwi/raumzeit.png') }
+
+.osf_wrintde { background-image: url('./img/bwi/wrin.png') }
