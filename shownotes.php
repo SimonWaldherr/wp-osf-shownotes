@@ -16,7 +16,7 @@ License: MIT License
 */
 
 include_once 'settings.php';
-include_once './OSFphp/osf.php';
+include_once 'OSFphp/osf.php';
 $shownotes_options = get_option('shownotes_options');
 
 function shownotesshortcode_add_styles() {
@@ -222,8 +222,10 @@ function osf_shownotes_shortcode($atts, $content = "") {
       if (isset($shownotesArray['header'])) {
         if ($mode == 'shownoter') {
           $export = osf_get_persons('shownoter', $shownotesArray['header']);
+          $export = $export['html'];
         } elseif ($mode == 'podcaster') {
           $export = osf_get_persons('podcaster', $shownotesArray['header']);
+          $export = $export['html'];
         }
       }
     }
