@@ -95,12 +95,15 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.3.8';
+  $version = '0.3.9';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
     if($version != $lastversion) {
       print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+      if(versionInt($lastversion) < versionInt('0.3.9')) {
+        print '<p>fix a bug which hides all untagged items</p>';
+      }
       if(versionInt($lastversion) < versionInt('0.3.8')) {
         print '<p>change internal structure (use a git submodule), more icons (please take a look at <a href="http://simonwaldherr.github.io/BitmapWebIcons/">simonwaldherr.github.io/BitmapWebIcons/</a>), improved header support</p>';
       }
@@ -289,7 +292,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.3.8</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.3.9</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">
