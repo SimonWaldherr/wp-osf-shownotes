@@ -57,6 +57,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.3.9 =
+* fix a bug which hides all untagged items
+
 = 0.3.8 =
 * more icons
 * osf as git submodule

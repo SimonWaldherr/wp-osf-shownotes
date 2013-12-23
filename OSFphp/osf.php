@@ -350,7 +350,7 @@ function osf_parser($shownotes, $data) {
         }
       }
       if (isset($newarray['tags'])) {
-        if (in_array("chapter", $newarray['tags'])) {
+        if (in_array('chapter', $newarray['tags'])) {
           $newarray['chapter'] = true;
         }
       }
@@ -365,8 +365,15 @@ function osf_parser($shownotes, $data) {
       $newarray['urls'] = $purls;
     }
 
+    $skipskipskip = false;
+    if(isset($newarray['tags'])) {
+      if(array_search('revision', $newarray['tags']) !== false) {
+        $skipskipskip = true;
+      }
+    }
+    //echo array_search('revision', $newarray['tags']);
     // Speichere nur Zeilen die nicht zur Revision/Überarbeitung markiert wurden
-    if (@array_search('revision', $newarray['tags']) === false) {
+    if ($skipskipskip === false) {
       // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
       if (!$newarray['chapter']) {
         if (isset($newarray['tags'])) {
