@@ -114,13 +114,29 @@ function osf_parse_person($string) {
     $profileurl = $url[1][0];
     $name = trim(preg_replace('/\<(http[\S]+)\>/', '', $string));
   } else {
-    if (strpos($string, '@:adn') != false) {
+    if ((strpos($string, ' (@') != false)&&(strpos($string, '@:adn') != false)) {
+      preg_match_all('/([^\(]+)\(@([^\)]+)@:adn\)/', $string, $url);
+      $profileurl = 'https://alpha.app.net/' . trim($url[2][0]);
+      $name = trim($url[1][0]);
+    } elseif ((strpos($string, ' (@') != false)&&(strpos($string, '@:gh') != false)) {
+      preg_match_all('/([^\(]+)\(@([^\)]+)@:gh\)/', $string, $url);
+      $profileurl = 'https://github.com/' . trim($url[2][0]);
+      $name = trim($url[1][0]);
+    } elseif (strpos($string, ' (@') != false) {
+      preg_match_all('/([^\(]+)\(@([^\)]+)\)/', $string, $url);
+      $profileurl = 'https://twitter.com/' . trim($url[2][0]);
+      $name = trim($url[1][0]);
+    } elseif (strpos($string, '@:adn') != false) {
       preg_match_all('/@(\(?[\S]+\)?)@:adn/', $string, $url);
-      $profileurl = 'https://alpha.app.net/' . $url[1][0];
+      $profileurl = 'https://alpha.app.net/' . trim($url[1][0]);
+      $name = trim($url[1][0]);
+    } elseif (strpos($string, '@:gh') != false) {
+      preg_match_all('/@(\(?[\S]+\)?)@:gh/', $string, $url);
+      $profileurl = 'https://github.com/' . trim($url[1][0]);
       $name = trim($url[1][0]);
     } elseif (strpos($string, '@') != false) {
       preg_match_all('/@(\(?[\S]+\)?)/', $string, $url);
-      $profileurl = 'https://twitter.com/' . $url[1][0];
+      $profileurl = 'https://twitter.com/' . trim($url[1][0]);
       $name = trim($url[1][0]);
     } else {
       $name = trim($string);
@@ -135,19 +151,52 @@ function osf_get_persons($persons, $header) {
   $regex['shownoter'] = '/(Shownoter|Zusammengetragen)[^:]*:([ \S]*)/';
   $regex['podcaster'] = '/(Podcaster|Zusammengetragen)[^:]*:([ \S]*)/';
   preg_match_all($regex[$persons], $header, $persons);
-  $persons    = preg_split('/(,| und | and )/', $persons[2][0]);
+  $persons    = preg_split('/(,|;| und | and )/', $persons[2][0]);
   $personsArray = array();
+  $personsArrayHTML = array();
   $i = 0;
   foreach ($persons as $person) {
     $personArray = osf_parse_person($person);
     if ($personArray['url'] == false) {
-      $personsArray[$i] = '<span>' . $personArray['name'] . '</span>';
+      $personsArray[$i]['name'] = trim($personArray['name']);
+      $personsArrayHTML[$i] = '<span>' . $personsArray[$i]['name'] . '</span>';
     } else {
-      $personsArray[$i] = '<a target="_blank" href="' . $personArray['url'] . '">' . $personArray['name'] . '</a>';
+      $personsArray[$i]['name'] = trim($personArray['name']);
+      $personsArray[$i]['url'] = trim($personArray['url'], " \-\)\(\<\>\t\n\r\0\x0B");
+      $personsArrayHTML[$i] = '<a target="_blank" href="' . $personsArray[$i]['url'] . '">' . $personsArray[$i]['name'] . '</a>';
     }
     $i++;
   }
-  return implode(', ', $personsArray);
+  return array('html' => implode(', ', $personsArrayHTML), 'data' => $personsArray);
+}
+
+function osf_get_episodetime($header) {
+  $regex = '/(Starttime|Startime|Startzeit|Episodenbeginn|Episodetime|Episodestart)[^:]*:([ \S]*)/';
+  preg_match_all($regex, $header, $date);
+  date_default_timezone_set('Europe/Berlin');
+  $date = strtotime($date[2][0]);
+  if($date != false) {
+    return $date;
+  }
+  return '0';
+}
+
+function osf_get_podcastname($header) {
+  $regex = '/(Podcast|Podcastname|Sendung)[^:]*:([ \S]*)/';
+  preg_match_all($regex, $header, $title);
+  return $title[2][0];
+}
+
+function osf_get_episodenumber($header) {
+  $regex = '/(Episode|Folge)[^:]*:([ \S]*)/';
+  preg_match_all($regex, $header, $number);
+  return $number[2][0];
+}
+
+function osf_get_episodename($header) {
+  $regex = '/(Title|Episodetitle|Thema|Subject)[^:]*:([ \S]*)/i';
+  preg_match_all($regex, $header, $title);
+  return $title[2][0];
 }
 
 function osf_parser($shownotes, $data) {
@@ -272,7 +321,7 @@ function osf_parser($shownotes, $data) {
               $newarray['tags'][] = 'link';
               break;
             case 's':
-              $newarray['tags'][] = 'section';
+              $newarray['tags'][] = 'section'; // niemand verwendet section, wir sollten #s für shopping freigeben
               break;
             case 't':
               $newarray['tags'][] = 'topic';
@@ -288,6 +337,12 @@ function osf_parser($shownotes, $data) {
               break;
             case 'i':
               $newarray['tags'][] = 'image';
+              break;
+            case 'r':
+              $newarray['tags'][] = 'revision';
+              break;
+            case 'p':
+              $newarray['tags'][] = 'prediction';
               break;
           }
         } else {
@@ -310,44 +365,47 @@ function osf_parser($shownotes, $data) {
       $newarray['urls'] = $purls;
     }
 
-    // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
-    if (!$newarray['chapter']) {
-      if (isset($newarray['tags'])) {
-        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ($tagsmode == 1) || ($exportall == 'true')) {
+    // Speichere nur Zeilen die nicht zur Revision/Überarbeitung markiert wurden
+    if (@array_search('revision', $newarray['tags']) === false) {
+      // Wenn Zeile mit "- " beginnt im Ausgabe-Array verschachteln
+      if (!$newarray['chapter']) {
+        if (isset($newarray['tags'])) {
+          if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ($tagsmode == 1) || ($exportall == 'true')) {
+            if (preg_match($pattern['kaskade'], $zeile[0])) {
+              $newarray['subtext'] = true;
+              $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
+            } else {
+              $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
+            }
+          } else {
+            unset($newarray);
+          }
+        } elseif ($exportall == 'true') {
           if (preg_match($pattern['kaskade'], $zeile[0])) {
             $newarray['subtext'] = true;
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
           } else {
             $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
           }
+        }
+        // Verschachtelungstiefe hochzählen
+        ++$kaskadei;
+      }
+      
+      // Wenn die Zeile keine Verschachtelung darstellt
+      else {
+        if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
+          // Daten auf oberster ebene einfügen
+          $returnarray['export'][$i] = $newarray;
+      
+          // Nummer des letzten Objekts auf oberster ebene auf akutelle Item Nummer setzen
+          $lastroot = $i;
+      
+          // Verschachtelungstiefe auf 0 setzen
+          $kaskadei = 0;
         } else {
           unset($newarray);
         }
-      } elseif ($exportall == 'true') {
-        if (preg_match($pattern['kaskade'], $zeile[0])) {
-          $newarray['subtext'] = true;
-          $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
-        } else {
-          $returnarray['export'][$lastroot]['subitems'][$kaskadei] = $newarray;
-        }
-      }
-      // Verschachtelungstiefe hochzählen
-      ++$kaskadei;
-    }
-
-    // Wenn die Zeile keine Verschachtelung darstellt
-    else {
-      if (((osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 0)) || ((!osf_specialtags($newarray['tags'], $specialtags)) && ($tagsmode == 1)) || ($exportall == 'true')) {
-        // Daten auf oberster ebene einfügen
-        $returnarray['export'][$i] = $newarray;
-
-        // Nummer des letzten Objekts auf oberster ebene auf akutelle Item Nummer setzen
-        $lastroot = $i;
-
-        // Verschachtelungstiefe auf 0 setzen
-        $kaskadei = 0;
-      } else {
-        unset($newarray);
       }
     }
     // Item Nummer hochzählen
@@ -357,7 +415,7 @@ function osf_parser($shownotes, $data) {
   // Zusatzinformationen im Array abspeichern (Zeilenzahl, Zeichenlänge und Hash der Shownotes)
   $returnarray['info']['zeilen']  = $i;
   $returnarray['info']['zeichen'] = strlen($shownotes);
-  $returnarray['info']['hash']  = md5($shownotes);
+  $returnarray['info']['hash']    = md5($shownotes);
   if (isset($header)) {
     $returnarray['header'] = $header;
   }
@@ -851,12 +909,12 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
               }
               $returnstring .= $text;
               if (isset($array[$arraykeys[$i]]['urls'][0])) {
-                $returnstring .= ' &lt;' . $array[$arraykeys[$i]]['urls'][0] . '&gt; ';
+                $returnstring .= ' <' . $array[$arraykeys[$i]]['urls'][0] . '> ';
               }
               if(count(@$array[$arraykeys[$i]]['tags']) !== 0) {
                 $returnstring .= ' #'.implode(' #', @$array[$arraykeys[$i]]['tags']);
               }
-              $returnstring .= "<br/> \n";
+              $returnstring .= "\n";
             }
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
@@ -876,12 +934,12 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
                     }
                     $returnstring .= $text;
                     if (isset($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0])) {
-                      $returnstring .= ' &lt;' . $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] . '&gt; ';
+                      $returnstring .= ' <' . $array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] . '> ';
                     }
                     if(count(@$array[$arraykeys[$i]]['subitems'][$ii]['tags']) !== 0) {
                       $returnstring .= ' #'.implode(' #', @$array[$arraykeys[$i]]['subitems'][$ii]['tags']);
                     }
-                    $returnstring .= "<br/> \n";
+                    $returnstring .= "\n";
                   }
                 }
               }

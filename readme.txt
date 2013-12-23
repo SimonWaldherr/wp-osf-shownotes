@@ -57,6 +57,11 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.3.8 =
+* more icons
+* osf as git submodule
+* accept more person string formats
+
 = 0.3.7 =
 * more small fixes
 

@@ -21,7 +21,7 @@ if (isset($fdlid)) {
   }
 }
 
-include_once 'osf.php';
+include_once './OSFphp/osf.php';
 
 $amazon = 'shownot.es-21';
 $thomann = '93439';
