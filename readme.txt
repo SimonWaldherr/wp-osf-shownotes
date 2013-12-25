@@ -1,9 +1,9 @@
 === Shownotes ===
 Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
-Tags: shownotes, osf, md, markdown, markup, podcast
-Requires at least: 3.2
-Tested up to: 3.5
+Tags: shownotes, osf, markup, podlove, md, podcast, markdown, etherpad, affiliate
+Requires at least: 3.3
+Tested up to: 3.8
 Stable tag: trunk
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
@@ -13,7 +13,7 @@ simplifies Show Notes, write them in OSF, get them as HTML
 
 == Description ==
 
-This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">Shownotes in OSF</a> to HTML
+This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">Shownotes in OSF (Open Shownotes Format)</a> to HTML, mp4 Chapters and Audacity/Reaper label tracks. All links to Amazon, will automatically converted to affiliate links. It also can import the show notes directly from the shownot.es ShowPad und will provide many metadata features in future.
 
 
 == Installation ==
@@ -38,6 +38,21 @@ a simple format for (Podcast-) show notes, more informations about OSF are at th
 
 it's easy to write, you get better results in less time and it's automatically changes links to affiliate links
 
+= do i have to use the <a href="http://pad.shownot.es">ShowPad</a>? =
+
+no, you don't have to, but we recommend it
+
+= under which license the code is released? =
+
+MIT License
+
+= how do i get the nice icons? =
+
+you can select one of the CSS files in the shownotes settings
+
+= what must i do to get the affiliate links? =
+
+enter your Amazon affiliate ID in the settings
 
 == Support ==
 
