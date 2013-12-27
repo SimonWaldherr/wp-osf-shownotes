@@ -72,6 +72,10 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.4.0 =
+* more icons
+* error on save bugfix
+
 = 0.3.9 =
 * fix a bug which hides all untagged items
 
@@ -197,6 +201,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Upgrade Notice ==
+
+= 0.4.0 =
+more icons, error on save bugfix, fix a bug which hides all untagged items, accept more person string formats and many more small fixes
+
+= 0.3.6 =
+small fixes
 
 = 0.3.5 =
 more and nicer icons and preview via php parser (instead of tinyOSF)
