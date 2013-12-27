@@ -87,7 +87,7 @@ function save_shownotes() {
   $old = get_post_meta($post_id, '_shownotes', true);
   if (isset($_POST['shownotes'])) {
     $new = $_POST['shownotes'];
-    $name = $_POST['shownotesname'];
+    $name = @$_POST['shownotesname'];
   } else {
     return;
   }
