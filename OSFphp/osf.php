@@ -5,7 +5,7 @@ function osf_specialtags($needles, $haystack) {
   $return = false;
   if (is_array($needles)) {
     foreach ($needles as $needle) {
-      if (array_search($needle, $haystack) !== false) {
+      if (@array_search($needle, $haystack) !== false) {
         $return = true;
       }
     }
@@ -233,7 +233,7 @@ function osf_parser($shownotes, $data) {
   $pattern['tags']    = '((\s#)(\S*))';
   $pattern['urls']    = '(\s+((http(|s)://\S{0,256})\s))';
   $pattern['urls2']   = '(\<((http(|s)://\S{0,256})>))';
-  $pattern['kaskade'] = '/((((\d+:)?\d+:\d+)(\\.\d+)?)*[\t ]* *[\-\–\—]+ )/';
+  $pattern['kaskade'] = '/\n((((\d+:)?\d+:\d+)(\\.\d+)?)*[\t ]* *[\-\–\—]+ )/';
 
   // danach werden mittels des zeilen-Patterns die Shownotes in Zeilen/items geteilt
   preg_match_all($pattern['zeilen'], $shownotes, $zeilen, PREG_SET_ORDER);
@@ -698,7 +698,7 @@ function osf_export_block($array, $full = false, $template, $filtertags = array(
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
+                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['orig'])) > 2)) || ($full == 2)) {
                     if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                       $tagtext = ' osf_spoiler';
                     } else {
@@ -824,7 +824,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['text'])) > 2)) || ($full == 2)) {
+                  if ((((($full != false) || (!$array[$arraykeys[$i]]['subitems'][$ii]['subtext'])) && ((($full == 1) && (!osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) || ($full == 2))) && (strlen(trim($array[$arraykeys[$i]]['subitems'][$ii]['orig'])) > 2)) || ($full == 2)) {
                     if (($full == 2) && (@osf_checktags($filtertags, @$array[$arraykeys[$i]]['subitems'][$ii]['tags']))) {
                       $tagtext = ' osf_spoiler';
                     } else {
@@ -889,7 +889,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
   return $returnstring;
 }
 
-function osf_export_osf($array, $full = false, $template, $filtertags = array(0 => 'spoiler')) {
+function osf_export_osf($array, $full = false, $template = '', $filtertags = array(0 => 'spoiler')) {
   global $shownotes_options;
   $returnstring  = '';
   $filterpattern = array(
@@ -904,8 +904,9 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
       if (isset($arraykeys[$i])) {
         if (isset($array[$arraykeys[$i]])) {
           if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
-            $text = trim(preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['text']));
+            $text = trim(preg_replace($filterpattern, '', @$array[$arraykeys[$i]]['orig']));
             if($text != '') {
+              //$returnstring .= "\n";
               if (strpos(@$array[$arraykeys[$i]]['time'], '.')) {
                 $time = explode('.', $array[$arraykeys[$i]]['time']);
                 $time = $time[0];
@@ -926,7 +927,7 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
             if (isset($array[$arraykeys[$i]]['subitems'])) {
               for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems'], COUNT_RECURSIVE); $ii++) {
                 if (isset($array[$arraykeys[$i]]['subitems'][$ii])) {
-                  $text = trim(preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['text']));
+                  $text = trim(preg_replace($filterpattern, '', $array[$arraykeys[$i]]['subitems'][$ii]['orig']));
                   if($text != '') {
                     if (strpos(@$array[$arraykeys[$i]]['subitems'][$ii]['time'], '.')) {
                       $time = explode('.', @$array[$arraykeys[$i]]['subitems'][$ii]['time']);
@@ -956,6 +957,7 @@ function osf_export_osf($array, $full = false, $template, $filtertags = array(0 
       }
     }
   }
+  $returnstring = preg_replace('/[ \t]{2,}/', ' ', $returnstring);
   return $returnstring;
 }
 
@@ -1047,8 +1049,8 @@ function osf_export_glossary($array, $showtags = array(0 => '')) {
     if (((@$array[$arraykeys[$i]]['chapter']) || (($full != false) && (@$array[$arraykeys[$i]]['time'] != ''))) || ($i == 0)) {
       if (isset($array[$arraykeys[$i]]['subitems'])) {
         for ($ii = 0; $ii <= count($array[$arraykeys[$i]]['subitems']); $ii++) {
-          if (isset($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0], $array[$arraykeys[$i]]['subitems'][$ii]['text'])) {
-            if (($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && ($array[$arraykeys[$i]]['subitems'][$ii]['text'] != '')) {
+          if (isset($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0], $array[$arraykeys[$i]]['subitems'][$ii]['orig'])) {
+            if (($array[$arraykeys[$i]]['subitems'][$ii]['urls'][0] != '') && ($array[$arraykeys[$i]]['subitems'][$ii]['orig'] != '')) {
               if (isset($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
                 if (is_array($array[$arraykeys[$i]]['subitems'][$ii]['tags'])) {
                   foreach ($array[$arraykeys[$i]]['subitems'][$ii]['tags'] as $tag) {

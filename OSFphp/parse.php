@@ -68,7 +68,9 @@ function parserWrapperAPI($postdata) {
     $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
   } else {
     $fullint = 1;
-    $tags = explode(' ', $tags);
+    if (!is_array($tags)) {
+      $tags = explode(' ', $tags);
+    }
   }
 
   $data = array(

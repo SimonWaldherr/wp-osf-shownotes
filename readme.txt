@@ -72,6 +72,11 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.4.1 =
+* cascading bugfix
+* osf export bugfix
+* minor fixes
+
 = 0.4.0 =
 * more icons
 * error on save bugfix
