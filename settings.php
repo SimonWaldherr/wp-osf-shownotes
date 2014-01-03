@@ -25,6 +25,10 @@ function shownotes_register_settings() {
       'title'    => '',
       'function' => true
     ),
+    'info' => array(
+      'title'    => 'Information',
+      'function' => true
+    ),
     'main' => array(
       'title'  => 'General Settings',
       'fields' => array(
@@ -53,10 +57,6 @@ function shownotes_register_settings() {
         'thomann'      => 'Thomann.de Id',
         'tradedoubler' => 'Tradedoubler Id'
       )
-    ),
-    'info' => array(
-      'title'    => 'Information',
-      'function' => true
     )
   );
 
@@ -178,7 +178,7 @@ function shownotes_main_tags_mode() {
     }
     ++$i;
   }
-  print "<select/>";
+  print '<select/>';
 }
 
 function shownotes_main_tags() {
@@ -233,7 +233,7 @@ function shownotes_main_last_delimiter() {
 
 function shownotes_main_css_id() {
   $options  = get_option('shownotes_options');
-  $cssnames = array('none', 'icons after items', 'icons before items', 'new icons before items', 'buttons', 'fontawesome');
+  $cssnames = array('none', 'old icons (after)', 'old icons (before)', 'new icons', 'buttons', 'fontawesome');
   $i = 0;
   print '<select id="css_id" name="shownotes_options[css_id]">';
   foreach($cssnames as $cssname) {
@@ -244,7 +244,7 @@ function shownotes_main_css_id() {
     }
     ++$i;
   }
-  print "<select/>";
+  print '<select/> <i>&nbsp; old icons are old, don&#39;t use them</i>';
 }
 
 function shownotes_main_osf_shortcode() {
@@ -301,7 +301,10 @@ function shownotes_info() {
   print '<p>This is <strong>Version 0.4.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
-  <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">
+  <p>Please make a Flattr subscription to support the development of this Plugin <br/>
+  Plugin:&nbsp;<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a>&nbsp;Shownot.es:&nbsp;<a class="FlattrButton" href="http://shownot.es/" title="Die Shownot.es" lang="de_DE" style="display:none;" rev="flattr;button:compact;">
+  [description]
+</a><script type="text/javascript">
 /* <![CDATA[ */
   (function() {
     var s = document.createElement("script"), t = document.getElementsByTagName("script")[0];
@@ -311,9 +314,9 @@ function shownotes_info() {
     t.parentNode.insertBefore(s, t);
   })();
 /* ]]> */</script></p>
-  <p>Want to contribute? Found a bug? Need some help? <br/>you can found our github repo/page at
+  <p>Want to contribute? Found a bug? Need some help? <br/>you can find the github repo/page at
   <a href="https://github.com/SimonWaldherr/wp-osf-shownotes">github.com/SimonWaldherr/wp-osf-shownotes</a></p>
-  <p>If you found a bug, please tell us your WP- and ps- (and PPP- if you use PPP) Version. <br/>Also your 
+  <p>If you found a bug, please tell us your Wordpress and Shownotes WP Plugin Version. <br/>Also your 
   Browser version, your PHP version and the URL of your Podcast can help us, find the bug.</p>';
 }
 
