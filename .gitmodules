@@ -13,3 +13,6 @@
 [submodule "OSFphp"]
 	path = OSFphp
 	url = https://github.com/SimonWaldherr/OSF.php.git
+[submodule "micromarkdown"]
+	path = micromarkdown
+	url = https://github.com/SimonWaldherr/micromarkdown.php.git
