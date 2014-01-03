@@ -1,5 +1,6 @@
 <?php
 
+
 if (is_admin()) {
   add_action('admin_menu', 'shownotes_create_menu');
   add_action('admin_init', 'shownotes_register_settings');

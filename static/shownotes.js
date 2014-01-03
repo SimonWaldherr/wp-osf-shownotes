@@ -12,6 +12,7 @@
 
 /*jslint browser: true, indent: 2 */
 
+
 function hashTime() {
   "use strict";
   document.location.hash = '#t=' + this.innerHTML;
@@ -28,4 +29,3 @@ function osf_init(divid, template) {
     }
   }
 }
-
