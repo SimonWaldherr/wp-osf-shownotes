@@ -95,7 +95,7 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.4.1';
+  $version = '0.4.2';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
@@ -298,7 +298,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.4.1</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.4.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a><script type="text/javascript">

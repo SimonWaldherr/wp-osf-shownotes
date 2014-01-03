@@ -7,11 +7,11 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.4.1
+ * Version: 0.4.2
  */
 
 /*jslint browser: true, indent: 2 */
-/*global majaX, shownotesname */
+/*global majaX, shownotesname, tinyosf, osfExportModules */
 
 function importShownotes(textarea, importid, baseurl) {
   "use strict";
@@ -48,6 +48,29 @@ function getPadList(select, podcastname) {
   });
 }
 
+function analyzeShownotes() {
+  "use strict";
+  var textarea = document.getElementById('shownotes'),
+    shownotes = textarea.value,
+    ready = false,
+    header = false,
+    compatible = false,
+    podcast = false,
+    episode = false,
+    title = false,
+    chapters = 0,
+    helper;
+  helper = shownotes.split(/[\\\/]head(er)?/gmi)[0].trim();
+  ready = /\n *ready: ?(false|no|not|nicht)/gmi.test(helper) ? false : true;
+  podcast = /\n *podcast: ?\w{3,}/gmi.test(helper);
+  episode = /\n *episode: ?\d+/gmi.test(helper);
+  title = /\n *(episode)?tit(le|el): *[\w\d ]{5,}/gmi.test(helper);
+  header = (helper.length > 23) ? podcast ? episode ? title : false : false : false;
+  chapters = tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotes)), osfExportModules.chapter).split("\n").length;
+  compatible = (chapters > 3) ? true : (tinyosf.Parser(tinyosf.htmldecode(shownotes)).length > 23) ? true : false;
+  document.getElementById('snstatus').innerHTML = '<b>Status: </b><span title="length: ' + helper.length + ' podcast: ' + podcast + ' episode: ' + episode + ' title: ' + title + '" style="color:' + ((header === true) ? 'green' : 'red') + ';">header</span>, ' + '<span title="count: ' + chapters + '" style="color:' + ((chapters > 3) ? 'green' : 'red') + ';">chapters</span>, ' + '<span style="color:' + ((compatible === true) ? 'green' : 'red') + ';">compatible</span>, ' + '<span style="color:' + ((ready === true) ? 'green' : 'red') + ';">ready</span>';
+}
+
 function templateAssociated(change) {
   "use strict";
   var delimiterele, lastdelimiterele;
@@ -82,21 +105,20 @@ function previewPopup(shownotesElement, emode, forceDL, apiurl) {
   }
   if (emode === "audacity" || emode === "reaper") {
     shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
-    shownotesPopup.document.write('<div style="white-space:pre;word-wrap:break-word;">'+tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotesElement.value)), osfExportModules[emode])+'</div>');
+    shownotesPopup.document.write('<div style="white-space:pre;word-wrap:break-word;">' + tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotesElement.value)), osfExportModules[emode]) + '</div>');
     shownotesPopup.document.title = 'Shownotes Preview';
     shownotesPopup.focus();
     return false;
-  } else {
-    majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
-      if (forceDL !== 'true') {
-        shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
-        shownotesPopup.document.write(resp);
-        shownotesPopup.document.title = 'Shownotes Preview';
-        shownotesPopup.focus();
-      } else {
-        window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
-      }
-    });
   }
+  majaX({url: apiurl + '/api.php', method: 'POST', data: {'fdl': forceDL, 'mode': emode, 'preview': preview, 'shownotes': encodeURIComponent(shownotesElement.value)}}, function (resp) {
+    if (forceDL !== 'true') {
+      shownotesPopup = window.open('', "Shownotes Preview", "width=1024,height=768,resizable=yes");
+      shownotesPopup.document.write(resp);
+      shownotesPopup.document.title = 'Shownotes Preview';
+      shownotesPopup.focus();
+    } else {
+      window.location = apiurl + '/api.php?fdlid=' + resp + '&fdname=' + document.getElementById('title').value;
+    }
+  });
   return false;
 }
