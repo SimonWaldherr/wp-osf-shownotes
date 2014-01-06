@@ -102,6 +102,8 @@ div a:hover { text-decoration: underline }
   background-size: 16px 16px;
 }
 
+.osf_podcast { background-image: url('./img/bwi/podcast.png'); }
+
 .osf_threemach { background-image: url('./img/bwi/threema.png'); }
 
 .osf_deviantartcom { background-image: url('./img/bwi/deviantart.png'); }
@@ -112,7 +114,8 @@ div a:hover { text-decoration: underline }
 
 .osf_nytimescom { background-image: url('./img/bwi/nyt.png'); }
 
-.osf_shownotes { background-image: url('./img/bwi/shownotes.png'); }
+.osf_shownotes,
+.osf_shownotesorg { background-image: url('./img/bwi/shownotes.png'); }
 
 .osf_heisede { background-image: url('./img/bwi/heise.png'); }
 
@@ -123,8 +126,6 @@ div a:hover { text-decoration: underline }
 .osf_amazon,
 .osf_amazonde,
 .osf_amazoncom { background-image: url('./img/bwi/amazon.png'); }
-
-.osf_shopping { background-image: url('./img/bwi/shopping.png'); }
 
 .osf_arduinocc { background-image: url('./img/bwi/arduino.png'); }
 
@@ -173,8 +174,6 @@ div a:hover { text-decoration: underline }
 .osf_imdbcom { background-image: url('./img/bwi/imdb.png'); }
 
 .osf_quote { background-image: url('./img/bwi/quote.png'); }
-
-.osf_podcast { background-image: url('./img/bwi/podcast.png'); }
 
 .osf_flickrcom { background-image: url('./img/bwi/flickr.png'); }
 
