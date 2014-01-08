@@ -23,23 +23,25 @@ $shownotes_options = get_option('shownotes_options');
 
 function shownotesshortcode_add_styles() {
   global $shownotes_options;
-  if (!isset($shownotes_options['css_id'])) {
-    return false;
+  if (!is_feed()) {
+    if (!isset($shownotes_options['css_id'])) {
+      return false;
+    }
+    if ($shownotes_options['css_id'] == '0') {
+      return false;
+    }
+    $css_styles = array(
+      '',
+      'style_one',
+      'style_two',
+      'style_three',
+      'style_four',
+      'style_five'
+    );
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.4.2');
   }
-  if ($shownotes_options['css_id'] == '0') {
-    return false;
-  }
-  $css_styles = array(
-    '',
-    'style_one',
-    'style_two',
-    'style_three',
-    'style_four',
-    'style_five'
-  );
-
-  wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.4.2');
 }
+
 add_action('wp_print_styles', 'shownotesshortcode_add_styles');
 
 function add_shownotes_textarea($post) {
@@ -273,17 +275,51 @@ if ($osf_shortcode != 'osf-shownotes') {
 }
 
 function shownotesshortcode_add_admin_scripts() {
-  wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.4.2', false);
-  wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.4.2', false);
-  wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.4.2', false);
-  wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.4.2', false);
+  if (!is_feed()) {
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.4.2', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.4.2', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.4.2', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.4.2', false);
+  }
 }
 function shownotesshortcode_add_scripts() {
-  wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.4.2', false);
+  if (!is_feed()) {
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.4.2', false);
+  }
 }
+
+
 if (is_admin()) {
   add_action('wp_print_scripts', 'shownotesshortcode_add_admin_scripts');
 }
 add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
+
+function custom_search_query( $query ) {
+  $custom_fields = array(
+    "_shownotes"
+  );
+  $searchterm = $query->query_vars['s'];
+  $query->query_vars['s'] = "";
+  if ($searchterm != "") {
+    $meta_query = array('relation' => 'OR');
+    foreach($custom_fields as $cf) {
+      array_push($meta_query, array(
+      'key' => $cf,
+      'value' => $searchterm,
+      'compare' => 'LIKE'
+      ));
+    }
+    $query->set("meta_query", $meta_query);
+  }
+}
+
+add_filter( "pre_get_posts", "custom_search_query");
+add_action( "save_post", "add_title_custom_field");
+
+function add_title_custom_field($postid){
+  // since we removed the "s" from the search query, we want to create a custom field for every post_title. I don't use post_content, if you also want to index this, you will have to add this also as meta field.
+  update_post_meta($postid, "_shownotes", $_POST["shownotes"]);
+  update_post_meta($postid, "post_content", $_POST["content"]);
+}
 
 ?>

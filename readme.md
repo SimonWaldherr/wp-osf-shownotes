@@ -60,6 +60,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ###0.4.2
 * analyze osf shownotes
+* enable search of OSF content
 * link to archive
 * old icons are depricated
 
