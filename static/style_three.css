@@ -73,15 +73,15 @@ div a:hover { text-decoration: underline }
 .osf_xingcom,
 .osf_xenimde,
 .osf_crefm,
-.osf_einschlafen-podcastde,
+.osf_einschlafenpodcastde,
 .osf_podunioncom,
 .osf_1337kulturde,
 .osf_binaergewitterde,
 .osf_nasagov,
-.osf_die-sondersendungde,
+.osf_diesondersendungde,
 .osf_wikigeeksde,
 .osf_helmholtzde,
-.osf_famous-projectorg,
+.osf_famousprojectorg,
 .osf_nsagov,
 .osf_thenextwebcom,
 .osf_achtungabschriftde,
@@ -93,9 +93,9 @@ div a:hover { text-decoration: underline }
 .osf_selfcssorg,
 .osf_firtzorg,
 .osf_hoersuppede,
-.osf_raumzeit-podcastde,
+.osf_raumzeitpodcastde,
 .osf_absradiode,
-.osf_staatsbuergerkunde-podcastde,
+.osf_staatsbuergerkundepodcastde,
 .osf_openstreetmapde,
 .osf_openstreetmaporg,
 .osf_tagesschaude,
@@ -112,7 +112,7 @@ div a:hover { text-decoration: underline }
 
 .osf_absradiode { background-image: url('./img/bwi/absradio.png' ); }
 
-.osf_staatsbuergerkunde-podcastde { background-image: url('./img/bwi/staatsbuergerkunde.png' ); }
+.osf_staatsbuergerkundepodcastde { background-image: url('./img/bwi/staatsbuergerkunde.png' ); }
 
 .osf_openstreetmapde { background-image: url('./img/bwi/osm.png' ); }
 .osf_openstreetmaporg { background-image: url('./img/bwi/osm.png' ); }
@@ -206,13 +206,13 @@ div a:hover { text-decoration: underline }
 
 .osf_crefm { background-image: url('./img/bwi/cre.png'); }
 
-.osf_einschlafen-podcastde { background-image: url('./img/bwi/einschlafen.png'); }
+.osf_einschlafenpodcastde { background-image: url('./img/bwi/einschlafen.png'); }
 
 .osf_firtzorg { background-image: url('./img/bwi/firtz.png'); }
 
 .osf_hoersuppede { background-image: url('./img/bwi/hoersuppe.png'); }
 
-.osf_raumzeit-podcastde { background-image: url('./img/bwi/raumzeit.png'); }
+.osf_raumzeitpodcastde { background-image: url('./img/bwi/raumzeit.png'); }
 
 .osf_wrintde { background-image: url('./img/bwi/wrint.png'); }
 
@@ -224,13 +224,13 @@ div a:hover { text-decoration: underline }
 
 .osf_nasagov { background-image: url('./img/bwi/nasa.png'); }
 
-.osf_die-sondersendungde { background-image: url('./img/bwi/sondersendung.png'); }
+.osf_diesondersendungde { background-image: url('./img/bwi/sondersendung.png'); }
 
 .osf_wikigeeksde { background-image: url('./img/bwi/wikigeeks.png'); }
 
 .osf_helmholtzde { background-image: url('./img/bwi/helmholtz.png'); }
 
-.osf_famous-projectorg { background-image: url('./img/bwi/famous02.png'); }
+.osf_famousprojectorg { background-image: url('./img/bwi/famous02.png'); }
 
 .osf_nsagov { background-image: url('./img/bwi/nsa.png'); }
 

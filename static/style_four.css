@@ -122,7 +122,6 @@ div a:hover { text-decoration: underline }
 .osf_items .osf_wiki,
 .osf_items .osf_youtube,
 .osf_items .osf_youtubecom,
-.osf_items .osf_youtu.be,
 .osf_items .osf_glossary,
 .osf_items .osf_amazonde,
 .osf_items .osf_amazoncom,
@@ -174,7 +173,6 @@ a.osf_wiki,
 a.osf_glossary { background-image: url('./img/orig/wiki.png') !important }
 a.osf_youtube,
 a.osf_youtubecom,
-a.osf_youtu.be,
 a.osf_video { background-image: url('./img/orig/youtube.png') !important }
 a.osf_applecom { background-image: url('./img/orig/apple.png') !important }
 a.osf_appnet { background-image: url('./img/orig/appnet.png') !important }
