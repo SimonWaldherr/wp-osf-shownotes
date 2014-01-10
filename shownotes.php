@@ -58,7 +58,7 @@ function add_shownotes_textarea($post) {
       $shownotesname = '';
     }
 
-    if ($shownotes == "") {
+    if ($shownotes == '') {
       $shownotes = get_post_meta($post_id, 'shownotes', true);
     }
   } else {
@@ -68,7 +68,7 @@ function add_shownotes_textarea($post) {
   $baseurlstring = '';
   $import_podcastname = false;
   if (isset($shownotes_options['import_podcastname'])) {
-    if (trim($shownotes_options['import_podcastname']) != "") {
+    if (trim($shownotes_options['import_podcastname']) != '') {
       $import_podcastname = trim($shownotes_options['import_podcastname']);
     }
   }
@@ -119,12 +119,12 @@ add_action('add_meta_boxes', function() {
 
 add_action('save_post', 'save_shownotes');
 
-function osf_shownotes_shortcode($atts, $content = "") {
+function osf_shownotes_shortcode($atts, $content = '') {
   global $shownotes_options;
   $export = '';
   $post_id = get_the_ID();
   $shownotes = get_post_meta($post_id, '_shownotes', true);
-  if ($shownotes == "") {
+  if ($shownotes == '') {
     $shownotes = get_post_meta($post_id, 'shownotes', true);
   }
   if (isset($shownotes_options['main_tags_mode'])) {
@@ -150,7 +150,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
     'feedtags'  => $feed_tags
   ), $atts));
   $randomSupport = rand(0,10);
-  if (($content !== "") || ($shownotes)) {
+  if (($content !== '') || ($shownotes)) {
     if ((isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') && ($randomSupport < 7)) {
       $amazon = $shownotes_options['affiliate_amazon'];
     } else {
@@ -194,7 +194,7 @@ function osf_shownotes_shortcode($atts, $content = "") {
       'tags'         => $tags
     );
     //undo fucking wordpress shortcode cripple shit
-    if ($content !== "") {
+    if ($content !== '') {
       $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
     } else {
       $shownotesString = "\n" . $shownotes . "\n";
@@ -242,13 +242,13 @@ function osf_shownotes_shortcode($atts, $content = "") {
   return $export;
 }
 
-function md_shownotes_shortcode($atts, $content = "") {
+function md_shownotes_shortcode($atts, $content = '') {
   $post_id   = get_the_ID();
   $shownotes = get_post_meta($post_id, '_shownotes', true);
-  if ($shownotes == "") {
+  if ($shownotes == '') {
     $shownotes = get_post_meta($post_id, 'shownotes', true);
   }
-  if ($content !== "") {
+  if ($content !== '') {
     $shownotesString = htmlspecialchars_decode(str_replace('<br />', '', str_replace('<p>', '', str_replace('</p>', '', $content))));
   } else {
     $shownotesString = "\n" . $shownotes . "\n";
@@ -296,11 +296,11 @@ add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
 
 function custom_search_query( $query ) {
   $custom_fields = array(
-    "_shownotes"
+    '_shownotes'
   );
   $searchterm = $query->query_vars['s'];
-  $query->query_vars['s'] = "";
-  if ($searchterm != "") {
+  $query->query_vars['s'] = '';
+  if ($searchterm != '') {
     $meta_query = array('relation' => 'OR');
     foreach($custom_fields as $cf) {
       array_push($meta_query, array(
@@ -309,17 +309,20 @@ function custom_search_query( $query ) {
       'compare' => 'LIKE'
       ));
     }
-    $query->set("meta_query", $meta_query);
+    $query->set('meta_query', $meta_query);
   }
 }
 
-add_filter( "pre_get_posts", "custom_search_query");
-add_action( "save_post", "add_title_custom_field");
-
 function add_title_custom_field($postid){
-  // since we removed the "s" from the search query, we want to create a custom field for every post_title. I don't use post_content, if you also want to index this, you will have to add this also as meta field.
-  update_post_meta($postid, "_shownotes", $_POST["shownotes"]);
-  update_post_meta($postid, "post_content", $_POST["content"]);
+  if (isset($_POST['shownotes'])) {
+    update_post_meta($postid, '_shownotes', $_POST['shownotes']);
+  }
+  if (isset($_POST['content'])) {
+    update_post_meta($postid, 'post_content', $_POST['content']);
+  }
 }
+
+add_filter('pre_get_posts', 'custom_search_query');
+add_action('save_post', 'add_title_custom_field');
 
 ?>

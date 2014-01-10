@@ -133,8 +133,6 @@ function shownotes_version() {
       }
       if(versionInt($lastversion) < versionInt('0.3.1')) {
         print '<p>This is how upgrade notices would look like</p>';
-        // if last version is smaller than 0.3.1
-        // here can also be a upgrade code
       }
     $options['version'] = $version;
     update_option( 'shownotes_options', $options );
@@ -161,8 +159,8 @@ function shownotes_main_mode() {
       print '<option>'.$mode.'</option>';
     }
   }
-  print "<select/>";
-  print "<script>window.onload = function () {templateAssociated(0);}</script>";
+  print '<select/>';
+  print '<script>window.onload = function () {templateAssociated(0);}</script>';
 }
 
 function shownotes_main_tags_mode() {
@@ -184,7 +182,7 @@ function shownotes_main_tags_mode() {
 function shownotes_main_tags() {
   $options = get_option('shownotes_options');
   if (!isset($options['main_tags'])) {
-    $options['main_tags'] = "";
+    $options['main_tags'] = '';
   }
   print '<input id="main_tags" name="shownotes_options[main_tags]" value="' . $options['main_tags'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
@@ -192,27 +190,27 @@ function shownotes_main_tags() {
 function shownotes_main_tags_feed() {
   $options = get_option('shownotes_options');
   if (!isset($options['main_tags_feed'])) {
-    $options['main_tags_feed'] = "";
+    $options['main_tags_feed'] = '';
   }
   print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
 function shownotes_main_untagged() { 
   $options = get_option('shownotes_options');
-  $checked = "";
+  $checked = '';
   if ( isset( $options['main_untagged'] ) ) {
     $checked = "checked ";
   }
-  print "<input id='main_untagged' name='shownotes_options[main_untagged]' $checked type='checkbox' value='1' />";
+  print '<input id="main_untagged" name="shownotes_options[main_untagged]" ' . $checked . ' type="checkbox" value="1" />';
 }
 
 function shownotes_main_tagdecoration() { 
   $options = get_option('shownotes_options');
-  $checked = "";
+  $checked = '';
   if ( isset( $options['main_tagdecoration'] ) ) {
-    $checked = "checked ";
+    $checked = 'checked ';
   }
-  print "<input id='main_tagdecoration' name='shownotes_options[main_tagdecoration]' $checked type='checkbox' value='1' />&nbsp;&nbsp; (topics bold, quotes italic, non-tagged small)";
+  print '<input id="main_tagdecoration" name="shownotes_options[main_tagdecoration]" ' . $checked . ' type="checkbox" value="1" />&nbsp;&nbsp; (topics bold, quotes italic, non-tagged small)';
 }
 
 function shownotes_main_delimiter() {
@@ -266,7 +264,7 @@ function shownotes_main_md_shortcode() {
 function shownotes_import_podcastname() {
   $options = get_option('shownotes_options');
   if (!isset($options['import_podcastname'])) {
-    $options['import_podcastname'] = "";
+    $options['import_podcastname'] = '';
   }
   print '<input id="import_podcastname" name="shownotes_options[import_podcastname]" value="' . $options['import_podcastname'] . '" style="width:18em;" /> <i>&nbsp; enter Podcastname in ShowPad &nbsp;(e.g.: mobilemacs)</i>';
 }
@@ -274,7 +272,7 @@ function shownotes_import_podcastname() {
 function shownotes_affiliate_amazon() {
   $options = get_option('shownotes_options');
   if (!isset($options['affiliate_amazon'])) {
-    $options['affiliate_amazon'] = "";
+    $options['affiliate_amazon'] = '';
   }
   print '<input id="affiliate_amazon" name="shownotes_options[affiliate_amazon]" value="' . $options['affiliate_amazon'] . '" style="width:8em;" /> <i> e.g.: shownot.es-21</i>';
 }
@@ -282,7 +280,7 @@ function shownotes_affiliate_amazon() {
 function shownotes_affiliate_thomann() {
   $options = get_option('shownotes_options');
   if (!isset($options['affiliate_thomann'])) {
-    $options['affiliate_thomann'] = "";
+    $options['affiliate_thomann'] = '';
   }
   print '<input id="affiliate_thomann" name="shownotes_options[affiliate_thomann]" value="' . $options['affiliate_thomann'] . '" style="width:8em;" /> <i> e.g.: 93439</i>';
 }
@@ -290,13 +288,13 @@ function shownotes_affiliate_thomann() {
 function shownotes_affiliate_tradedoubler() {
   $options = get_option('shownotes_options');
   if (!isset($options['affiliate_tradedoubler'])) {
-    $options['affiliate_tradedoubler'] = "";
+    $options['affiliate_tradedoubler'] = '';
   }
   print '<input id="affiliate_tradedoubler" name="shownotes_options[affiliate_tradedoubler]" value="' . $options['affiliate_tradedoubler'] . '" style="width:8em;" /> <i> e.g.: 16248286</i>';
 }
 
 function shownotes_info() {
-  $scriptname = explode('/wp-admin', $_SERVER["SCRIPT_FILENAME"]);
+  $scriptname = explode('/wp-admin', $_SERVER['SCRIPT_FILENAME']);
   $dirname  = explode('/wp-content', dirname(__FILE__));
   print '<p>This is <strong>Version 0.4.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
