@@ -19,7 +19,8 @@ function importShownotes(textarea, importid, baseurl) {
   var requrl;
   requrl = baseurl.replace("$$$", importid);
   majaX({url: requrl}, function (resp) {
-    textarea.value = resp;
+    textarea.value = resp.trim();
+    analyzeShownotes();
   });
 }
 
@@ -63,7 +64,8 @@ function analyzeShownotes() {
     revision = 0,
     helper;
   helper = shownotes.split(/[\\\/]head(er)?/gmi)[0].trim();
-  revision = shownotes.match(/( \#r | \#revision | \#r\n| \#revision\n)/gmi).length;
+  revision = shownotes.match(/( \#r | \#revision | \#r\n| \#revision\n)/gmi);
+  revision = (revision === null) ? 0 : revision.length;
   ready = /\n *ready: ?(false|no|not|nicht)/gmi.test(helper) ? false : (revision > 0) ? false : true;
   podcast = /\n *podcast: ?\w{3,}/gmi.test(helper);
   episode = /\n *episode: ?\d+/gmi.test(helper);
@@ -72,7 +74,7 @@ function analyzeShownotes() {
   header = (helper.length > 23) ? podcast ? episode ? title : false : false : false;
   chapters = tinyosf.Export(tinyosf.Parser(tinyosf.htmldecode(shownotes)), osfExportModules.chapter).split("\n").length;
   compatible = (chapters > 3) ? true : (tinyosf.Parser(tinyosf.htmldecode(shownotes)).length > 23) ? true : false;
-  document.getElementById('snstatus').innerHTML = '<b>Status: </b><span title="length: ' + helper.length + '; podcast: ' + podcast + '; episode: ' + episode + '; title: ' + title + '" style="color:' + ((header === true) ? 'green' : 'red') + ';">header</span>, ' + '<span title="count: ' + chapters + '" style="color:' + ((chapters > 3) ? 'green' : 'red') + ';">chapters</span>, ' + '<span style="color:' + ((compatible === true) ? 'green' : 'red') + ';">compatible</span>, ' + '<span title="revision items: ' + revision + '" style="color:' + ((ready === true) ? 'green' : 'red') + ';">ready</span>';
+  document.getElementById('snstatus').innerHTML = '<b>Status: </b><span title="length: ' + helper.length + '\npodcast: ' + podcast + '\nepisode: ' + episode + '\ntitle: ' + title + '" style="color:' + ((header === true) ? 'green' : 'red') + ';">header</span>, ' + '<span title="count: ' + chapters + '" style="color:' + ((chapters > 3) ? 'green' : 'red') + ';">chapters</span>, ' + '<span style="color:' + ((compatible === true) ? 'green' : 'red') + ';">compatible</span>, ' + '<span title="revision items: ' + revision + '" style="color:' + ((ready === true) ? 'green' : 'red') + ';">ready</span>';
 }
 
 function templateAssociated(change) {
