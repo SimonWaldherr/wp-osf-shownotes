@@ -16,7 +16,7 @@ Author URI: http://waldherr.eu
 License: MIT License
 */
 
-include_once 'settings.php';
+include_once 'snsettings.php';
 include_once 'OSFphp/osf.php';
 include_once 'micromarkdown/micromarkdown.php';
 $shownotes_options = get_option('shownotes_options');

@@ -63,6 +63,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * enable search of OSF content
 * link to archive
 * old icons are depricated
+* fix crazy wordpress multisite bug
 
 ###0.4.1
 * cascading bugfix
