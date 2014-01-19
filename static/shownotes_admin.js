@@ -42,9 +42,9 @@ function getPadList(select, podcastname) {
 function analyzeShownotes() {
   "use strict";
   var textarea = document.getElementById('shownotes'),
-    status = tinyosf.Parser(tinyosf.htmldecode(textarea.innerHTML)).info;
+    status = tinyosf.Parser(tinyosf.htmldecode(textarea.value)).info;
 
-  document.getElementById('snstatus').innerHTML = '<b>Status: </b><span title="podcast: ' + status.podcast + '\nepisode: ' + status.episode + '\ntitle: ' + status.title + '" style="color:' + ((status.header === true) ? 'green' : 'red') + ';">header</span>, ' + '<span title="count: ' + status.chapters + '" style="color:' + ((status.chapters > 3) ? 'green' : 'red') + ';">chapters</span>, ' + '<span style="color:' + ((status.compatible === true) ? 'green' : 'red') + ';">compatible</span>, ' + '<span title="revision items: ' + status.revision + '" style="color:' + ((status.ready === true) ? 'green' : 'red') + ';">ready</span>';
+  document.getElementById('snstatus').innerHTML = '<b>Status: </b><span title="podcast: ' + status.podcast + '\nepisode: ' + status.episode + '\ntitle: ' + status.title + '\nlength: ' + status.header + '" style="color:' + ((status.header !== false) ? 'green' : 'red') + ';">header</span>, ' + '<span title="count: ' + status.chapters + '" style="color:' + ((status.chapters > 3) ? 'green' : 'red') + ';">chapters</span>, ' + '<span style="color:' + ((status.compatible === true) ? 'green' : 'red') + ';">compatible</span>, ' + '<span title="revision items: ' + status.revision + '" style="color:' + ((status.ready === true) ? 'green' : 'red') + ';">ready</span>';
 }
 
 function importShownotes(textarea, importid, baseurl) {
@@ -53,7 +53,7 @@ function importShownotes(textarea, importid, baseurl) {
   requrl = baseurl.replace("$$$", importid);
   majaX({url: requrl}, function (resp) {
     textarea.value = resp.trim();
-    analyzeShownotes();
+    window.setTimeout(analyzeShownotes, 200);
   });
 }
 
