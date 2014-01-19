@@ -43,6 +43,8 @@ div a:hover { text-decoration: underline }
 .osf_flattr,
 .osf_flattrcom,
 .osf_twitter,
+.osf_tweet,
+.osf_twittercom,
 .osf_wikipediaorg,
 .osf_youtube,
 .osf_youtubecom,
@@ -87,6 +89,8 @@ div a:hover { text-decoration: underline }
 .osf_achtungabschriftde,
 .osf_auphoniccom,
 .osf_creativecommonsorg,
+.osf_opensource,
+.osf_opensourceorg,
 .osf_cccde,
 .osf_raspberrypiorg,
 .osf_golemde,
@@ -95,6 +99,13 @@ div a:hover { text-decoration: underline }
 .osf_hoersuppede,
 .osf_raumzeitpodcastde,
 .osf_absradiode,
+.osf_anycast,
+.osf_bitloveorg,
+.osf_wikibyteorg,
+.osf_podcascriptionde,
+.osf_podpottde,
+.osf_reliveradiode,
+.osf_resonatorpodcastde,
 .osf_staatsbuergerkundepodcastde,
 .osf_openstreetmapde,
 .osf_openstreetmaporg,
@@ -110,7 +121,24 @@ div a:hover { text-decoration: underline }
 
 .osf_podcast { background-image: url('./img/bwi/podcast.png'); }
 
+.osf_opensource,
+.osf_opensourceorg { background-image: url('./img/bwi/osi.png' ); }
+
 .osf_absradiode { background-image: url('./img/bwi/absradio.png' ); }
+
+.osf_anycast { background-image: url('./img/bwi/anycast.png' ); }
+
+.osf_bitloveorg { background-image: url('./img/bwi/bitlove.png' ); }
+
+.osf_wikibyteorg { background-image: url('./img/bwi/podbe.png' ); }
+
+.osf_podcascriptionde { background-image: url('./img/bwi/podcascription.png' ); }
+
+.osf_podpottde { background-image: url('./img/bwi/podpott.png' ); }
+
+.osf_reliveradiode { background-image: url('./img/bwi/reliveradio.png' ); }
+
+.osf_resonatorpodcastde { background-image: url('./img/bwi/resonator.png' ); }
 
 .osf_staatsbuergerkundepodcastde { background-image: url('./img/bwi/staatsbuergerkunde.png' ); }
 
@@ -162,6 +190,8 @@ div a:hover { text-decoration: underline }
 .osf_flattrcom,
 .osf_flattr { background-image: url('./img/bwi/flattr.png'); }
 
+.osf_tweet,
+.osf_twittercom,
 .osf_twitter { background-image: url('./img/bwi/twitter.png'); }
 
 .osf_wiki,
