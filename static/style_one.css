@@ -1,4 +1,4 @@
-/* https://github.com/SimonWaldherr/wp-osf-shownotes/blob/master/static/style_one.css 0.4.1 */
+/* https://github.com/SimonWaldherr/wp-osf-shownotes/blob/master/static/style_one.css 0.5.0 */
 
 .osf_chaptertime {
     margin-left: 10px;
@@ -28,7 +28,6 @@ div a:hover { text-decoration: underline }
 .osf_wiki,
 .osf_youtube,
 .osf_youtubecom,
-.osf_youtu.be,
 .osf_glossary,
 .osf_amazonde,
 .osf_amazoncom,
@@ -73,7 +72,6 @@ div a:hover { text-decoration: underline }
 .osf_glossary { background-image: url('./img/orig/wiki.png') }
 .osf_youtube,
 .osf_youtubecom,
-.osf_youtu.be,
 .osf_video { background-image: url('./img/orig/youtube.png') }
 .osf_applecom { background-image: url('./img/orig/apple.png') }
 .osf_appnet { background-image: url('./img/orig/appnet.png') }

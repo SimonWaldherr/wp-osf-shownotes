@@ -7,10 +7,11 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.4.1
+ * Version: 0.5.0
  */
 
 /*jslint browser: true, indent: 2 */
+
 
 function hashTime() {
   "use strict";
@@ -28,4 +29,3 @@ function osf_init(divid, template) {
     }
   }
 }
-

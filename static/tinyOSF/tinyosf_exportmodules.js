@@ -6,7 +6,7 @@
  * http://simon.waldherr.eu/license/mit/
  *
  * Github:  https://github.com/shownotes/tinyOSF.js/
- * Version: 0.3.7
+ * Version: 0.3.8
  */
 
 /*jslint browser: true, node: true, white: true, indent: 2, plusplus: true */

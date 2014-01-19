@@ -285,15 +285,7 @@ function osf_parser($shownotes, $data) {
       "$1&#8209;$2",
       '&#39;'
     );
-    $newarray['text'] = trim(preg_replace($regex['search'], $regex['replace'], ' ' . htmlentities(preg_replace(array(
-      $pattern['tags'],
-      $pattern['urls'],
-      $pattern['urls2']
-    ), array(
-      '',
-      '',
-      ''
-    ), trim($zeile[5], '/\s\-<>/')), ENT_QUOTES, 'UTF-8') . ' '));
+
     $newarray['orig'] = trim(preg_replace(array(
       $pattern['tags'],
       $pattern['urls'],
@@ -303,6 +295,9 @@ function osf_parser($shownotes, $data) {
       '',
       ''
     ), $zeile[5]));
+
+    $newarray['text'] = trim(htmlentities($newarray['orig'], ENT_QUOTES, 'UTF-8'));
+
     $newarray['rank'] = $kaskade;
 
     // Wenn Tags vorhanden sind, diese ebenfalls im Array speichern
@@ -495,7 +490,7 @@ function osf_item_textgen($subitem, $tagtext, $text, $template = 'block style') 
     }
     $url = parse_url($subitem['urls'][0]);
     $url = explode('.', $url['host']);
-    $tagtext .= ' osf_' . $url[count($url) - 2] . $url[count($url) - 1];
+    $tagtext .= ' osf_' . preg_filter('/[^a-zA-Z0-9]/', '', $url[count($url) - 2]) . $url[count($url) - 1];
     $subtext .= '<a target="_blank" title="' . $title . '" href="' . $subitem['urls'][0] . '"';
     if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
       $subtext .= ' class="osf_wiki ' . $tagtext . '"';
@@ -594,7 +589,7 @@ function osf_metacast_textgen($subitem, $tagtext, $text) {
     }
     $url = parse_url($subitem['urls'][0]);
     $url = explode('.', $url['host']);
-    $tagtext .= ' osf_' . $url[count($url) - 2] . $url[count($url) - 1];
+    $tagtext .= ' osf_' . preg_filter('/[^a-zA-Z0-9]/', '', $url[count($url) - 2]) . $url[count($url) - 1];
     $subtext .= '<a target="_blank" title="' . $title . '" href="' . $subitem['urls'][0] . '"';
     if (strstr($subitem['urls'][0], 'wikipedia.org/wiki/')) {
       $subtext .= ' class="osf_wiki ' . $tagtext . '"';
@@ -964,17 +959,19 @@ function osf_export_osf($array, $full = false, $template = '', $filtertags = arr
 function osf_export_chapterlist($array) {
   $returnstring = '';
   foreach ($array as $item) {
-    if ($item['chapter']) {
-      $filterpattern = array(
-        '((#)(\S*))',
-        '(\<((http(|s)://\S{0,128})>))',
-        '(\s+((http(|s)://\S{0,128})\s))'
-      );
-      $text = preg_replace($filterpattern, '', $item['orig']);
-      if (strpos($item['time'], '.')) {
-        $returnstring .= $item['time'] . ' ' . $text . "\n";
-      } else {
-        $returnstring .= $item['time'] . '.000 ' . $text . "\n";
+    if (isset($item['chapter'])) {
+      if ($item['chapter']) {
+        $filterpattern = array(
+          '((#)(\S*))',
+          '(\<((http(|s)://\S{0,128})>))',
+          '(\s+((http(|s)://\S{0,128})\s))'
+        );
+        $text = preg_replace($filterpattern, '', $item['orig']);
+        if (strpos($item['time'], '.')) {
+          $returnstring .= $item['time'] . ' ' . $text . "\n";
+        } else {
+          $returnstring .= $item['time'] . '.000 ' . $text . "\n";
+        }
       }
     }
   }
@@ -988,8 +985,8 @@ function osf_export_psc($array) {
     if ($item['chapter']) {
       $filterpattern = array(
         '((#)(\S*))',
-        '(\<((http(|s)://[\S#?-]{0,128})>))',
-        '(\s+((http(|s)://[\S#?-]{0,128})\s))'
+        '(\<((http(|s)://[\S#?-]{0,1024})>))',
+        '(\s+((http(|s)://[\S#?-]{0,1024})\s))'
       );
       $text          = trim(preg_replace($filterpattern, '', $item['text']));
       if (strpos($item['time'], '.')) {

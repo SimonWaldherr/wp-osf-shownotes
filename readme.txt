@@ -72,6 +72,13 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.5.0 =
+* analyze osf shownotes
+* enable search of OSF content
+* provide chapters to other plugins (pwp)
+* old icons are depricated
+* fix crazy wordpress multisite bug
+
 = 0.4.1 =
 * cascading bugfix
 * osf export bugfix
@@ -206,6 +213,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Upgrade Notice ==
+
+= 0.5.0 =
+This version is recommended for all podcasters outside of metaebene. It delivers searchable shownotes, a osf validity indicator, wordpress multisite support, small fixes and many new icons
+
+= 0.4.1 =
+fixes a cascading bug and a few other bugs
 
 = 0.4.0 =
 more icons, error on save bugfix, fix a bug which hides all untagged items, accept more person string formats and many more small fixes
