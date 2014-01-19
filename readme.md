@@ -58,10 +58,10 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
-###0.4.2
+###0.5.0
 * analyze osf shownotes
 * enable search of OSF content
-* link to archive
+* provide chapters to other plugins (pwp)
 * old icons are depricated
 * fix crazy wordpress multisite bug
 

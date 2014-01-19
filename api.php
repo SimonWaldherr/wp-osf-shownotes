@@ -1,6 +1,5 @@
 <?php
 
-
 $fdl       = $_POST['fdl'];
 $fdlid     = $_GET['fdlid'];
 $emode     = $_POST['mode'];

@@ -95,44 +95,47 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.4.2';
+  $version = '0.5.0';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
     if($version != $lastversion) {
       print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+      if(versionInt($lastversion) < versionInt('0.5.0')) {
+        print '<p><b>0.5.0: </b>shownotes are searchable, show validity of shownotes, multisite bugfix, small fixes, many new icons, ...</p>';
+      }
       if(versionInt($lastversion) < versionInt('0.4.1')) {
-        print '<p>cascading bugfix, osf export bugfix and minor fixes</p>';
+        print '<p><b>0.4.1: </b>cascading bugfix, osf export bugfix and minor fixes</p>';
       }
       if(versionInt($lastversion) < versionInt('0.4.0')) {
-        print '<p>more icons and a &#34;error on save&#34; bugfix</p>';
+        print '<p><b>0.4.0: </b>more icons and a &#34;error on save&#34; bugfix</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.9')) {
-        print '<p>fix a bug which hides all untagged items</p>';
+        print '<p><b>0.3.9: </b>fix a bug which hides all untagged items</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.8')) {
-        print '<p>change internal structure (use a git submodule), more icons (please take a look at <a href="http://simonwaldherr.github.io/BitmapWebIcons/">simonwaldherr.github.io/BitmapWebIcons/</a>), improved header support</p>';
+        print '<p><b>0.3.8: </b>change internal structure (use a git submodule), more icons (please take a look at <a href="http://simonwaldherr.github.io/BitmapWebIcons/">simonwaldherr.github.io/BitmapWebIcons/</a>), improved header support</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.7')) {
-        print '<p>many small fixes</p>';
+        print '<p><b>0.3.7: </b>many small fixes</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.6')) {
-        print '<p>small fix for shownoters and podcasters with &#34;und&#34; in their names or urls</p>';
+        print '<p><b>0.3.6: </b>small fix for shownoters and podcasters with &#34;und&#34; in their names or urls</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.5')) {
-        print '<p>small fixes for maha, Tim P. and Sven R.</p>';
+        print '<p><b>0.3.5: </b>small fixes for maha, Tim P. and Sven R.</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.4')) {
-        print '<p>this version fixes a few bugs and use the PHP Parser for preview</p>';
+        print '<p><b>0.3.4: </b>this version fixes a few bugs and use the PHP Parser for preview</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.3')) {
-        print '<p>more hierarchy, better chapter handling, font-awesome icons added, feed improvements</p>';
+        print '<p><b>0.3.3: </b>more hierarchy, better chapter handling, font-awesome icons added, feed improvements</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.2')) {
-        print '<p>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p><p>it also has new icons for links</p>';
+        print '<p><b>0.3.2: </b>this version adds hierarchy (OSF can set the hierarchy with "-" = (first rank), ..., "----" (fourth rank), ...</p><p>it also has new icons for links</p>';
       }
       if(versionInt($lastversion) < versionInt('0.3.1')) {
-        print '<p>This is how upgrade notices would look like</p>';
+        print '<p><b>0.3.1: </b>This is how upgrade notices would look like</p>';
       }
     $options['version'] = $version;
     update_option( 'shownotes_options', $options );
@@ -296,7 +299,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER['SCRIPT_FILENAME']);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.4.2</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.5.0</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Please make a Flattr subscription to support the development of this Plugin <br/>
