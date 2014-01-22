@@ -238,7 +238,7 @@ function osf_shownotes_shortcode($atts, $content = '') {
       $export .= '<textarea>' . json_encode($shownotesArray) . '</textarea><textarea>' . print_r($shownotes_options, true) . htmlspecialchars($shownotesString) . '</textarea>';
     }
     if (!is_feed()) {
-      $export = '<div style="display:none;visibility:hidden;" class="mp4chaps">' . trim(osf_export_chapterlist($shownotesArray['export'])) . '</div>' . $export;
+      $export .= '<div style="display:none;visibility:hidden;" class="mp4chaps">' . trim(osf_export_chapterlist($shownotesArray['export'])) . '</div>';
     }
   }
 
