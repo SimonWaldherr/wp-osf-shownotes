@@ -72,6 +72,10 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.5.1 =
+* a few fixes
+* performance improvements
+
 = 0.5.0 =
 * analyze osf shownotes
 * enable search of OSF content
@@ -213,6 +217,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Upgrade Notice ==
+
+= 0.5.1 =
+a few fixes and performance improvements
 
 = 0.5.0 =
 This version is recommended for all podcasters outside of metaebene. It delivers searchable shownotes, a osf validity indicator, wordpress multisite support, small fixes and many new icons
