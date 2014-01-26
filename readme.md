@@ -3,7 +3,7 @@
 Contributors: simonwaldherr  
 Donate link: https://flattr.com/profile/simonwaldherr  
 Tags: shownotes, osf, markup, podlove, markdown, etherpad, affiliate  
-Requires at least: 3.1  
+Requires at least: 3.3  
 Tested up to: 3.5  
 Stable tag: trunk  
 License: MIT License  
@@ -57,6 +57,10 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 5. [Meta box for OSF/MD input with Preview](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-5.png)
 
 ##Changelog
+
+###0.5.1
+* a few fixes
+* performance improvements
 
 ###0.5.0
 * analyze osf shownotes

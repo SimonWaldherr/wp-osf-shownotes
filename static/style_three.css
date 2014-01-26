@@ -1,4 +1,4 @@
-/* https://github.com/SimonWaldherr/wp-osf-shownotes/blob/master/static/style_three.css 0.5.0 */
+/* https://github.com/SimonWaldherr/wp-osf-shownotes/blob/master/static/style_three.css 0.5.1 */
 
 .osf_chaptertime {
   margin-left: 10px;
@@ -16,12 +16,12 @@
 
 .osf_chaptertime,
 .osf_chapter {
-  display: inline-block;
-  vertical-align: text-top;
+  display: inline;
 }
 
-.osf_chaptertime {
-  vertical-align: middle;
+.osf_items {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 div a:hover { text-decoration: underline }

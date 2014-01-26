@@ -3,7 +3,7 @@
 
 /**
  * @package Shownotes
- * @version 0.5.0
+ * @version 0.5.1
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.5.0
+Version: 0.5.1
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -20,6 +20,7 @@ include_once 'snsettings.php';
 include_once 'OSFphp/osf.php';
 include_once 'micromarkdown/micromarkdown.php';
 $shownotes_options = get_option('shownotes_options');
+$shownotes_cache = array();
 
 function shownotesshortcode_add_styles() {
   global $shownotes_options;
@@ -38,7 +39,7 @@ function shownotesshortcode_add_styles() {
       'style_four',
       'style_five'
     );
-    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.0');
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.1');
   }
 }
 
@@ -121,6 +122,7 @@ add_action('save_post', 'save_shownotes');
 
 function osf_shownotes_shortcode($atts, $content = '') {
   global $shownotes_options;
+  global $shownotes_cache;
   $export = '';
   $post_id = get_the_ID();
   $shownotes = get_post_meta($post_id, '_shownotes', true);
@@ -214,7 +216,12 @@ function osf_shownotes_shortcode($atts, $content = '') {
       $mode = 'clean osf';
     }
 
-    $shownotesArray = osf_parser($shownotesString, $data);
+    if (isset($shownotes_cache[$post_id])) {
+      $shownotesArray = $shownotes_cache[$post_id];
+    } else {
+      $shownotesArray = osf_parser($shownotesString, $data);
+    }
+
     if (($mode == 'block style') || ($mode == 'button style')) {
       $export = osf_export_block($shownotesArray['export'], $fullint, $mode);
     } elseif ($mode == 'list style') {
@@ -279,15 +286,15 @@ if ($osf_shortcode != 'osf-shownotes') {
 
 function shownotesshortcode_add_admin_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.0', false);
-    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.0', false);
-    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.0', false);
-    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.0', false);
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.1', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.1', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.1', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.1', false);
   }
 }
 function shownotesshortcode_add_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.0', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.1', false);
   }
 }
 
