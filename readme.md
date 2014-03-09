@@ -58,6 +58,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.5.2
+* wordpress search is a bit of confusing, so i made a switch to turn the show notes search on and off
+
 ###0.5.1
 * a few fixes
 * performance improvements

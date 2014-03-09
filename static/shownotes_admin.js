@@ -7,7 +7,7 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.5.0
+ * Version: 0.5.2
  */
 
 /*jslint browser: true, indent: 2 */
@@ -28,6 +28,18 @@ function getPadList(select, podcastname) {
 
   majaX({url: requrl, type: 'json'}, function (resp) {
     padslist = resp;
+    padslist.sort(function(a, b) {
+      a = a.docname.toLowerCase();
+      b = b.docname.toLowerCase();
+      if (a < b) {
+        return 1;
+      }
+      if (a > b) {
+        return -1;
+      }
+      return 0;
+    });
+    console.log(padslist);
     for (i = 0; i < padslist.length; i += 1) {
       if (shownotesname === padslist[i].docname) {
         returnstring += '<option selected>' + padslist[i].docname + '</option>';
