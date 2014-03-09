@@ -35,6 +35,7 @@ function shownotes_register_settings() {
         'mode'            => 'Template',
         'tags_mode'       => 'Tag mode',
         'tags'            => '',
+        'snsearch'        => 'switch wp search to sn search',
         'untagged'        => 'hide untagged items',
         'tagdecoration'   => 'Special tag decoration',
         'delimiter'       => 'String between items',
@@ -95,12 +96,15 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.5.1';
+  $version = '0.5.2';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
     if($version != $lastversion) {
       print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+      if(versionInt($lastversion) < versionInt('0.5.2')) {
+        print '<p><b>0.5.2: </b>turn shownotes search on/off</p>';
+      }
       if(versionInt($lastversion) < versionInt('0.5.1')) {
         print '<p><b>0.5.1: </b>a few fixes and performance improvements</p>';
       }
@@ -199,6 +203,15 @@ function shownotes_main_tags_feed() {
     $options['main_tags_feed'] = '';
   }
   print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
+}
+
+function shownotes_main_snsearch() { 
+  $options = get_option('shownotes_options');
+  $checked = '';
+  if ( isset( $options['main_snsearch'] ) ) {
+    $checked = "checked ";
+  }
+  print '<input id="main_snsearch" name="shownotes_options[main_snsearch]" ' . $checked . ' type="checkbox" value="1" />';
 }
 
 function shownotes_main_untagged() { 
@@ -302,10 +315,10 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER['SCRIPT_FILENAME']);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.5.1</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.5.2</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
-  <p>Please make a Flattr subscription to support the development of this Plugin <br/>
+  <p><b>Please make a Flattr subscription to support the development of this Plugin</b> <br/>
   Plugin:&nbsp;<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://github.com/SimonWaldherr/wp-osf-shownotes"></a>&nbsp;Shownot.es:&nbsp;<a class="FlattrButton" href="http://shownot.es/" title="Die Shownot.es" lang="de_DE" style="display:none;" rev="flattr;button:compact;">
   [description]
 </a><script type="text/javascript">

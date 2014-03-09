@@ -787,7 +787,7 @@ function osf_export_list($array, $full = false, $template, $filtertags = array(0
     '(\s+((http(|s)://[\S#?-]{0,128})\s))',
     '(^ *[\-\–\—]*)'
   );
-  $arraykeys   = array_keys($array);
+  $arraykeys   = @array_keys($array);
   for ($i = 0; $i <= count($array); $i++) {
     if (isset($array[$arraykeys[0]])) {
       if (isset($arraykeys[$i])) {
@@ -958,7 +958,7 @@ function osf_export_osf($array, $full = false, $template = '', $filtertags = arr
 
 function osf_export_chapterlist($array) {
   $returnstring = '';
-  foreach ($array as $item) {
+  foreach (@$array as $item) {
     if (isset($item['chapter'])) {
       if ($item['chapter']) {
         $filterpattern = array(

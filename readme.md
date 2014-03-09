@@ -1,124 +1,110 @@
-=== Shownotes ===
-Contributors: simonwaldherr
-Donate link: https://flattr.com/profile/simonwaldherr
-Tags: shownotes, osf, markup, podlove, md, podcast, markdown, etherpad, affiliate
-Requires at least: 3.3
-Tested up to: 3.8
-Stable tag: trunk
-License: MIT License
-License URI: http://opensource.org/licenses/mit-license.php
+#Shownotes
+
+Contributors: simonwaldherr  
+Donate link: https://flattr.com/profile/simonwaldherr  
+Tags: shownotes, osf, markup, podlove, markdown, etherpad, affiliate  
+Requires at least: 3.3  
+Tested up to: 3.5  
+Stable tag: trunk  
+License: MIT License  
+License URI: http://opensource.org/licenses/mit-license.php  
 
 simplifies Show Notes, write them in OSF, get them as HTML
 
-
-== Description ==
+##Description
 
 This Plugin converts <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">Shownotes in OSF (Open Shownotes Format)</a> to HTML, mp4 Chapters and Audacity/Reaper label tracks. All links to Amazon, will automatically converted to affiliate links. It also can import the show notes directly from the shownot.es ShowPad und will provide many metadata features in future.
 
-
-== Installation ==
+##Installation
 
 1. Upload the `shownotes-shortcode` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress
 3. Use the `[shownotes]` shortcode in your post or page with the options on the front page.
 4. Visit the options page
 
+##Frequently Asked Questions
 
-== Frequently Asked Questions ==
+* **what is OSF?** *the Open Shownotes Format is a easy plaintext format to represent show notes of podcasts*
+* **do i have to use the [ShowPad](http://pad.shownot.es)?** *no, you don't have to, but we recommend it*
+* **under which license the code is released?** *MIT License*
+* **how do i get the nice icons?** *you can select one of the CSS files in the shownotes settings*
+* **what must i do to get the affiliate links?** *enter your Amazon affiliate ID in the settings*
 
-= What does this Plugin? =
+###What does this Plugin?
 
 convert OSF to HTML
 
-= What is OSF? =
+###What is OSF?
 
 a simple format for (Podcast-) show notes, more informations about OSF are at the <a href="https://github.com/shownotes/OSF-in-a-Nutshell/blob/master/OSF-in-a-Nutshell.md">OSF-in-a-Nutshell Repo</a>
 
-= Why should i use it? =
+###Why should i use it?
 
 it's easy to write, you get better results in less time and it's automatically changes links to affiliate links
 
-= do i have to use the <a href="http://pad.shownot.es">ShowPad</a>? =
+##Support
 
-no, you don't have to, but we recommend it
-
-= under which license the code is released? =
-
-MIT License
-
-= how do i get the nice icons? =
-
-you can select one of the CSS files in the shownotes settings
-
-= what must i do to get the affiliate links? =
-
-enter your Amazon affiliate ID in the settings
-
-== Support ==
-
-= only on GitHub =
+###only on GitHub
 
 if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownotes/issues">github.com/simonwaldherr/wp-osf-shownotes</a>
 
+##Screenshots
 
-== Screenshots ==
+1. [Options](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-1.png)
+2. [Result (Block style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-2.png)
+3. [Result (List style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-3.png)
+4. [Result (Button style)](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-4.png)
+5. [Meta box for OSF/MD input with Preview](https://raw.github.com/SimonWaldherr/wp-osf-shownotes/on-wp.org/screenshot-5.png)
 
-1. Options
-2. Result (Block style)
-3. Result (List style)
-4. Result (Button style)
-5. Meta box for OSF/MD input with Preview
+##Changelog
 
-
-== Changelog ==
-
-= 0.5.2 =
+###0.5.2
 * wordpress search is a bit of confusing, so i made a switch to turn the show notes search on and off
 
-= 0.5.1 =
+###0.5.1
 * a few fixes
 * performance improvements
 
-= 0.5.0 =
+###0.5.0
 * analyze osf shownotes
 * enable search of OSF content
 * provide chapters to other plugins (pwp)
 * old icons are depricated
 * fix crazy wordpress multisite bug
 
-= 0.4.1 =
+###0.4.1
 * cascading bugfix
 * osf export bugfix
 * minor fixes
 
-= 0.4.0 =
+###0.4.0
 * more icons
 * error on save bugfix
 
-= 0.3.9 =
+###0.3.9
 * fix a bug which hides all untagged items
 
-= 0.3.8 =
+###0.3.8
 * more icons
 * osf as git submodule
 * accept more person string formats
 
-= 0.3.7 =
+###0.3.7
 * more small fixes
 
-= 0.3.6 =
+###0.3.6
 * small fixes
 
-= 0.3.5 =
+###0.3.5
 * more and nicer icons
 * preview via php parser (instead of tinyOSF)
 * API added
 
-= 0.3.4 =
+###0.3.4
 * more stable as 0.3.3
 * save and preselect ShowPad Pad name
 
-= 0.3.3 =
+###0.3.3
 * empty chapters fix
 * chapter without time fix
 * add more hierarchy (ranks)
@@ -127,7 +113,7 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * font awesome icons added
 * API Cache on Serverside added
 
-= 0.3.2 =
+###0.3.2
 * added hierarchy at list template
 * added upgrade code in settings
 * works even without chapters and times
@@ -135,11 +121,12 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * better feed code
 * code cleanup
 
-= 0.3.1 =
+###0.3.1
 * new Screenshots
 * Wordpress SVN Bugfix
+* added upgrade code in settings
 
-= 0.3.0 =
+###0.3.0
 * new template added (buttons)
 * firefox style fix
 * better style
@@ -147,55 +134,63 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * better output
 * clean feed output
 
-= 0.2.5 =
+###0.3.0
+* new template added (buttons)
+* firefox style fix
+* better style
+* small fixes
+* better output
+* clean feed output
+
+###0.2.5
 * delimiter bug fixed
 * titles added to items
 * switch between in- and exclude tags
 * much better tags handling
 
-= 0.2.4 =
+###0.2.4
 * put osf code in a separate file
 * requires at least 3.1 (no, not really, but there is no reason to run WP3.0)
 * filter disturbing chars at beginning and end of items
 * fix custom field rename bug
 
-= 0.2.3 =
+###0.2.3
 * rename custom field shownotes to _shownotes to hide it from custon fields list
 * open links in new tab/window
 * podcaster template added
 * header/get persons code improved
-* change - to &amp; #8209;
+* change - to &amp;#8209;
 * show more debug info
 
-= 0.2.2 =
+###0.2.2
 * delimiter after last item added
 
-= 0.2.1 =
+###0.2.1
 * delimiter after subitem bugfix
 
-= 0.2 =
+###0.2
 * debug mode added
 * only show template associated options
 * chapter delemiter added
 * preview in popup added
 
-= 0.1.3 =
+###0.1.3
 * show all podcasts in dropdown (asterisk)
 
-= 0.1.2 =
+###0.1.2
 * better templates
 * various improvements
 * load Pads and Padcontent via AJAX
 * better shortcode handling
 
-= 0.1.1 =
+###0.1.1
 * delimiter changeable
 * shortcodes changeable
 * better shownoter matching
 * also include subitems without tags
 * small bugs removed
 
-= 0.1.0 =
+###0.1.0
 * typographically correct quotation marks
 * export modes renamed and glossary added
 * show shownoter (as new output mode)
@@ -203,98 +198,17 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 * markdown support added
 * settings rearranged
 
-= 0.0.6 =
+###0.0.6
 * small fullmode fix
 
-= 0.0.5 =
+###0.0.5
 * shownot.es CSS can be turned off
 * import from ShowPad
 * export tags changeable
 
-= 0.0.4 =
+###0.0.4
 * wikigeeks style added
 
-= 0.0.3 =
+###0.0.3
 * first Version on Wordpress.org.
 * working Version with meta_box and shortcode content.
-
-
-== Upgrade Notice ==
-
-= 0.5.2 =
-wordpress search is a bit of confusing, so i made a switch to turn the show notes search on and off
-
-= 0.5.1 =
-a few fixes and performance improvements
-
-= 0.5.0 =
-This version is recommended for all podcasters outside of metaebene. It delivers searchable shownotes, a osf validity indicator, wordpress multisite support, small fixes and many new icons
-
-= 0.4.1 =
-fixes a cascading bug and a few other bugs
-
-= 0.4.0 =
-more icons, error on save bugfix, fix a bug which hides all untagged items, accept more person string formats and many more small fixes
-
-= 0.3.6 =
-small fixes
-
-= 0.3.5 =
-more and nicer icons and preview via php parser (instead of tinyOSF)
-
-= 0.3.4 =
-saves pad names and is more stable as 0.3.3
-
-= 0.3.3 =
-0.3.3 testversion with many fixes, but maybe bugs too. A lot of hierarchy added and font awesome style
-
-= 0.3.2 =
-hierarchy at list mode, upgrade code in settings and works without chapters and times
-
-= 0.3.1 =
-Same as last commit with changes
-
-= 0.3.0 =
-new template added, firefox style fix, better style and clean feed output
-
-= 0.2.5 =
-much better tag handling and configurability added and small bugs fixed
-
-= 0.2.4 =
-small fixes
-
-= 0.2.3 =
-shownotes custom field renamed to _shownotes to hide it from custom fields list and important improvements
-
-= 0.2.2 =
-delimiter after last item added
-
-= 0.2.1 =
-delimiter after subitem bugfix
-
-= 0.2 =
-preview added, chapter delimiter added, options improved
-
-= 0.1.3 =
-show all podcasts in import dropdown
-
-= 0.1.2 =
-pad import and output templates improved
-
-= 0.1.1 =
-more adjustment options and tiny improvements
-
-= 0.1.0 =
-many important improvements
-
-= 0.0.6 =
-fullmode fixed
-
-= 0.0.5 =
-export tags now changeable and osf shownotes can be imported via ajax
-
-= 0.0.4 =
-new style added (wikigeeks)
-
-= 0.0.3 =
-first Version on Wordpress.org.
