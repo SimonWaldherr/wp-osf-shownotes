@@ -134,12 +134,12 @@ function micromarkdown($string, $strict=false) {
         $calign[$i] = 0;
       }
     }
-    $cel = ['<th>', '<th align="left">', '<th align="right">', '<th align="center">'];
+    $cel = array('<th>', '<th align="left">', '<th align="right">', '<th align="center">');
     for ($i = 0; $i < count($helper); $i++) {
       $repstr .= $cel[$calign[$i]] . trim($helper[$i]) . '</th>';
     }
     $repstr .= '</tr>';
-    $cel = ['<td>', '<td align="left">', '<td align="right">', '<td align="center">'];
+    $cel = array('<td>', '<td align="left">', '<td align="right">', '<td align="center">');
     $helper1 = explode("\n", trim($match[7]));
     for ($i = 0; $i < count($helper1); $i++) {
       $helper2 = explode('|', $helper1[$i]);
