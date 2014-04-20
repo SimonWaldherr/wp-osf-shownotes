@@ -8,3 +8,11 @@ please visit [shownot.es](http://shownot.es)
 
 ---
 
+use index.php to test this library  
+
+```sh
+php index.php
+```
+
+---
+

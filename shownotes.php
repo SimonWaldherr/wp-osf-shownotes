@@ -3,7 +3,7 @@
 
 /**
  * @package Shownotes
- * @version 0.5.2
+ * @version 0.5.2.1
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.5.2
+Version: 0.5.2.1
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -39,7 +39,7 @@ function shownotesshortcode_add_styles() {
       'style_four',
       'style_five'
     );
-    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.2');
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.2.1');
   }
 }
 
@@ -286,16 +286,16 @@ if ($osf_shortcode != 'osf-shownotes') {
 
 function shownotesshortcode_add_admin_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.2', false);
-    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.2', false);
-    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.2', false);
-    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.2', false);
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.2.1', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.2.1', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.2.1', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.2.1', false);
   }
 }
 
 function shownotesshortcode_add_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.2', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.2.1', false);
   }
 }
 
