@@ -58,6 +58,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.5.3
+* search in shownotes and blogpost content at the same time (many thanks to @RobRoy)
+
 ###0.5.2.1
 * cascade/hierarchy-fix
 
