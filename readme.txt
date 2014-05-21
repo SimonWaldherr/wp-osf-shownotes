@@ -72,6 +72,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 == Changelog ==
 
+= 0.5.3 =
+* search in shownotes and blogpost content at the same time (many thanks to @RobRoy)
+
 = 0.5.2 =
 * wordpress search is a bit of confusing, so i made a switch to turn the show notes search on and off
 
@@ -220,6 +223,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Upgrade Notice ==
+
+= 0.5.3 =
+search in shownotes and blogpost content at the same time (many thanks to @RobRoy)
 
 = 0.5.2 =
 wordpress search is a bit of confusing, so i made a switch to turn the show notes search on and off

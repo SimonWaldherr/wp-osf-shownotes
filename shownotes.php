@@ -3,7 +3,7 @@
 
 /**
  * @package Shownotes
- * @version 0.5.2.1
+ * @version 0.5.3
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.5.2.1
+Version: 0.5.3
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -39,7 +39,7 @@ function shownotesshortcode_add_styles() {
       'style_four',
       'style_five'
     );
-    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.2.1');
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.3');
   }
 }
 
@@ -286,16 +286,16 @@ if ($osf_shortcode != 'osf-shownotes') {
 
 function shownotesshortcode_add_admin_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.2.1', false);
-    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.2.1', false);
-    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.2.1', false);
-    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.2.1', false);
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.3', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.3', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.3', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.3', false);
   }
 }
 
 function shownotesshortcode_add_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.2.1', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.3', false);
   }
 }
 
@@ -306,6 +306,9 @@ if (is_admin()) {
 
 add_action('wp_print_scripts', 'shownotesshortcode_add_scripts');
 
+/* 
+ * deprecated; see below
+ */
 function custom_search_query( $query ) {
   $custom_fields = array(
     '_shownotes'
@@ -325,6 +328,61 @@ function custom_search_query( $query ) {
   }
 }
 
+/* 
+ * new search function for the shownotes that doesn't replace the posts query but extends it
+ */
+function shownotes_search_where($query) {
+
+  // if we are on a search page, modify the generated SQL
+  if (is_search() && !is_admin()) {
+
+      global $wpdb;
+      $custom_fields = array('_shownotes');
+      $keywords = explode(' ', get_query_var('s')); // build an array from the search string
+      $shownotes_query = "";
+      foreach ($custom_fields as $field) {
+           foreach ($keywords as $word) {
+               $shownotes_query .= "((mypm1.meta_key = '".$field."')";
+               $shownotes_query .= " AND (mypm1.meta_value  LIKE '%{$word}%')) OR ";
+           }
+      }
+      
+      // if the shownotes query is not an empty string, append it to the existing query
+      if (!empty($shownotes_query)) {
+          // add to where clause
+          $query['where'] = str_replace("(((wp_posts.post_title LIKE '%", "( {$shownotes_query} ((wp_posts.post_title LIKE '%", $query['where']);
+
+          $query['join'] = $query['join'] . " INNER JOIN {$wpdb->postmeta} AS mypm1 ON ({$wpdb->posts}.ID = mypm1.post_id)";
+      }
+  }
+  return ($query);
+}
+
+/* 
+ * we need this filter to add a grouping to the SQL string - prevents duplicate result rows
+ */
+function shownotes_groupby($groupby){
+  
+  global $wpdb;
+
+  // group by post id to avoid multiple results in the modified search
+  $groupby_id = "{$wpdb->posts}.ID";
+  
+  // if this is not a search or the groupby string already contains our groupby string, just return
+  if(!is_search() || strpos($groupby, $groupby_id) !== false) {
+    return $groupby;
+  } 
+
+  // if groupby is empty, use ours
+  if(strlen(trim($groupby)) === 0) {
+    return $groupby_id;
+  } 
+
+  // groupby wasn't empty, append ours
+  return $groupby.", ".$groupby_id;
+}
+
+
 function add_title_custom_field($postid){
   if (isset($_POST['shownotes'])) {
     update_post_meta($postid, '_shownotes', $_POST['shownotes']);
@@ -335,8 +393,14 @@ function add_title_custom_field($postid){
 }
 
 if (isset($shownotes_options['main_snsearch'])) {
-  add_filter('pre_get_posts', 'custom_search_query');
+  //add_filter('pre_get_posts', 'custom_search_query');
 }
+
+if (isset($shownotes_options['main_snsearch'])) {
+  add_filter('posts_clauses', 'shownotes_search_where', 20, 1);
+  add_filter('posts_groupby', 'shownotes_groupby');
+}
+
 
 add_action('save_post', 'add_title_custom_field');
 
