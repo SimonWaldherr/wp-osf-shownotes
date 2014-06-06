@@ -285,3 +285,5 @@ div a:hover { text-decoration: underline }
 .osf_revision { display: none; }
 .osf_stats { display: none; }
 .osf_stat { display: none; }
+
+.osf_law { background-image: url('./img/bwi/paragraph.png');}
