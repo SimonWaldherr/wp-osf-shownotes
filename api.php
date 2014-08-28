@@ -23,9 +23,9 @@ if (isset($fdlid)) {
 
 include_once './OSFphp/osf.php';
 
-$amazon = 'shownot.es-21';
-$thomann = '93439';
-$tradedoubler = '16248286';
+$amazon = '';
+$thomann = '';
+$tradedoubler = '';
 $fullmode = 'false';
 $fullmode = 'true';
 $fullint = 2;
