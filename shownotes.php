@@ -156,17 +156,17 @@ function osf_shownotes_shortcode($atts, $content = '') {
     if ((isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') && ($randomSupport < 7)) {
       $amazon = $shownotes_options['affiliate_amazon'];
     } else {
-      $amazon = 'shownot.es-21';
+      $amazon = '';
     }
     if (isset($shownotes_options['affiliate_thomann']) && $shownotes_options['affiliate_thomann'] != '') {
       $thomann = $shownotes_options['affiliate_thomann'];
     } else {
-      $thomann = '93439';
+      $thomann = '';
     }
     if (isset($shownotes_options['affiliate_tradedoubler']) && $shownotes_options['affiliate_tradedoubler'] != '') {
       $tradedoubler = $shownotes_options['affiliate_tradedoubler'];
     } else {
-      $tradedoubler = '16248286';
+      $tradedoubler = '';
     }
     $fullmode = 'false';
     if (is_feed()) {
@@ -334,7 +334,7 @@ function custom_search_query( $query ) {
 function shownotes_search_where($query) {
 
   // if we are on a search page, modify the generated SQL
-  if (is_search() && !is_admin()) {
+  if ( is_search() && !is_admin() ) {
 
       global $wpdb;
       $custom_fields = array('_shownotes');
@@ -342,18 +342,23 @@ function shownotes_search_where($query) {
       $shownotes_query = "";
       foreach ($custom_fields as $field) {
            foreach ($keywords as $word) {
-               $shownotes_query .= "((mypm1.meta_key = '".$field."')";
-               $shownotes_query .= " AND (mypm1.meta_value  LIKE '%{$word}%')) OR ";
+               $shownotes_query .= "((joined_tables.meta_key = '".$field."')";
+               $shownotes_query .= " AND (joined_tables.meta_value  LIKE '%{$word}%')) OR ";
            }
       }
       
       // if the shownotes query is not an empty string, append it to the existing query
       if (!empty($shownotes_query)) {
           // add to where clause
-          $query['where'] = str_replace("(((wp_posts.post_title LIKE '%", "( {$shownotes_query} ((wp_posts.post_title LIKE '%", $query['where']);
+          $query['where'] = str_replace(
+                "(".$wpdb->prefix."posts.post_title LIKE '%",
+                "({$shownotes_query} ".$wpdb->prefix."posts.post_title LIKE '%",
+                $query['where']
+              );
 
-          $query['join'] = $query['join'] . " INNER JOIN {$wpdb->postmeta} AS mypm1 ON ({$wpdb->posts}.ID = mypm1.post_id)";
+          $query['join'] = $query['join'] . " INNER JOIN {$wpdb->postmeta} AS joined_tables ON ({$wpdb->posts}.ID = joined_tables.post_id)";
       }
+
   }
   return ($query);
 }
