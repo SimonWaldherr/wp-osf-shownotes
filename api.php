@@ -23,9 +23,9 @@ if (isset($fdlid)) {
 
 include_once './OSFphp/osf.php';
 
-$amazon = 'shownot.es-21';
-$thomann = '93439';
-$tradedoubler = '16248286';
+$amazon = '';
+$thomann = '';
+$tradedoubler = '';
 $fullmode = 'false';
 $fullmode = 'true';
 $fullint = 2;
@@ -98,7 +98,7 @@ if (isset($preview) && ($preview != 'false')) {
 <body>
   <div id="parsedBox">
     <div id="parsed">' . $export . '</div>
-    <div id="footer">&nbsp;<span>© 2013 <a href="http://shownot.es/">shownot.es</a></span></div>
+    <div id="footer">&nbsp;<span>© 2014 <a href="http://shownot.es/">shownot.es</a></span></div>
   </div>
 </body>
 </html>';

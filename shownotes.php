@@ -3,7 +3,7 @@
 
 /**
  * @package Shownotes
- * @version 0.5.3
+ * @version 0.5.4
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.5.3
+Version: 0.5.4
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -39,7 +39,7 @@ function shownotesshortcode_add_styles() {
       'style_four',
       'style_five'
     );
-    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.3');
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.4');
   }
 }
 
@@ -151,22 +151,21 @@ function osf_shownotes_shortcode($atts, $content = '') {
     'tags'      => $default_tags,
     'feedtags'  => $feed_tags
   ), $atts));
-  $randomSupport = rand(0,10);
   if (($content !== '') || ($shownotes)) {
-    if ((isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') && ($randomSupport < 7)) {
+    if (isset($shownotes_options['affiliate_amazon']) && $shownotes_options['affiliate_amazon'] != '') {
       $amazon = $shownotes_options['affiliate_amazon'];
     } else {
-      $amazon = 'shownot.es-21';
+      $amazon = '';
     }
     if (isset($shownotes_options['affiliate_thomann']) && $shownotes_options['affiliate_thomann'] != '') {
       $thomann = $shownotes_options['affiliate_thomann'];
     } else {
-      $thomann = '93439';
+      $thomann = '';
     }
     if (isset($shownotes_options['affiliate_tradedoubler']) && $shownotes_options['affiliate_tradedoubler'] != '') {
       $tradedoubler = $shownotes_options['affiliate_tradedoubler'];
     } else {
-      $tradedoubler = '16248286';
+      $tradedoubler = '';
     }
     $fullmode = 'false';
     if (is_feed()) {
@@ -286,16 +285,16 @@ if ($osf_shortcode != 'osf-shownotes') {
 
 function shownotesshortcode_add_admin_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.3', false);
-    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.3', false);
-    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.3', false);
-    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.3', false);
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.4', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.4', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.4', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.4', false);
   }
 }
 
 function shownotesshortcode_add_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.3', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.4', false);
   }
 }
 
@@ -334,7 +333,7 @@ function custom_search_query( $query ) {
 function shownotes_search_where($query) {
 
   // if we are on a search page, modify the generated SQL
-  if (is_search() && !is_admin()) {
+  if ( is_search() && !is_admin() ) {
 
       global $wpdb;
       $custom_fields = array('_shownotes');
@@ -342,18 +341,23 @@ function shownotes_search_where($query) {
       $shownotes_query = "";
       foreach ($custom_fields as $field) {
            foreach ($keywords as $word) {
-               $shownotes_query .= "((mypm1.meta_key = '".$field."')";
-               $shownotes_query .= " AND (mypm1.meta_value  LIKE '%{$word}%')) OR ";
+               $shownotes_query .= "((joined_tables.meta_key = '".$field."')";
+               $shownotes_query .= " AND (joined_tables.meta_value  LIKE '%{$word}%')) OR ";
            }
       }
       
       // if the shownotes query is not an empty string, append it to the existing query
       if (!empty($shownotes_query)) {
           // add to where clause
-          $query['where'] = str_replace("(((wp_posts.post_title LIKE '%", "( {$shownotes_query} ((wp_posts.post_title LIKE '%", $query['where']);
+          $query['where'] = str_replace(
+                "(".$wpdb->prefix."posts.post_title LIKE '%",
+                "({$shownotes_query} ".$wpdb->prefix."posts.post_title LIKE '%",
+                $query['where']
+              );
 
-          $query['join'] = $query['join'] . " INNER JOIN {$wpdb->postmeta} AS mypm1 ON ({$wpdb->posts}.ID = mypm1.post_id)";
+          $query['join'] = $query['join'] . " INNER JOIN {$wpdb->postmeta} AS joined_tables ON ({$wpdb->posts}.ID = joined_tables.post_id)";
       }
+
   }
   return ($query);
 }

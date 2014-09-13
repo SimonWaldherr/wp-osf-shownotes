@@ -7,7 +7,7 @@
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.5.3
+ * Version: 0.5.4
  */
 
 /*jslint browser: true, indent: 2 */

@@ -58,6 +58,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 ##Changelog
 
+###0.5.4
+* search improved for multisite installations and installations with a custom db prefix (many thanks to @chemiker)
+
 ###0.5.3
 * search in shownotes and blogpost content at the same time (many thanks to @RobRoy)
 
