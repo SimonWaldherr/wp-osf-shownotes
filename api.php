@@ -98,7 +98,7 @@ if (isset($preview) && ($preview != 'false')) {
 <body>
   <div id="parsedBox">
     <div id="parsed">' . $export . '</div>
-    <div id="footer">&nbsp;<span>© 2013 <a href="http://shownot.es/">shownot.es</a></span></div>
+    <div id="footer">&nbsp;<span>© 2014 <a href="http://shownot.es/">shownot.es</a></span></div>
   </div>
 </body>
 </html>';
