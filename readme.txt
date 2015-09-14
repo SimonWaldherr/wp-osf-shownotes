@@ -2,8 +2,8 @@
 Contributors: simonwaldherr
 Donate link: https://flattr.com/profile/simonwaldherr
 Tags: shownotes, osf, markup, podlove, md, podcast, markdown, etherpad, affiliate
-Requires at least: 3.3
-Tested up to: 4.0
+Requires at least: 3.3.1
+Tested up to: 4.3
 Stable tag: trunk
 License: MIT License
 License URI: http://opensource.org/licenses/mit-license.php
@@ -71,6 +71,11 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Changelog ==
+
+= 0.5.5 =
+* set search to shownotes + blogpost as default, but you can turn it off (opt-out in settings page)
+* proxy all Shownot.es-API Requests through your own server, so it is encrypted with your SSL connection
+* remove preview buttons (most browsers nowadays block all popups)
 
 = 0.5.4 =
 * search improved for multisite installations and installations with a custom db prefix (many thanks to @chemiker)
@@ -226,6 +231,9 @@ if you need help, go to <a href="https://github.com/SimonWaldherr/wp-osf-shownot
 
 
 == Upgrade Notice ==
+
+= 0.5.5 =
+set search to shownotes + blogpost as default, but you can turn it off (opt-out in settings page)
 
 = 0.5.4 =
 search improved for multisite installations and installations with a custom db prefix (many thanks to @chemiker)

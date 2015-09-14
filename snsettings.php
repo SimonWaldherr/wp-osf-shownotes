@@ -35,7 +35,7 @@ function shownotes_register_settings() {
         'mode'            => 'Template',
         'tags_mode'       => 'Tag mode',
         'tags'            => '',
-        'snsearch'        => 'switch wp search to sn search',
+        'defaultsearch'   => 'return to default wp search',
         'untagged'        => 'hide untagged items',
         'tagdecoration'   => 'Special tag decoration',
         'delimiter'       => 'String between items',
@@ -96,12 +96,15 @@ function shownotes_version() {
   }
 
   $options = get_option('shownotes_options');
-  $version = '0.5.4';
+  $version = '0.5.5';
 
   if(isset($options['version'])) {
     $lastversion = $options['version'];
     if($version != $lastversion) {
       print '<h3>Version</h3><p>Congratulations, you just upgraded the <b>shownotes</b> plugin from <b>version '.$lastversion.'</b> to <b>version '.$version.'</b></p>';
+      if(versionInt($lastversion) < versionInt('0.5.5')) {
+        print '<p><b>0.5.5: </b>searching shownotes <b>AND</b> blogpost by default (you can opt out if you need)</p>';
+      }
       if(versionInt($lastversion) < versionInt('0.5.4')) {
         print '<p><b>0.5.4: </b>search improved by @chemiker</p>';
       }
@@ -211,13 +214,13 @@ function shownotes_main_tags_feed() {
   print '<input id="main_tags_feed" name="shownotes_options[main_tags_feed]" value="' . $options['main_tags_feed'] . '" style="width:18em;" /> <i>&nbsp; split by space &nbsp;(leave empty to include all tags)</i>';
 }
 
-function shownotes_main_snsearch() { 
+function shownotes_main_defaultsearch() { 
   $options = get_option('shownotes_options');
   $checked = '';
-  if ( isset( $options['main_snsearch'] ) ) {
+  if ( isset( $options['main_defaultsearch'] ) ) {
     $checked = "checked ";
   }
-  print '<input id="main_snsearch" name="shownotes_options[main_snsearch]" ' . $checked . ' type="checkbox" value="1" />';
+  print '<input id="main_defaultsearch" name="shownotes_options[main_defaultsearch]" ' . $checked . ' type="checkbox" value="1" />';
 }
 
 function shownotes_main_untagged() { 
@@ -321,7 +324,7 @@ function shownotes_affiliate_tradedoubler() {
 function shownotes_info() {
   $scriptname = explode('/wp-admin', $_SERVER['SCRIPT_FILENAME']);
   $dirname  = explode('/wp-content', dirname(__FILE__));
-  print '<p>This is <strong>Version 0.5.4</strong> of the <strong> Shownotes</strong>.<br>
+  print '<p>This is <strong>Version 0.5.5</strong> of the <strong> Shownotes</strong>.<br>
   The <strong>Including file</strong> is: <code>wp-admin' . $scriptname[1] . '</code><br>
   The <strong>plugin-directory</strong> is: <code>wp-content' . $dirname[1] . '</code></p>
   <p>Please make a Flattr subscription to support the development of this Plugin <br/>

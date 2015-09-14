@@ -3,7 +3,7 @@
 
 /**
  * @package Shownotes
- * @version 0.5.4
+ * @version 0.5.5
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: Shownotes
 Plugin URI: http://shownot.es/wp-plugin/
 Description: Convert OSF-Shownotes to HTML for your Podcast
 Author: Simon Waldherr
-Version: 0.5.4
+Version: 0.5.5
 Author URI: http://waldherr.eu
 License: MIT License
 */
@@ -39,7 +39,7 @@ function shownotesshortcode_add_styles() {
       'style_four',
       'style_five'
     );
-    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.4');
+    wp_enqueue_style('shownotesstyle', plugins_url('static/' . $css_styles[$shownotes_options['css_id']] . '.css', __FILE__), array(), '0.5.5');
   }
 }
 
@@ -65,7 +65,6 @@ function add_shownotes_textarea($post) {
   } else {
     $shownotes = '';
   }
-  $baseurl = 'http://cdn.simon.waldherr.eu/projects/showpad-api/getPad/?id=$$$';
   $baseurlstring = '';
   $import_podcastname = false;
   if (isset($shownotes_options['import_podcastname'])) {
@@ -74,14 +73,14 @@ function add_shownotes_textarea($post) {
     }
   }
   if ($import_podcastname == false) {
-    $baseurlstring = '<input type="text" id="importId" name="shownotesname" class="form-input-tip" size="16" autocomplete="off" value=""> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import">';
+    $baseurlstring = '<input type="text" id="importId" name="shownotesname" class="form-input-tip" size="16" autocomplete="off" value=""> <input id="loadShownotes" type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \''.plugins_url('' , __FILE__ ).'/api.php?proxytype=pad&proxyvalue=$$$\')" value="Import">';
   } else {
-    $baseurlstring = '<select id="importId" name="shownotesname" size="1"></select> <input type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \'' . $baseurl . '\')" value="Import"><script>getPadList(document.getElementById(\'importId\'),\'' . $import_podcastname . '\')</script>';
+    $baseurlstring = '<select id="importId" name="shownotesname" size="1"></select> <input id="loadShownotes" type="button" class="button" onclick="importShownotes(document.getElementById(\'shownotes\'), document.getElementById(\'importId\').value, \''.plugins_url('' , __FILE__ ).'/api.php?proxytype=pad&proxyvalue=$$$\')" value="Import"><script>getPadList(document.getElementById(\'importId\'), \''.plugins_url('' , __FILE__ ).'\',\'' . $import_podcastname . '\')</script>';
   }
-  echo '<div id="add_shownotes" class="shownotesdiv"><script>var shownotesname = \'' . $shownotesname . '\';</script><p>You can use the following shortcodes in the textarea above: <code>[shownotes]</code>, <code>[shownotes mode=&quot;block&quot;]</code>, <code>[shownotes mode=&quot;shownoter&quot;]</code>, <code>[shownotes mode=&quot;podcaster&quot;]</code>, ...</p><p>In the textarea below you can enter your <a href="http://shownotes.github.io/OSF-in-a-Nutshell/">OSF Show Notes</a>.</p><p id="snstatus"></p><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text" onKeyUp="analyzeShownotes();">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' <br/><br/> Preview:
+  echo '<div id="add_shownotes" class="shownotesdiv"><script>var shownotesname = \'' . $shownotesname . '\';</script><p>You can use the following shortcodes in the textarea above: <code>[shownotes]</code>, <code>[shownotes mode=&quot;block&quot;]</code>, <code>[shownotes mode=&quot;shownoter&quot;]</code>, <code>[shownotes mode=&quot;podcaster&quot;]</code>, ...</p><p>In the textarea below you can enter your <a href="http://shownotes.github.io/OSF-in-a-Nutshell/">OSF Show Notes</a>.</p><p id="snstatus"></p><p><textarea id="shownotes" name="shownotes" style="height:280px" class="large-text" onKeyUp="analyzeShownotes();">' . $shownotes . '</textarea></p> <p>ShowPad Import: ' . $baseurlstring . ' <br/><!--<br/> Preview:
 <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'html\', false, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="HTML">
 <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', false, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Chapter"> <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'audacity\', true, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Audacity"> <input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'reaper\', true, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Reaper"> &#124; Download:
-<input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', true, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Chapter"> </p></div>';
+<input type="submit" class="button" onclick="previewPopup(document.getElementById(\'shownotes\'), \'chapter\', true, \''.plugins_url('' , __FILE__ ).'\'); return false;" value="Chapter"> --></p></div>';
 }
 
 function save_shownotes() {
@@ -285,16 +284,16 @@ if ($osf_shortcode != 'osf-shownotes') {
 
 function shownotesshortcode_add_admin_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.4', false);
-    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.4', false);
-    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.4', false);
-    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.4', false);
+    wp_enqueue_script('majax', plugins_url('static/majaX/majax.js', __FILE__), array(), '0.5.5', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes_admin.js', __FILE__), array(), '0.5.5', false);
+    wp_enqueue_script('tinyosf', plugins_url('static/tinyOSF/tinyosf.js', __FILE__), array(), '0.5.5', false);
+    wp_enqueue_script('tinyosf_exportmodules', plugins_url('static/tinyOSF/tinyosf_exportmodules.js', __FILE__), array(), '0.5.5', false);
   }
 }
 
 function shownotesshortcode_add_scripts() {
   if (!is_feed()) {
-    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.4', false);
+    wp_enqueue_script('importPad', plugins_url('static/shownotes.js', __FILE__), array(), '0.5.5', false);
   }
 }
 
@@ -396,11 +395,7 @@ function add_title_custom_field($postid){
   }
 }
 
-if (isset($shownotes_options['main_snsearch'])) {
-  //add_filter('pre_get_posts', 'custom_search_query');
-}
-
-if (isset($shownotes_options['main_snsearch'])) {
+if (!isset($shownotes_options['main_defaultsearch'])) {
   add_filter('posts_clauses', 'shownotes_search_where', 20, 1);
   add_filter('posts_groupby', 'shownotes_groupby');
 }

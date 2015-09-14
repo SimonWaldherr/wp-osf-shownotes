@@ -1,10 +1,26 @@
 <?php
 
-$fdl       = $_POST['fdl'];
-$fdlid     = $_GET['fdlid'];
-$emode     = $_POST['mode'];
-$preview   = $_POST['preview'];
+$proxytype = trim($_GET['proxytype']);
+$proxyval  = urldecode(trim($_GET['proxyvalue']));
+$fdl       = trim($_POST['fdl']);
+$fdlid     = trim($_GET['fdlid']);
+$emode     = trim($_POST['mode']);
+$preview   = trim($_POST['preview']);
 $shownotes = urldecode($_POST['shownotes']);
+
+if (isset($proxytype)) {
+  if ($proxytype == 'list') {
+    if ($proxyval == '*') {
+      echo file_get_contents('http://cdn.simon.waldherr.eu/projects/showpad-api/getList/');
+      die();
+    }
+    echo file_get_contents('http://cdn.simon.waldherr.eu/projects/showpad-api/getList/?search='.$proxyval);
+    die();
+  } elseif ($proxytype == 'pad') {
+    echo file_get_contents('http://cdn.simon.waldherr.eu/projects/showpad-api/getPad/?id='.$proxyval);
+    die();
+  }
+}
 
 if (isset($fdlid)) {
   if (is_numeric($fdlid)) {
@@ -98,7 +114,7 @@ if (isset($preview) && ($preview != 'false')) {
 <body>
   <div id="parsedBox">
     <div id="parsed">' . $export . '</div>
-    <div id="footer">&nbsp;<span>© 2014 <a href="http://shownot.es/">shownot.es</a></span></div>
+    <div id="footer">&nbsp;<span>© 2015 <a href="http://shownot.es/">shownot.es</a></span></div>
   </div>
 </body>
 </html>';

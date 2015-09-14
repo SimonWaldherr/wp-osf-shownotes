@@ -1,13 +1,13 @@
 /*
  * shownotes
  *
- * Copyright 2013, Simon Waldherr - http://simon.waldherr.eu/
+ * Copyright 2015, Simon Waldherr - http://simon.waldherr.eu/
  * Released under the MIT Licence
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/wp-osf-shownotes
  * Wordpress: http://wordpress.org/plugins/shownotes/
- * Version: 0.5.2.1
+ * Version: 0.5.5
  */
 
 /*jslint browser: true, indent: 2 */
